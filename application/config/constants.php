@@ -76,9 +76,6 @@ define('SHOW_DEBUG_BACKTRACE', TRUE);
 /*
 define('TYPE_SOFT', 'soft');
 define('TYPE_GAME', 'game');
-define('TYPE_APP', 'app');
-define('TYPE_VIDEO', 'video');
-define('TYPE_BOOK', 'book');
 define('TYPE_PICTURE', 'picture');
 define('SITES_TABLE', 'sites');
 define('TOPICS_TABLE', 'topics');
@@ -86,5 +83,7 @@ define('TOPICS_TABLE', 'topics');
 
 define('USER_TABLE', 'user');
 define('ACCOUNT_TABLE', 'account');
+define('DICTIONARY_TABLE', 'dictionary');
+define('DICTIONARY_DEFINE_TABLE', 'dictionary_define');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
