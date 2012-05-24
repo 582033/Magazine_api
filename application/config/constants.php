@@ -73,6 +73,18 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 */
 define('SHOW_DEBUG_BACKTRACE', TRUE);
 
+/*
+define('TYPE_SOFT', 'soft');
+define('TYPE_GAME', 'game');
+define('TYPE_APP', 'app');
+define('TYPE_VIDEO', 'video');
+define('TYPE_BOOK', 'book');
+define('TYPE_PICTURE', 'picture');
+define('SITES_TABLE', 'sites');
+define('TOPICS_TABLE', 'topics');
+*/
 
+define('USER_TABLE', 'user');
+define('ACCOUNT_TABLE', 'account');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
