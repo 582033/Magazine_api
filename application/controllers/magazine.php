@@ -153,4 +153,26 @@ class Magazine extends MY_Controller {
 		return $category_return;
 	}	//}}}
 
+	function mag_list(){	//{{{
+		$mag_list = array(
+				'apiver' => $this->config->item('api_version'),
+				'errcode' => '0',
+				'data' => $this->_get_mag_list(),
+				'extra' => $this->_mag_list_extra(),
+				);
+		$this->_json_output($mag_list);
+	}	//}}}
+
+	function _get_mag_list(){	//{{{
+		$key = array('type', 'start', 'limit');
+		$from_url = $this->_get_more_non_empty($key);
+//		$where = $from_url['type'] ? array('mag_category' => $from_url['type']) : array();
+		$where = array('mag_category' => $from_url['type']);
+		$mag_list = $this->mag_db->rows(MAGAZINE_TABLE, $where);
+		return $mag_list;
+	}	//}}}
+	
+	function _mag_list_extra(){
+		return "1";
+	}
 }

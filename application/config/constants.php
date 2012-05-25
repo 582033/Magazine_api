@@ -85,5 +85,6 @@ define('USER_TABLE', 'user');
 define('ACCOUNT_TABLE', 'account');
 define('DICTIONARY_TABLE', 'dictionary');
 define('DICTIONARY_DEFINE_TABLE', 'dictionary_define');
+define('MAGAZINE_TABLE', 'magazine');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
