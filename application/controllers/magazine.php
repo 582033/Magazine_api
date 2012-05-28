@@ -3,9 +3,11 @@
 class Magazine extends MY_Controller {
 
 
-	function magazine (){	//{{{
+	function Magazine (){	//{{{
 		parent::__construct();
 		$this->load->model('mag_db');
+		$this->load->library('session');
+		$this->load->model('user_model');
 		$this->load->config();
 	}	//}}}
 
@@ -20,71 +22,34 @@ class Magazine extends MY_Controller {
 	function reg (){	//{{{
 		$keys = array('username', 'passwd', 'sessionid');
 		$user_data = $this->_get_more_non_empty($keys);
-		$user_is_exist = $this-> _check_user_exists($user_data['username']);
-		if (!$user_is_exist){
-			$user_id = $this->mag_db->insert_row(USER_TABLE, array('user_type' => '0'));
-			$user_info = array(
-					'user_id' => $user_id,
-					'account_type' => 'letou',
-					'account_name' => $user_data['username'],
-					'account_passwd' => $this->_passwd_encryption($user_data['passwd']),
-					);
-			$this->mag_db->insert_row(ACCOUNT_TABLE, $user_info);
-			$return = array(
-					'errcode' => '0',
-					'msg' => 'ok',
-					'username' => $user_data['username'],
-					'account_type' => 'letou',
-					'user_type' => '0',	//用户类型:0读者,1作者,2vip作者,3管理员
-					);
-		}
-		else {
-			$return = array(
-					'errcode' => '0',
-					'msg' => '用户名已存在',
-					);
-		}
+
+		$return = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
+		
 		$return['apiver'] = $this->config->item('api_version');
 		$this->_json_output($return);
 	}	//}}}
 
 	function login (){ //{{{
-		$keys = array('username', 'passwd', 'sessionid');
+		$keys = array('username', 'passwd', 'session_id');
 		$user_data = $this->_get_more_non_empty($keys);
-		$user_is_exist = $this->_check_user_exists($user_data['username']);
-		$passwd_is_right = $this->_check_passwd($user_data['username'], $this->_passwd_encryption($user_data['passwd']));
-		if ($user_is_exist && $passwd_is_right){
-			$user_info = array_merge($user_is_exist, $this->_get_user_info($user_is_exist['user_id']));
-			$return = $user_info;
-		}
-		else {
-			$return = array(
-					'errcode' => '1',
-					'msg' => '用户名密码错误',
-					); 
-		}
+		$key = $this->session->userdata('key');		
+
+		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
+
 		$return['apiver'] = $this->config->item('api_version');
 		$this->_json_output($return);
 	}	//}}}
-
-	function _check_user_exists ($username){	//检测用户名是否存在{{{
-		$where = array('account_name' => $username);
-		$user_result = $this->mag_db->row(ACCOUNT_TABLE, $where);
-		if ($user_result == array())
-			return	false;
-		else
-			return $user_result;
-	}	//}}}
-
-	function _check_passwd ($username, $passwd){	//检测用户密码是否匹配{{{
-		$where = array('account_name' => $username);
-		$user_result = $this->mag_db->row(ACCOUNT_TABLE, $where);
-		if ($passwd == $user_result['account_passwd'])
-			return true;
-		else
-			return false;
-	}	//}}}
-
+        function getKey (){
+		$session_id = $this->session->userdata('session_id');
+		$key = $this->_generate_key();
+		$this->session->set_userdata('key',$key);
+		$return['session_id']=$session_id;
+		$return['key']=$key;
+		$this->_json_output($return);
+	}
+	function _generate_key(){
+		return 'aaaa';
+	}
 	function _get_user_info ($user_id){	//获得user表里用户的详细信息{{{
 		$where = array('user_id' => $user_id);
 		$user_info = $this->mag_db->row(USER_TABLE, $where);	
