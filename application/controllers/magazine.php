@@ -95,7 +95,6 @@ class Magazine extends MY_Controller {
 		return $passwd;
 	}	//}}}
 	
-	
 	function config (){ //{{{
 		$base_config = array(
 				'apiver' => $this->config->item('api_version'),
@@ -154,25 +153,79 @@ class Magazine extends MY_Controller {
 	}	//}}}
 
 	function mag_list(){	//{{{
+		$key = array('start', 'limit');
+		$from_url = $this->_get_more_non_empty($key);
+		$from_url['type'] = $this->input->get('type');
+		if ($from_url['type']){
+			$where = array('mag_category' => $from_url['type']);
+		}
+		else {
+			$where = array();
+			$from_url['type'] = null;
+		}
 		$mag_list = array(
 				'apiver' => $this->config->item('api_version'),
 				'errcode' => '0',
-				'data' => $this->_get_mag_list(),
-				'extra' => $this->_mag_list_extra(),
+				'data' => $this->_get_mag_list($where, $from_url),
+				'extra' => $this->_mag_list_extra($where, $from_url),
 				);
 		$this->_json_output($mag_list);
 	}	//}}}
 
-	function _get_mag_list(){	//{{{
-		$key = array('type', 'start', 'limit');
-		$from_url = $this->_get_more_non_empty($key);
-//		$where = $from_url['type'] ? array('mag_category' => $from_url['type']) : array();
-		$where = array('mag_category' => $from_url['type']);
-		$mag_list = $this->mag_db->rows(MAGAZINE_TABLE, $where);
+	function _get_mag_list($where, $from_url = null){	//获取杂志列表结果{{{
+		if ($from_url){
+			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where, $from_url['limit'], $from_url['start']);
+		}
+		else{
+			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where);
+		}
+		$mag_list = $this->_get_mag_download($mag_list);
+		if (!empty($mag_list['edit_index_img'])){
+			$mag_list['edit_index_img'] = explode(',', trim($mag_list['edit_index_img']));
+		}
+		return $mag_list;
+	}	//}}}	
+
+	function _get_mag_download($mag_list){	//拼出杂志下载地址{{{
+		foreach($mag_list as &$mag){
+			if ($mag['filepath'] && $mag['filename_ftp'])
+				$mag['download'] = $this->config->item('file_hosts').$mag['filepath'].$mag['filename_ftp'];
+			else
+				$mag['download'] = null;
+		}	
 		return $mag_list;
 	}	//}}}
-	
-	function _mag_list_extra(){
-		return "1";
-	}
+
+	function _mag_list_extra($where, $from_url){	//杂志列表附加值{{{
+		$total = $this->mag_db->total(MAGAZINE_TABLE, $where);
+		return array(
+				'type' => $from_url['type'],
+				'start' => $from_url['start'],
+				'limit' => $from_url['limit'],
+				'total' => $total,
+				);;
+	}	//}}}
+
+	function detail(){	//{{{
+		$id = $this->_get_non_empty('id');
+		$where = array(MAGAZINE_TABLE.'.magazine_id' => $id);
+		$detail = array(
+				'apiver' => $this->config->item('api_version'),
+				'errcode' => '0',
+				'data' => $this->_get_mag_list($where),
+				);	
+		$this->_json_output($detail);
+	}	//}}}
+
+	function download(){	//获取杂志下载地址{{{
+		$id = $this->_get_non_empty('id');
+		$where = array(MAGAZINE_TABLE.'.magazine_id' => $id);
+		$mag = $this->_get_mag_list($where);
+		if ($mag != array())
+			$return = $mag[0]['download'];
+		else
+			$return = null;
+		$this->_json_output($return);
+	}	//}}}
 }
+
