@@ -48,7 +48,7 @@ class Magazine extends MY_Controller {
 		$this->_json_output($return);
 	}
 	function _generate_key(){
-		return 'aaaa';
+		return random_string('alnum',7);
 	}
 	function _get_user_info ($user_id){	//获得user表里用户的详细信息{{{
 		$where = array('user_id' => $user_id);
