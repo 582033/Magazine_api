@@ -7,7 +7,7 @@ class Magazine extends MY_Controller {
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->library('session');
-		$this->load->model('user_model');
+		$this->load->model('User_Model');
 		$this->load->config();
 	}	//}}}
 
@@ -20,7 +20,7 @@ class Magazine extends MY_Controller {
 	}	//}}}
 
 	function reg (){	//{{{
-		$keys = array('username', 'passwd', 'sessionid');
+		$keys = array('username', 'passwd', 'session_id');
 		$user_data = $this->_get_more_non_empty($keys);
 
 		$return = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
@@ -39,21 +39,18 @@ class Magazine extends MY_Controller {
 		$return['apiver'] = $this->config->item('api_version');
 		$this->_json_output($return);
 	}	//}}}
-        function getKey (){
+
+	function getKey (){	//{{{
 		$session_id = $this->session->userdata('session_id');
 		$key = $this->_generate_key();
 		$this->session->set_userdata('key',$key);
 		$return['session_id']=$session_id;
 		$return['key']=$key;
 		$this->_json_output($return);
-	}
-	function _generate_key(){
+	}	//}}}
+
+	function _generate_key(){	//{{{
 		return random_string('alnum',7);
-	}
-	function _get_user_info ($user_id){	//获得user表里用户的详细信息{{{
-		$where = array('user_id' => $user_id);
-		$user_info = $this->mag_db->row(USER_TABLE, $where);	
-		return $user_info;
 	}	//}}}
 	
 	function _passwd_encryption ($passwd){	//密码加密{{{
