@@ -1,7 +1,7 @@
 <?php
 
 class Magazine extends MY_Controller {
-
+	public $apiver = '';
 
 	function Magazine (){	//{{{
 		parent::__construct();
@@ -9,6 +9,7 @@ class Magazine extends MY_Controller {
 		$this->load->library('session');
 		$this->load->model('User_Model');
 		$this->load->config();
+		$this->apiver = $this->config->item('api_version');
 	}	//}}}
 
 	function _get_more_non_empty ($more){	//{{{
@@ -26,10 +27,11 @@ class Magazine extends MY_Controller {
 		$userdata = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
 		$userdata['session_id'] = $this->session->userdata('session_id');
 		$return = array(
-				'apiver' => $this->config->item('api_version'),
+				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $userdata,
 				);
+		
 		$this->_json_output($return);
 	}	//}}}
 
@@ -40,7 +42,6 @@ class Magazine extends MY_Controller {
 
 		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
 
-		$return['apiver'] = $this->config->item('api_version');
 		$return['session_id'] = $this->session->userdata('session_id');
 		$this->_json_output($return);
 	}	//}}}
@@ -64,7 +65,7 @@ class Magazine extends MY_Controller {
 	
 	function config (){ //{{{
 		$base_config = array(
-				'apiver' => $this->config->item('api_version'),
+				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $this->_api_config(),
 				'extra' => $this->_config_extra(),
@@ -99,7 +100,7 @@ class Magazine extends MY_Controller {
 
 	function category (){	//{{{
 		$category = array(
-				'apiver' => $this->config->item('api_version'),
+				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $this->_get_category_list(),
 				);
@@ -131,7 +132,7 @@ class Magazine extends MY_Controller {
 			$from_url['type'] = null;
 		}
 		$mag_list = array(
-				'apiver' => $this->config->item('api_version'),
+				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $this->_get_mag_list($where, $from_url),
 				'extra' => $this->_mag_list_extra($where, $from_url),
@@ -177,7 +178,7 @@ class Magazine extends MY_Controller {
 		$id = $this->_get_non_empty('id');
 		$where = array(MAGAZINE_TABLE.'.magazine_id' => $id);
 		$detail = array(
-				'apiver' => $this->config->item('api_version'),
+				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $this->_get_mag_list($where),
 				);	
@@ -195,6 +196,17 @@ class Magazine extends MY_Controller {
 		$this->_json_output($return);
 	}	//}}}
 
+/*	
+	function _mag_list_extra(){
+		return 1;
+	}
+*/
+	
+	
+	
+	
+	
+	
 	
 	/*喜欢接口*/
 	function _loved_check($loved_id, $user_id, $loved_type){
@@ -210,22 +222,23 @@ class Magazine extends MY_Controller {
 			return $row;
 		}
 	}
+	
 	function love(){
-		$loved_id = $this->input->get('loved_id');
-		$user_id = $this->input->get('user_id');
-		$loved_type = $this->input->get('loved_type');
+		$loved_id = $this->_get_non_empty('loved_id');
+		$user_id = $this->_get_non_empty('user_id');
+		$loved_type = $this->_get_non_empty('loved_type');
 		$result = $this->_loved_check($loved_id,$user_id,$loved_type);
 		$data = array('loved_id' => $loved_id, 'user_id' => $user_id, 'loved_type' => $loved_type);
 		if($result == 'empty'){
 			$this->mag_db->insert_row(USER_LOVE_TABLE,$data);
 			$item = array(
-						'apiver' => $this->config->item('api_version'),
+						'apiver' => $this->apiver,
 						'errcode' => '0',
 						'data' => $data,
 						);
 		}else{
 			$item = array(
-						'apiver' => $this->config->item('api_version'),
+						'apiver' => $this->apiver,
 						'errcode' => '1',
 						'data' => null,
 						'msg' => '您已经喜欢过这个元素了',
@@ -233,9 +246,45 @@ class Magazine extends MY_Controller {
 		}
 		$this->_json_output($item);
 	}
-	function _get_loved_nums(){
-		
+	
+	function get_loved_nums(){
+		$user_id = $this->_get_non_empty('user_id');
+		$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
+		$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
+		$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
+		$result_mag = $this->mag_db->total(USER_LOVE_TABLE, $where_mag);			//收藏的杂志
+		$result_author = $this->mag_db->total(USER_LOVE_TABLE, $where_author);		//订阅的作者
+		$result_elem = $this->mag_db->total(USER_LOVE_TABLE, $where_elem);			//喜欢的元素
+		$item = array(
+					'apiver' => $this->apiver,
+					'data' => array(
+								'mag_num' => $result_mag,
+								'author_num' => $result_author,
+								'elem_num' => $result_elem,
+								),
+					);
+		$this->_json_output($item);
 	}
 	
+	function get_loved_data(){
+//		limit start type user_id
+		
+		$user_id = $this->_get_non_empty('user_id');
+		$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
+		$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
+		$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
+		$result_mag = $this->mag_db->rows(USER_LOVE_TABLE,$where_mag);
+		$result_author = $this->mag_db->rows(USER_LOVE_TABLE,$where_author);
+		$result_elem = $this->mag_db->rows(USER_LOVE_TABLE,$where_elem);
+		$item = array(
+					'apiver' => $this->apiver,
+					'data' => array(
+								'loved_mag' => $result_mag,
+								'loved_author' => $result_author,
+								'loved_elem' => $result_elem,
+								),
+					);
+		$this->_json_output($item);
+	}
 }
 
