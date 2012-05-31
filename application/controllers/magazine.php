@@ -3,15 +3,28 @@
 class Magazine extends MY_Controller {
 	public $apiver = '';
 
+
+	
 	function Magazine (){	//{{{
 		parent::__construct();
 		$this->load->model('mag_db');
-		$this->load->library('session');
 		$this->load->model('User_Model');
 		$this->load->config();
 		$this->apiver = $this->config->item('api_version');
-	}	//}}}
 
+		$this->_get_session();
+	}	//}}}
+	function _get_session(){
+                if(!session_id()) {
+                       session_start(); 
+                       $sid=session_id();
+                }else{
+                        $sid = $this->_get_non_empty('session_id');
+                        session_id($sid);
+                        session_start(); 
+                        if(!session_id()) {session_start();} 
+                }
+	}
 	function _get_more_non_empty ($more){	//{{{
 		$result = array();
 		foreach ($more as $data){
@@ -38,7 +51,7 @@ class Magazine extends MY_Controller {
 	function login (){ //{{{
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
-		$key = $this->session->userdata('key');		
+		$key = $_SESSION['key'];		
 
 		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
 
@@ -47,10 +60,9 @@ class Magazine extends MY_Controller {
 	}	//}}}
 
 	function getKey (){	//{{{
-		$session_id = $this->session->userdata('session_id');
 		$key = $this->_generate_key();
-		$this->session->set_userdata('key',$key);
-		$return['session_id']=$session_id;
+		$_SESSION['key'] = $key;
+		$return['session_id']=session_id();
 		$return['key']=$key;
 		$this->_json_output($return);
 	}	//}}}
