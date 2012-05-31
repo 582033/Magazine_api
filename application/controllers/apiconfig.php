@@ -1,7 +1,7 @@
 <?php
 
 class ApiConfig extends MY_Controller {
-	
+	$apiver = '';	
         function ApiConfig (){   //{{{
                 parent::__construct();
                 $this->load->config();
