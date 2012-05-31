@@ -47,6 +47,22 @@ class mag_db extends CI_Model {
 		return $result;
 	}	//}}}
 
+	function loved_rows ($user_love, $table2, $field, $where, $limit = NULL, $start = NULL){
+		$this->db
+				->from($user_love)
+				->join($table2, $user_love.".loved_id=".$table2.".".$field)
+				->where($where);
+		if ($limit){
+			$this->db
+					->limit($limit)
+					->offset($start);
+		}
+		$result = $this->db
+				->get()
+				->result_array();
+		return $result;
+	}
+	
 	function total ($table, $where){	//统计数量{{{
 		$return = $this->db
 				->from($table)
