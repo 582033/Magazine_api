@@ -59,5 +59,6 @@ class mag_db extends CI_Model {
 		$row = $this->db->insert($table, $data);
 		return $this->db->insert_id();
 	}	//}}}
-
+	
+	
 }

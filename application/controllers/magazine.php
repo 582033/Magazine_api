@@ -268,8 +268,37 @@ class Magazine extends MY_Controller {
 	
 	function get_loved_data(){
 //		limit start type user_id
-		
 		$user_id = $this->_get_non_empty('user_id');
+		$type = $this->input->get('type');
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		if (!$type){
+				$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
+				$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
+				$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
+				$result_mag = $this->mag_db->rows(USER_LOVE_TABLE,$where_mag,$limit,$start);
+				$result_author = $this->mag_db->rows(USER_LOVE_TABLE,$where_author,$limit,$start);
+				$result_elem = $this->mag_db->rows(USER_LOVE_TABLE,$where_elem,$limit,$start);
+				$item = array(
+							'apiver' => $this->apiver,
+							'data' => array(
+											'loved_mag' => $result_mag,
+											'loved_elem' => $result_elem,
+											'loved_author' => $result_author,
+											),
+							);
+				$this->_json_output($item);
+		}else{
+				$where = array('user_id' => $user_id, 'loved_type' => $type);
+				$result = $this->mag_db->rows(USER_LOVE_TABLE,$where,$limit,$start);
+				$item = array(
+							'apiver' => $this->apiver,
+							'data' => array('loved_obj' => $result),
+							);
+				$this->_json_output($item);
+
+		}
+/*
 		$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
 		$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
 		$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
@@ -285,6 +314,7 @@ class Magazine extends MY_Controller {
 								),
 					);
 		$this->_json_output($item);
+*/
 	}
 }
 
