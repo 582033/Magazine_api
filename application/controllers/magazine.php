@@ -20,23 +20,28 @@ class Magazine extends MY_Controller {
 	}	//}}}
 
 	function reg (){	//{{{
-		$keys = array('username', 'passwd', 'session_id');
+		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
 
-		$return = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
-		
-		$return['apiver'] = $this->config->item('api_version');
+		$userdata = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
+		$userdata['session_id'] = $this->session->userdata('session_id');
+		$return = array(
+				'apiver' => $this->config->item('api_version'),
+				'errcode' => '0',
+				'data' => $userdata,
+				);
 		$this->_json_output($return);
 	}	//}}}
 
 	function login (){ //{{{
-		$keys = array('username', 'passwd', 'session_id');
+		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
 		$key = $this->session->userdata('key');		
 
 		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
 
 		$return['apiver'] = $this->config->item('api_version');
+		$return['session_id'] = $this->session->userdata('session_id');
 		$this->_json_output($return);
 	}	//}}}
 
@@ -189,5 +194,6 @@ class Magazine extends MY_Controller {
 			$return = null;
 		$this->_json_output($return);
 	}	//}}}
+
 }
 
