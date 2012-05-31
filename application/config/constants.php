@@ -87,5 +87,6 @@ define('DICTIONARY_TABLE', 'dictionary');
 define('DICTIONARY_DEFINE_TABLE', 'dictionary_define');
 define('MAGAZINE_TABLE', 'magazine');
 define('MAG_FILE_TABLE', 'mag_file');
+define('USER_LOVE_TABLE', 'user_love');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

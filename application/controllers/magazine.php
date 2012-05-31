@@ -136,7 +136,7 @@ class Magazine extends MY_Controller {
 				'data' => $this->_get_mag_list($where, $from_url),
 				'extra' => $this->_mag_list_extra($where, $from_url),
 				);
-		$this->_json_output($mag_list);
+		$this->_json_output($mag_list); 
 	}	//}}}
 
 	function _get_mag_list($where, $from_url = null){	//获取杂志列表结果{{{
@@ -195,5 +195,47 @@ class Magazine extends MY_Controller {
 		$this->_json_output($return);
 	}	//}}}
 
+	
+	/*喜欢接口*/
+	function _loved_check($loved_id, $user_id, $loved_type){
+		$where = array(
+					'loved_id' => $loved_id,
+					'user_id' => $user_id,
+					'loved_type' => $loved_type,
+					);
+		$row = $this->mag_db->row(USER_LOVE_TABLE, $where);
+		if ($row == array()){
+			return 'empty';
+		}else{
+			return $row;
+		}
+	}
+	function love(){
+		$loved_id = $this->input->get('loved_id');
+		$user_id = $this->input->get('user_id');
+		$loved_type = $this->input->get('loved_type');
+		$result = $this->_loved_check($loved_id,$user_id,$loved_type);
+		$data = array('loved_id' => $loved_id, 'user_id' => $user_id, 'loved_type' => $loved_type);
+		if($result == 'empty'){
+			$this->mag_db->insert_row(USER_LOVE_TABLE,$data);
+			$item = array(
+						'apiver' => $this->config->item('api_version'),
+						'errcode' => '0',
+						'data' => $data,
+						);
+		}else{
+			$item = array(
+						'apiver' => $this->config->item('api_version'),
+						'errcode' => '1',
+						'data' => null,
+						'msg' => '您已经喜欢过这个元素了',
+						);
+		}
+		$this->_json_output($item);
+	}
+	function _get_loved_nums(){
+		
+	}
+	
 }
 
