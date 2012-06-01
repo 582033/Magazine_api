@@ -62,8 +62,8 @@ class ApiConfig extends MY_Controller {
         function _api_visitor (){       //{{{
                 $return = array(
                                 'category' => '/magazine/category',
-                                'mag_list' => '/magazine/mag_list?type=&start=&limit=',
-                                'download' => '/magazine/download?id=1',
+                                'mag_list' => '/magazine/mag_list',
+                                'download' => '/magazine/download',
                                 );
 
                 return $return;

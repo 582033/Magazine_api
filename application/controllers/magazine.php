@@ -123,9 +123,12 @@
 			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where);
 		}
 		$mag_list = $this->_get_mag_download($mag_list);
-		if (!empty($mag_list['edit_index_img'])){
-			$mag_list['edit_index_img'] = explode(',', trim($mag_list['edit_index_img']));
+		foreach ($mag_list as &$mag){
+			if ($mag['edit_index_img']){
+				$mag['edit_index_img'] = explode(',', trim($mag['edit_index_img']));
+			}
 		}
+		if ($mag_list == array()) $mag_list = null;
 		return $mag_list;
 	}	//}}}	
 
