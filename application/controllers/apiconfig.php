@@ -2,7 +2,7 @@
 
 class ApiConfig extends MY_Controller {
 
-	$apiver = '';	
+	var	$apiver;	
 
         function ApiConfig (){   //{{{
                 parent::__construct();
