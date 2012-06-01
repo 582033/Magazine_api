@@ -1,17 +1,26 @@
-<?php
-
-class Magazine extends MY_Controller {
+<?php class Magazine extends MY_Controller { 
 	public $apiver = '';
-
-	function Magazine (){	//{{{
+	
+	function Magazine (){	//{{{ 
 		parent::__construct();
 		$this->load->model('mag_db');
-		$this->load->library('session');
 		$this->load->model('User_Model');
 		$this->load->config();
 		$this->apiver = $this->config->item('api_version');
+		$this->_get_session();
 	}	//}}}
 
+	function _get_session(){
+                if(!session_id()) {
+                       session_start(); 
+                       $sid=session_id();
+                }else{
+                        $sid = $this->_get_non_empty('session_id');
+                        session_id($sid);
+                        session_start(); 
+                        if(!session_id()) {session_start();} 
+                }
+	}
 	function _get_more_non_empty ($more){	//{{{
 		$result = array();
 		foreach ($more as $data){
@@ -38,7 +47,7 @@ class Magazine extends MY_Controller {
 	function login (){ //{{{
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
-		$key = $this->session->userdata('key');		
+		$key = $_SESSION['key'];		
 
 		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
 
@@ -47,10 +56,9 @@ class Magazine extends MY_Controller {
 	}	//}}}
 
 	function getKey (){	//{{{
-		$session_id = $this->session->userdata('session_id');
 		$key = $this->_generate_key();
-		$this->session->set_userdata('key',$key);
-		$return['session_id']=$session_id;
+		$_SESSION['key'] = $key;
+		$return['session_id']=session_id();
 		$return['key']=$key;
 		$this->_json_output($return);
 	}	//}}}
@@ -196,20 +204,31 @@ class Magazine extends MY_Controller {
 		$this->_json_output($return);
 	}	//}}}
 
-/*	
-	function _mag_list_extra(){
-		return 1;
-	}
-*/
+	function ads(){		//广告接口{{{
+		$keys = array('start', 'limit');
+		$items = $this->_get_more_non_empty($keys);
+		$items['position'] = $this->input->get('position');
+		$return = array(
+				'apiver' => $this->config->item('api_version'),
+				'errcode' => '0',
+				'data' => $this->_get_ads_links($items),
+				);
+		$this->_json_output($return);
+	}	//}}}
+
+	function _get_ads_links($items){	//获取广告内容{{{
+		$where = array('position' => $items['position']);
+		$return = $this->mag_db->rows(AD_TABLE, $where, $items['limit'], $items['start']);
+		if ($return == array()) $return = null;
+		return $return;
+	}	//}}}
 	
 	
 	
 	
 	
 	
-	
-	/*喜欢接口*/
-	function _loved_check($loved_id, $user_id, $loved_type){
+	function _loved_check($loved_id, $user_id, $loved_type){		//喜欢接口{{{
 		$where = array(
 					'loved_id' => $loved_id,
 					'user_id' => $user_id,
@@ -221,53 +240,54 @@ class Magazine extends MY_Controller {
 		}else{
 			return $row;
 		}
-	}
+	}		//}}}
 	
-	function love(){					//喜欢
+	function love(){					//喜欢		//{{{
 		$loved_id = $this->_get_non_empty('loved_id');
-		$user_id = $this->_get_non_empty('user_id');
+		$user_id = $_SESSION['user_id'];
 		$loved_type = $this->_get_non_empty('loved_type');
 		$result = $this->_loved_check($loved_id,$user_id,$loved_type);
 		$data = array('loved_id' => $loved_id, 'user_id' => $user_id, 'loved_type' => $loved_type);
 		if($result == 'empty'){
 			$this->mag_db->insert_row(USER_LOVE_TABLE,$data);
-			$item = array(
+			$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => '0',
 						'data' => $data,
 						);
 		}else{
-			$item = array(
+			$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => '1',
 						'data' => null,
-						'msg' => '您已经喜欢过这个元素了',
+						'msg' => '已经喜欢过这个元素了',
 						);
 		}
-		$this->_json_output($item);
-	}
+		$this->_json_output($return);
+	}		//}}}
 	
-	function get_loved_nums(){			//喜欢数量取得
-		$user_id = $this->_get_non_empty('user_id');
+	function get_loved_nums(){			//喜欢数量取得	{{{
+		$user_id = $_SESSION['user_id'];
 		$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
 		$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
 		$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
 		$result_mag = $this->mag_db->total(USER_LOVE_TABLE, $where_mag);			//收藏的杂志
 		$result_author = $this->mag_db->total(USER_LOVE_TABLE, $where_author);		//订阅的作者
 		$result_elem = $this->mag_db->total(USER_LOVE_TABLE, $where_elem);			//喜欢的元素
-		$item = array(
+		$return = array(
 					'apiver' => $this->apiver,
+					'errcode' => '0',
 					'data' => array(
 								'mag_num' => $result_mag,
 								'author_num' => $result_author,
 								'elem_num' => $result_elem,
 								),
 					);
-		$this->_json_output($item);
-	}
+		$this->_json_output($return);
+	}	//}}}
 	
-	function get_loved_data(){				//喜欢数据取得
-		$user_id = $this->_get_non_empty('user_id');
+	function get_loved_data(){				//喜欢数据取得	{{{
+		$user_id = $_SESSION['id'] = '1';
 		$type = $this->input->get('type');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
@@ -278,15 +298,15 @@ class Magazine extends MY_Controller {
 				$result_mag = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAGAZINE_TABLE,'magazine_id',$where_mag,$limit,$start);
 				$result_author = $this->mag_db->loved_rows(USER_LOVE_TABLE,USER_TABLE,'user_id',$where_author,$limit,$start);
 				$result_elem = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAG_ELEMENT_TABLE,'mag_element_id',$where_elem,$limit,$start);
-				$item = array(
+				$return = array(
 							'apiver' => $this->apiver,
+							'errcode' => '0',
 							'data' => array(
 											'loved_mag' => $result_mag,
 											'loved_elem' => $result_elem,
 											'loved_author' => $result_author,
 											),
 							);
-				$this->_json_output($item);
 		}else{
 				$where = array('user_love.user_id' => $user_id, 'loved_type' => $type);
 				if ($type == 'element'){
@@ -298,14 +318,45 @@ class Magazine extends MY_Controller {
 				}else{
 					$result = NULL;
 				}
-				$item = array(
+				$return = array(
 							'apiver' => $this->apiver,
+							'errcode' => '0',
 							'data' => $result,
 							);
-				$this->_json_output($item);
+				if ($return['data'] == 'null'){
+					$return['errcode'] = '1';
+					$return['data'] = null;
+				}
 		}
-	}
+		$this->_json_output($return);
+	}	//}}}
 	
-	
+	function comment(){ //{{{		杂志评论
+		$now = new DateTime;
+		$date = $now->format("Y-m-d H:i:s");
+		$_SESSION['user_id'] = 2;
+		$user_id = $_SESSION['user_id'];
+		$com_data = $this->input->post('data');
+//		$com_data = '{"magazine_id":"1","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
+		$data = json_decode($com_data, true);
+		$data['send_time'] = $date;
+		$data['user_id'] = $user_id;
+		$result = $this->mag_db->insert_row(USER_COMMENT_TABLE, $data);
+		if (!$result){
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '1',
+						'msg' => '操作不成功',
+						'data' => null,
+						);
+		}else{
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $data,
+						);
+		}
+		$this->_json_output($return);
+	}	//}}}
 }
 

@@ -44,6 +44,7 @@ class User_Model extends mag_db {
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
 				$user_info = array_merge($user_is_exist, $this->_get_user_info($user_is_exist['user_id']));
+				$_SESSION['user_id'] = $user_is_exist['user_id'];
 				return $user_info;
 			 }
 			 else {
