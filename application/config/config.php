@@ -406,5 +406,14 @@ $config['mq_pass'] = 'guest';
 $config['api_version'] = "1";
 $config['api_hosts'] = "http://api.1001s.cn";
 $config['file_hosts'] = "http://file.1001s.cn";
+$config['regurl'] = 'http://www.1001s.cn/reg';
+$config['keyurl'] = 'http://api.1001s.cn/magazine/getkey';
+$config['loginurl'] = 'http://api.1001s.cn/magazine/login';
+$config['ftpurl'] = 'ftp.1001s.cn';
+$config['ftpport'] = '21';
+$config['uploadcurl'] = 'http://api.1001s.cn/magazine/uploadfile';
+$config['manageurl'] = 'http://www.1001s.cn/userCenter';
+$config['toolversion'] = '1.0'; 
+ 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

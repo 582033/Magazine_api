@@ -1,16 +1,17 @@
 <?php class Magazine extends MY_Controller { 
-	public $apiver = '';
+
+	var $apiver;
 	
 	function Magazine (){	//{{{ 
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
-		$this->load->config();
+		$this->load->model('Ads_Model');
 		$this->apiver = $this->config->item('api_version');
 		$this->_get_session();
 	}	//}}}
 
-	function _get_session(){
+	function _get_session(){	//{{{
                 if(!session_id()) {
                        session_start(); 
                        $sid=session_id();
@@ -20,7 +21,8 @@
                         session_start(); 
                         if(!session_id()) {session_start();} 
                 }
-	}
+	}	//}}}
+
 	function _get_more_non_empty ($more){	//{{{
 		$result = array();
 		foreach ($more as $data){
@@ -69,41 +71,6 @@
 	
 	function _passwd_encryption ($passwd){	//密码加密{{{
 		return $passwd;
-	}	//}}}
-	
-	function config (){ //{{{
-		$base_config = array(
-				'apiver' => $this->apiver,
-				'errcode' => '0',
-				'data' => $this->_api_config(),
-				'extra' => $this->_config_extra(),
-				);
-		$this->_json_output($base_config);
-	}	//}}}
-
-	function _config_extra (){	//{{{
-		$return = array(
-				'api_hosts' => $this->config->item('api_hosts'),
-				'file_hosts' => $this->config->item('file_hosts'),
-				);	
-		return $return;
-	}	//}}}
-
-	function _api_config (){ //{{{
-		$return = array(
-				'visitor' => $this->_api_visitor(),
-				);
-		return $return;
-	} //}}}
-
-	function _api_visitor (){	//{{{
-		$return = array(
-				'category' => '/magazine/category',
-				'mag_list' => '/magazine/mag_list?type=&start=&limit=',
-				'download' => '/magazine/download?id=1',
-				);
-
-		return $return;
 	}	//}}}
 
 	function category (){	//{{{
@@ -156,9 +123,12 @@
 			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where);
 		}
 		$mag_list = $this->_get_mag_download($mag_list);
-		if (!empty($mag_list['edit_index_img'])){
-			$mag_list['edit_index_img'] = explode(',', trim($mag_list['edit_index_img']));
+		foreach ($mag_list as &$mag){
+			if ($mag['edit_index_img']){
+				$mag['edit_index_img'] = explode(',', trim($mag['edit_index_img']));
+			}
 		}
+		if ($mag_list == array()) $mag_list = null;
 		return $mag_list;
 	}	//}}}	
 
@@ -211,18 +181,10 @@
 		$return = array(
 				'apiver' => $this->config->item('api_version'),
 				'errcode' => '0',
-				'data' => $this->_get_ads_links($items),
+				'data' => $this->Ads_Model->_get_ads_links($items),
 				);
 		$this->_json_output($return);
 	}	//}}}
-
-	function _get_ads_links($items){	//获取广告内容{{{
-		$where = array('position' => $items['position']);
-		$return = $this->mag_db->rows(AD_TABLE, $where, $items['limit'], $items['start']);
-		if ($return == array()) $return = null;
-		return $return;
-	}	//}}}
-	
 	
 	
 	

@@ -1,10 +1,9 @@
 <?php
 class User_Model extends mag_db {
 
-
-        function  __construct(){
-             parent::__construct();
-    	}
+	function  __construct(){
+		 parent::__construct();
+	}
 
 	function regasReader ($username,$passwd){   //注册为读者{{{
 		$user_is_exist = $this-> _get_user_by_accountname($username);
