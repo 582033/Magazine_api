@@ -1,13 +1,16 @@
 <?php
 
 class ApiConfig extends MY_Controller {
+
 	$apiver = '';	
+
         function ApiConfig (){   //{{{
                 parent::__construct();
                 $this->load->config();
                 $this->apiver = $this->config->item('api_version');
 
         }       //}}}
+
 	function tool(){    //{{{
 		$base_config =  array(
                                 'errcode' => '0',
@@ -16,6 +19,7 @@ class ApiConfig extends MY_Controller {
 			
 		$this->_json_output($base_config);		
 	}      //}}}
+
 	function client(){  //{{{
                 $base_config = array(
                                 'apiver' => $this->apiver,
@@ -25,9 +29,10 @@ class ApiConfig extends MY_Controller {
                                 );
                 $this->_json_output($base_config);
 	}      //}}}
+
 	function _tool_config(){ //{{{
 		$return = array(
-                                'regurl' => $this->config->item('regurl'),
+				'regurl' => $this->config->item('regurl'),
 				'keyurl' => $this->config->item('keyurl'),
 				'loginurl' => $this->config->item('loginurl'),
 				'ftpurl' => $this->config->item('ftpurl'),

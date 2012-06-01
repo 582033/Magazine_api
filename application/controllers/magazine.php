@@ -1,16 +1,18 @@
 <?php class Magazine extends MY_Controller { 
+
 	public $apiver = '';
 	
 	function Magazine (){	//{{{ 
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
+		$this->load->model('Ads_Model');
 		$this->load->config();
 		$this->apiver = $this->config->item('api_version');
 		$this->_get_session();
 	}	//}}}
 
-	function _get_session(){
+	function _get_session(){	//{{{
                 if(!session_id()) {
                        session_start(); 
                        $sid=session_id();
@@ -20,7 +22,8 @@
                         session_start(); 
                         if(!session_id()) {session_start();} 
                 }
-	}
+	}	//}}}
+
 	function _get_more_non_empty ($more){	//{{{
 		$result = array();
 		foreach ($more as $data){
@@ -178,18 +181,10 @@
 		$return = array(
 				'apiver' => $this->config->item('api_version'),
 				'errcode' => '0',
-				'data' => $this->_get_ads_links($items),
+				'data' => $this->ads_model->_get_ads_links($items),
 				);
 		$this->_json_output($return);
 	}	//}}}
-
-	function _get_ads_links($items){	//获取广告内容{{{
-		$where = array('position' => $items['position']);
-		$return = $this->mag_db->rows(AD_TABLE, $where, $items['limit'], $items['start']);
-		if ($return == array()) $return = null;
-		return $return;
-	}	//}}}
-	
 	
 	
 	
