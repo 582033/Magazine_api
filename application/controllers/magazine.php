@@ -290,7 +290,21 @@
 		$start = $this->_get_non_empty('start');
 		$type = $this->input->get('type');
 		$result = $this->mag_element_model->_get_mag_element($for, $limit, $start, $type);
-		$this->_json_output($result);
+		if ($result){
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $result,
+						);
+		}else{
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '1',
+						'data' => null,
+						'msg' => '操作错误,请查看参数是否正确',
+						);
+		}
+		$this->_json_output($return);
 	}//}}}
 }
 
