@@ -7,6 +7,8 @@
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
 		$this->load->model('Ads_Model');
+		$this->load->model('Mag_Model');
+		$this->load->model('Love_Model');
 		$this->apiver = $this->config->item('api_version');
 		$this->_get_session();
 	}	//}}}
@@ -77,22 +79,9 @@
 		$category = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
-				'data' => $this->_get_category_list(),
+				'data' => $this->Mag_Model->_get_category_list(),
 				);
 		$this->_json_output($category);
-	}	//}}}
-
-	function _get_category_list (){	//获取杂志分类{{{
-		$where = array('dic_name' => 'mag_category');
-		$category_list = $this->mag_db->rows(DICTIONARY_TABLE, $where);
-		$category_return = array();
-		foreach ($category_list as $cat){
-			$category_return[] = array(
-					'id' => $cat['dic_key'],
-					'name' => $cat['dic_value'],
-					);
-		}
-		return $category_return;
 	}	//}}}
 
 	function mag_list(){	//{{{
@@ -109,47 +98,10 @@
 		$mag_list = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
-				'data' => $this->_get_mag_list($where, $from_url),
-				'extra' => $this->_mag_list_extra($where, $from_url),
+				'data' => $this->Mag_Model->_get_mag_list($where, $from_url),
+				'extra' => $this->Mag_Model->_mag_list_extra($where, $from_url),
 				);
 		$this->_json_output($mag_list); 
-	}	//}}}
-
-	function _get_mag_list($where, $from_url = null){	//获取杂志列表结果{{{
-		if ($from_url){
-			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where, $from_url['limit'], $from_url['start']);
-		}
-		else{
-			$mag_list = $this->mag_db->mag_rows(MAGAZINE_TABLE, MAG_FILE_TABLE, $where);
-		}
-		$mag_list = $this->_get_mag_download($mag_list);
-		foreach ($mag_list as &$mag){
-			if ($mag['edit_index_img']){
-				$mag['edit_index_img'] = explode(',', trim($mag['edit_index_img']));
-			}
-		}
-		if ($mag_list == array()) $mag_list = null;
-		return $mag_list;
-	}	//}}}	
-
-	function _get_mag_download($mag_list){	//拼出杂志下载地址{{{
-		foreach($mag_list as &$mag){
-			if ($mag['filepath'] && $mag['filename_ftp'])
-				$mag['download'] = $this->config->item('file_hosts').$mag['filepath'].$mag['filename_ftp'];
-			else
-				$mag['download'] = null;
-		}	
-		return $mag_list;
-	}	//}}}
-
-	function _mag_list_extra($where, $from_url){	//杂志列表附加值{{{
-		$total = $this->mag_db->total(MAGAZINE_TABLE, $where);
-		return array(
-				'type' => $from_url['type'],
-				'start' => $from_url['start'],
-				'limit' => $from_url['limit'],
-				'total' => $total,
-				);;
 	}	//}}}
 
 	function detail(){	//{{{
@@ -186,29 +138,11 @@
 		$this->_json_output($return);
 	}	//}}}
 	
-	
-	
-	
-	
-	function _loved_check($loved_id, $user_id, $loved_type){		//喜欢接口{{{
-		$where = array(
-					'loved_id' => $loved_id,
-					'user_id' => $user_id,
-					'loved_type' => $loved_type,
-					);
-		$row = $this->mag_db->row(USER_LOVE_TABLE, $where);
-		if ($row == array()){
-			return 'empty';
-		}else{
-			return $row;
-		}
-	}		//}}}
-	
 	function love(){					//喜欢		//{{{
 		$loved_id = $this->_get_non_empty('loved_id');
 		$user_id = $_SESSION['user_id'];
 		$loved_type = $this->_get_non_empty('loved_type');
-		$result = $this->_loved_check($loved_id,$user_id,$loved_type);
+		$result = $this->Love_Model->_loved_check($loved_id,$user_id,$loved_type);
 		$data = array('loved_id' => $loved_id, 'user_id' => $user_id, 'loved_type' => $loved_type);
 		if($result == 'empty'){
 			$this->mag_db->insert_row(USER_LOVE_TABLE,$data);
