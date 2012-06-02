@@ -9,6 +9,7 @@
 		$this->load->model('Ads_Model');
 		$this->load->model('Mag_Model');
 		$this->load->model('Love_Model');
+		$this->load->model('mag_element_model');
 		$this->apiver = $this->config->item('api_version');
 		$this->_get_session();
 	}	//}}}
@@ -138,14 +139,14 @@
 		$this->_json_output($return);
 	}	//}}}
 	
-	function love(){					//喜欢		//{{{
+	function love(){					//喜欢		{{{
 		$loved_id = $this->_get_non_empty('loved_id');
 		$user_id = $_SESSION['user_id'];
 		$loved_type = $this->_get_non_empty('loved_type');
-		$result = $this->Love_Model->_loved_check($loved_id,$user_id,$loved_type);
+		$result = $this->Love_Model->_loved_check($loved_id, $user_id, $loved_type);
 		$data = array('loved_id' => $loved_id, 'user_id' => $user_id, 'loved_type' => $loved_type);
 		if($result == 'empty'){
-			$this->mag_db->insert_row(USER_LOVE_TABLE,$data);
+			$this->mag_db->insert_row(USER_LOVE_TABLE, $data);
 			$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => '0',
@@ -183,7 +184,7 @@
 	}	//}}}
 	
 	function get_loved_data(){				//喜欢数据取得	{{{
-		$user_id = $_SESSION['id'] = '1';
+		$user_id = $_SESSION['id'];
 		$type = $this->input->get('type');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
@@ -191,9 +192,9 @@
 				$where_mag = array('user_love.user_id' => $user_id, 'loved_type' => 'magazine');
 				$where_author = array('user_love.user_id' => $user_id, 'loved_type' => 'author');
 				$where_elem = array('user_love.user_id' => $user_id, 'loved_type' => 'element');
-				$result_mag = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAGAZINE_TABLE,'magazine_id',$where_mag,$limit,$start);
-				$result_author = $this->mag_db->loved_rows(USER_LOVE_TABLE,USER_TABLE,'user_id',$where_author,$limit,$start);
-				$result_elem = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAG_ELEMENT_TABLE,'mag_element_id',$where_elem,$limit,$start);
+				$result_mag = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAGAZINE_TABLE, 'magazine_id', $where_mag, $limit, $start);
+				$result_author = $this->mag_db->loved_rows(USER_LOVE_TABLE, USER_TABLE, 'user_id', $where_author, $limit, $start);
+				$result_elem = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAG_ELEMENT_TABLE, 'mag_element_id', $where_elem, $limit, $start);
 				$return = array(
 							'apiver' => $this->apiver,
 							'errcode' => '0',
@@ -206,11 +207,11 @@
 		}else{
 				$where = array('user_love.user_id' => $user_id, 'loved_type' => $type);
 				if ($type == 'element'){
-					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAG_ELEMENT_TABLE,'mag_element_id',$where,$limit,$start);
+					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAG_ELEMENT_TABLE, 'mag_element_id', $where, $limit, $start);
 				}else if ($type == 'author'){
-					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE,USER_TABLE,'user_id',$where,$limit,$start);
+					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, USER_TABLE, 'user_id', $where, $limit, $start);
 				}else if ($type == 'magazine'){
-					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE,MAGAZINE_TABLE,'magazine_id',$where,$limit,$start);
+					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAGAZINE_TABLE, 'magazine_id', $where, $limit, $start);
 				}else{
 					$result = NULL;
 				}
@@ -232,7 +233,7 @@
 		$date = $now->format("Y-m-d H:i:s");
 		$user_id = $_SESSION['user_id'];
 		$com_data = $this->input->post('data');
-		$com_data = '{"magazine_id":"2","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
+//		$com_data = '{"magazine_id":"2","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
 		$data = json_decode($com_data, true);
 		$data['send_time'] = $date;
 		$data['user_id'] = $user_id;
@@ -288,22 +289,7 @@
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
 		$type = $this->input->get('type');
-		if ($for == 'index'){
-			$order_by = 'weight desc';
-			if ($type == ''){
-				$where = array();
-			}else{
-				$where = array('element_type' => $type);
-			}
-		}else if ($for == 'list'){
-			$order_by = 'create_at desc';
-			if ($type == ''){
-				$where = array();
-			}else{
-				$where = array('element_type' => $type);
-			}
-		}
-		$result = $this->mag_db->elem_rows(MAG_ELEMENT_TABLE, $where, $limit, $start,$order_by);
+		$result = $this->mag_element_model->_get_mag_element($for, $limit, $start, $type);
 		$this->_json_output($result);
 	}//}}}
 }
