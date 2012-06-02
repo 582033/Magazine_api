@@ -8,11 +8,7 @@ class Mag_element_Model extends mag_db {
 	function _get_mag_element($for, $limit, $start, $type){		//喜欢接口{{{
 		if ($for == 'index'){
 			$order_by = 'weight desc';
-			if ($type == ''){
-				$where = array();
-			}else{
-				$where = array('element_type' => $type);
-			}
+			$where = array();
 		}else if ($for == 'list'){
 			$order_by = 'create_at desc';
 			if ($type == ''){
