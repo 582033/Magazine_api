@@ -230,14 +230,14 @@
 	function comment(){ //{{{		杂志评论
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
-		$_SESSION['user_id'] = 2;
 		$user_id = $_SESSION['user_id'];
 		$com_data = $this->input->post('data');
-//		$com_data = '{"magazine_id":"1","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
+		$com_data = '{"magazine_id":"2","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
 		$data = json_decode($com_data, true);
 		$data['send_time'] = $date;
 		$data['user_id'] = $user_id;
 		$result = $this->mag_db->insert_row(USER_COMMENT_TABLE, $data);
+		$item = $this->mag_db->row(USER_COMMENT_TABLE,array('user_comment_id' => $result));
 		if (!$result){
 			$return = array(
 						'apiver' => $this->apiver,
@@ -249,10 +249,62 @@
 			$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => '0',
-						'data' => $data,
+						'data' => $item,
 						);
 		}
 		$this->_json_output($return);
 	}	//}}}
+	
+	function get_user_comment(){//{{{         杂志评论取得
+		$user_id = $_SESSION['user_id'];
+		$magazine_id = $this->input->get('magazine_id');
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		if ($magazine_id == ''){
+			$where = array('user_id' => $user_id);
+		}else{
+			$where = array('user_id' => $user_id, 'magazine_id' => $magazine_id);
+		}
+		$result = $this->mag_db->rows(USER_COMMENT_TABLE, $where, $limit, $start);
+		if ($result){
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $result,
+						);
+		}else{
+			$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '1',
+						'data' => null,
+						'msg' => '操作不成功，请查看参数是否正确',
+						);
+		}
+		$this->_json_output($return);
+	}	//}}}
+	
+	function get_mag_element(){		//{{{		元素取得接口		
+		$for = $this->_get_non_empty('for');
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$type = $this->input->get('type');
+		if ($for == 'index'){
+			$order_by = 'weight desc';
+			if ($type == ''){
+				$where = array();
+			}else{
+				$where = array('element_type' => $type);
+			}
+		}else if ($for == 'list'){
+			$order_by = 'create_at desc';
+			if ($type == ''){
+				$where = array();
+			}else{
+				$where = array('element_type' => $type);
+			}
+		}
+		$result = $this->mag_db->elem_rows(MAG_ELEMENT_TABLE, $where, $limit, $start,$order_by);
+		$this->_json_output($result);
+	}//}}}
 }
 

@@ -30,7 +30,19 @@ class mag_db extends CI_Model {
 				->result_array();
 		return $result;
 	}	//}}}
-
+	
+	function elem_rows ($table, $where, $limit = NULL, $start = NULL, $order_by = 'mag_element_id asc'){
+		$result = $this->db
+						->from($table)
+						->where($where)
+						->order_by($order_by)
+						->limit($limit)
+						->offset($start)
+						->get()
+						->result_array(); 
+		return $result;
+	}
+	
 	function mag_rows ($mag, $magfile, $where, $limit = NULL, $start = NULL){	//获取杂志数据{{{
 		$this->db
 				->from($mag)
