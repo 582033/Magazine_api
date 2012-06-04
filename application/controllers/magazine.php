@@ -108,10 +108,11 @@
 	function detail(){	//{{{
 		$id = $this->_get_non_empty('id');
 		$where = array(MAGAZINE_TABLE.'.magazine_id' => $id);
+		$data = $this->Mag_Model->_get_mag_list($where);
 		$detail = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
-				'data' => $this->Mag_Model->_get_mag_list($where),
+				'data' => $data[0],
 				);	
 		$this->_json_output($detail);
 	}	//}}}

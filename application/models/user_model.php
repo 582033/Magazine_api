@@ -34,11 +34,18 @@ class User_Model extends mag_db {
 	} //}}}
 	
 	function login ($username, $passwd, $key){ //{{{
+		if ($key == null)
+		{
+			return array(
+					'errcode' => '1',
+					'msg' => '缺少key',
+					);	
+		}
 		$user_is_exist = $this->_get_user_by_accountname($username);
 		if(!$user_is_exist){
 		return array(
 					'errcode' => '1',
-					'msg' => '用户名密码错误',
+					'msg' => '用户不存在',
 					);	
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
@@ -71,7 +78,7 @@ class User_Model extends mag_db {
 	}       //}}}
 
 	function _passwd_encryption ($passwd){  //密码加密{{{
-		return $passwd;
+		return md5($passwd);
 	}       //}}}	
 
 }
