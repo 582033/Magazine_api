@@ -39,7 +39,7 @@
 		$user_data = $this->_get_more_non_empty($keys);
 
 		$userdata = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
-		$userdata['session_id'] = $this->session->userdata('session_id');
+		$userdata['session_id'] = session_id();
 		$return = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
@@ -55,8 +55,8 @@
 		$key = $_SESSION['key'];		
 
 		$return = $this->User_Model->login($user_data['username'], $user_data['passwd'], $key);
-
-		$return['session_id'] = $this->session->userdata('session_id');
+		
+		$return['session_id'] = session_id();
 		$this->_json_output($return);
 	}	//}}}
 
