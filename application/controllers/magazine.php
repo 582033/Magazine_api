@@ -50,11 +50,10 @@
 	}	//}}}
 
 	function login (){ //{{{
-		$keys = array('username', 'passwd');
-		$user_data = $this->_get_more_non_empty($keys);
-		$key = $_SESSION['key'];		
-
-		$return = $this->User_Model->login($user_data['username'], $user_data['passwd'], $key);
+		$key = $_SESSION['key'];	
+		$username = $this->_get_non_empty('username');
+		$passwd = md5(md5($this->_get_non_empty('passwd')).$key);
+		$return = $this->User_Model->login($username, $passwd, $key);
 		
 		$return['session_id'] = session_id();
 		$this->_json_output($return);

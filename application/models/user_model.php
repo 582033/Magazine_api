@@ -5,7 +5,7 @@ class User_Model extends mag_db {
 		 parent::__construct();
 	}
 
-	function regasReader ($username,$passwd){   //注册为读者{{{
+	function regasReader ($username, $passwd){   //注册为读者{{{
 		$user_is_exist = $this-> _get_user_by_accountname($username);
 		if (!$user_is_exist){
 			$user_id = $this->insert_row(USER_TABLE, array('user_type' => '0'));
