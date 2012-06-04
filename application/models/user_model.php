@@ -33,7 +33,7 @@ class User_Model extends mag_db {
 		return $return;
 	} //}}}
 	
-	function login ($username,$passwd,$key){ //{{{
+	function login ($username, $passwd, $key){ //{{{
 		$user_is_exist = $this->_get_user_by_accountname($username);
 		if(!$user_is_exist){
 		return array(

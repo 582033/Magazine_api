@@ -64,6 +64,8 @@ class ApiConfig extends MY_Controller {
                                 'category' => '/magazine/category',
                                 'mag_list' => '/magazine/mag_list',
                                 'download' => '/magazine/download',
+				'detail' => '/magazine/detail',
+				'login' => '/magazine/login',
                                 );
 
                 return $return;

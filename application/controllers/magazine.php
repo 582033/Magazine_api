@@ -17,7 +17,7 @@
 	function _get_session(){	//{{{
                 if(!session_id()) {
                        session_start(); 
-                       $sid=session_id();
+                       $sid = session_id();
                 }else{
                         $sid = $this->_get_non_empty('session_id');
                         session_id($sid);
@@ -54,7 +54,7 @@
 		$user_data = $this->_get_more_non_empty($keys);
 		$key = $_SESSION['key'];		
 
-		$return = $this->User_Model->login($user_data['username'],$user_data['passwd'],$key);
+		$return = $this->User_Model->login($user_data['username'], $user_data['passwd'], $key);
 
 		$return['session_id'] = $this->session->userdata('session_id');
 		$this->_json_output($return);
@@ -63,8 +63,8 @@
 	function getKey (){	//{{{
 		$key = $this->_generate_key();
 		$_SESSION['key'] = $key;
-		$return['session_id']=session_id();
-		$return['key']=$key;
+		$return['session_id'] = session_id();
+		$return['key'] = $key;
 		$this->_json_output($return);
 	}	//}}}
 
@@ -111,7 +111,7 @@
 		$detail = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
-				'data' => $this->_get_mag_list($where),
+				'data' => $this->Mag_Model->_get_mag_list($where),
 				);	
 		$this->_json_output($detail);
 	}	//}}}
@@ -119,7 +119,7 @@
 	function download(){	//获取杂志下载地址{{{
 		$id = $this->_get_non_empty('id');
 		$where = array(MAGAZINE_TABLE.'.magazine_id' => $id);
-		$mag = $this->_get_mag_list($where);
+		$mag = $this->Mag_Model->_get_mag_list($where);
 		if ($mag != array())
 			$return = $mag[0]['download'];
 		else
