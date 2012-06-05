@@ -11,19 +11,8 @@
 		$this->load->model('Love_Model');
 		$this->load->model('mag_element_model');
 		$this->apiver = $this->config->item('api_version');
-		$this->_get_session();
-	}	//}}}
-
-	function _get_session(){	//{{{
-                if(!session_id()) {
-                       session_start(); 
-                       $sid = session_id();
-                }else{
-                        $sid = $this->_get_non_empty('session_id');
-                        session_id($sid);
-                        session_start(); 
-                        if(!session_id()) {session_start();} 
-                }
+		$this->load->helper('session');
+		_get_session();
 	}	//}}}
 
 	function _get_more_non_empty ($more){	//{{{
@@ -50,7 +39,7 @@
 	}	//}}}
 
 	function login (){ //{{{
-		$key = $_SESSION['key'];	
+		@$key = $_SESSION['key'];
 		$username = $this->_get_non_empty('username');
 		$passwd = md5(md5($this->_get_non_empty('passwd')).$key);
 		$return = $this->User_Model->login($username, $passwd, $key);
