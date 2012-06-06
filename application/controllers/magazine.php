@@ -11,8 +11,8 @@
 		$this->load->model('Love_Model');
 		$this->load->model('mag_element_model');
 		$this->apiver = $this->config->item('api_version');
-		$this->load->helper('session');
-		_get_session();
+		session_start();
+		$this->load->model('get_session_model');
 	}	//}}}
 
 	function _get_more_non_empty ($more){	//{{{
@@ -39,6 +39,7 @@
 	}	//}}}
 
 	function login (){ //{{{
+		$this->get_session_model->_get_session();
 		@$key = $_SESSION['key'];
 		$username = $this->_get_non_empty('username');
 		$passwd = md5(md5($this->_get_non_empty('passwd')).$key);
