@@ -211,7 +211,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
@@ -414,6 +414,6 @@ $config['ftpport'] = '21';
 $config['uploadcurl'] = 'http://api.1001s.cn/magazine/uploadfile';
 $config['manageurl'] = 'http://www.1001s.cn/userCenter';
 $config['toolversion'] = '1.0'; 
- 
+$config['ftp_path'] = '/mnt/data3/ftp/';
 /* End of file config.php */
 /* Location: ./application/config/config.php */
