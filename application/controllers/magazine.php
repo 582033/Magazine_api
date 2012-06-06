@@ -10,6 +10,7 @@
 		$this->load->model('Mag_Model');
 		$this->load->model('Love_Model');
 		$this->load->model('mag_element_model');
+		$this->load->model('mag_file_model');
 		$this->apiver = $this->config->item('api_version');
 		$this->_get_session();
 	}	//}}}
@@ -306,5 +307,13 @@
 		}
 		$this->_json_output($return);
 	}//}}}
+	function uploadfile(){
+		
+		@$user_id = $_SESSION['user_id'];
+		$data = $this->input->post('data');
+		$file_data = json_decode($data, true);
+		$this->mag_file_model->save_mag_file($file_data,$user_id);
+
+	}
 }
 
