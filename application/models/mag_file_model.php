@@ -11,10 +11,10 @@ class Mag_file_model extends mag_db{
 		if($user_id == null){
 			return array('errcode' => '1','msg'=>'session 过期');
 		}
-		if(!_check_file($file_data,$user_id)){
+		if(!$this->_check_file($file_data,$user_id)){
 			return array('errcode' => '2','msg'=>'file error');
 		}
-		_save_mag_file_2db($file_data,$user_id);
+		$this->_save_mag_file_2db($file_data,$user_id);
 			
 		return array('errcode' => '0','msg'=>'success');
 

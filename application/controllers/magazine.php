@@ -302,7 +302,10 @@
 		@$user_id = $_SESSION['user_id'];
 		$data = $this->input->post('data');
 		$file_data = json_decode($data, true);
-		$this->mag_file_model->save_mag_file($file_data,$user_id);
+
+		$res = $this->mag_file_model->save_mag_file($file_data, $user_id);
+		$pubstr = file_get_contents("http://api.1001s.cn/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
+		$this->_json_output($res);
 
 	}
 }
