@@ -1,2 +1,3 @@
 application/var
 .sass-cache
+application/logs/*
