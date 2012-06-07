@@ -11,9 +11,8 @@
 		$this->load->model('Love_Model');
 		$this->load->model('mag_element_model');
 		$this->load->model('mag_file_model');
+		$this->load->library('session');
 		$this->apiver = $this->config->item('api_version');
-		session_start();
-		$this->load->model('get_session_model');
 	}	//}}}
 
 	function _get_more_non_empty ($more){	//{{{
@@ -23,13 +22,17 @@
 		}
 		return $result;
 	}	//}}}
-
+	function _no_session_result(){
+		return array('apiver' => $this->apiver,
+				'errcode' => '5',
+				'msg' => 'need session_id'
+			);
+	}
 	function reg (){	//{{{
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
 
 		$userdata = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
-		$userdata['session_id'] = session_id();
 		$return = array(
 				'apiver' => $this->apiver,
 				'errcode' => '0',
@@ -40,20 +43,26 @@
 	}	//}}}
 
 	function login (){ //{{{
-		$this->get_session_model->_get_session();
-		@$key = $_SESSION['key'];
-		$username = $this->_get_non_empty('username');
-		$passwd = md5(md5($this->_get_non_empty('passwd')).$key);
-		$return = $this->User_Model->login($username, $passwd, $key);
 		
-		$return['session_id'] = session_id();
+	    	if(!$this->session->checkAndRead()){
+			return $this->_no_session_result();
+		}
+		$key = $this->session->flashdata('key');
+		$username = $this->_get_non_empty('username');
+		$passwd = $this->_get_non_empty('passwd');
+		$return = $this->User_Model->login($username, $passwd, $key);
+		if(isset($return['user_id'])){
+			$this->session->set_userdata('user_id',$return['user_id']);
+		}
+		$return['session_id'] = $this->session->get_session_id();
 		$this->_json_output($return);
 	}	//}}}
 
 	function getKey (){	//{{{
 		$key = $this->_generate_key();
-		$_SESSION['key'] = $key;
-		$return['session_id'] = session_id();
+		$this->session->initSession();
+		$this->session->set_flashdata('key',$key);
+		$return['session_id'] = $this->session->get_session_id();
 		$return['key'] = $key;
 		$this->_json_output($return);
 	}	//}}}
@@ -298,13 +307,15 @@
 		$this->_json_output($return);
 	}//}}}
 	function uploadfile(){
-		
-		@$user_id = $_SESSION['user_id'];
+		if(!$this->session->checkAndRead()){
+			return $this->_no_session_result();
+		}		
+		$user_id = $this->session->userdata('user_id');
 		$data = $this->input->post('data');
 		$file_data = json_decode($data, true);
 
 		$res = $this->mag_file_model->save_mag_file($file_data, $user_id);
-		$pubstr = file_get_contents("http://api.1001s.cn/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
+//		$pubstr = file_get_contents("http://api.1001s.cn/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
 		$this->_json_output($res);
 
 	}
