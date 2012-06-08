@@ -17,7 +17,19 @@ class Mag_element_Model extends mag_db {
 				$where = array('element_type' => $type);
 			}
 		}
-		return $this->elem_rows(MAG_ELEMENT_TABLE, $where, $limit, $start, $order_by);
+		$item = $this->elem_rows(MAG_ELEMENT_TABLE, $where, $limit, $start, $order_by);
+		if ($item){
+			$return = array(
+							'errcode' => '0',
+							'data' => $item,
+						);
+		}else{
+			$return = array(
+							'errcode' => '1',
+							'data' => null,
+						);
+		}
+		return $return;
 	}		//}}}
 	
 }
