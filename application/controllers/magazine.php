@@ -306,6 +306,7 @@
 		}
 		$this->_json_output($return);
 	}//}}}
+	
 	function uploadfile(){
 		if(!$this->session->checkAndRead()){
 			return $this->_no_session_result();
@@ -318,6 +319,12 @@
 //		$pubstr = file_get_contents("http://api.1001s.cn/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
 		$this->_json_output($res);
 
+	}
+
+	function pwd (){
+		$pwd = $this->input->get('pwd');
+		$key = $this->input->get('key');
+		echo md5(md5($pwd).$key);
 	}
 }
 
