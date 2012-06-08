@@ -322,9 +322,13 @@
 	}
 
 	function pwd (){
-		$pwd = $this->input->get('pwd');
-		$key = $this->input->get('key');
-		echo md5(md5($pwd).$key);
+		$usr = $this->input->get('u');
+		$pwd = $this->input->get('p');
+		$key = $this->input->get('k');
+		$pwd = md5(md5($pwd).$key);
+		$sid = $this->input->get('s');
+		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
+		echo "<a href=$url>$url</a>";
 	}
 }
 

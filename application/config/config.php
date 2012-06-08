@@ -416,5 +416,10 @@ $config['uploadcurl'] = 'http://api.1001s.cn/magazine/uploadfile';
 $config['manageurl'] = 'http://www.1001s.cn/userCenter';
 $config['toolversion'] = '1.0'; 
 $config['ftp_path'] = '/mnt/data3/ftp/';
+
+
+if (file_exists(APPPATH . 'config/local.config.php')){
+	include APPPATH . 'config/local.config.php';
+}
 /* End of file config.php */
 /* Location: ./application/config/config.php */
