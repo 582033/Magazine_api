@@ -33,13 +33,8 @@
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
 
-		$userdata = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
-		$return = array(
-				'apiver' => $this->apiver,
-				'errcode' => '0',
-				'data' => $userdata,
-				);
-		
+		$return = $this->User_Model->regasReader($user_data['username'],$user_data['passwd']);
+		$return = array_merge(array('apiver' => $this->apiver), $return);
 		$this->_json_output($return);
 	}	//}}}
 
