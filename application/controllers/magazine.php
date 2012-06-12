@@ -12,6 +12,7 @@
 		$this->load->model('mag_element_model');
 		$this->load->model('mag_file_model');
 		$this->load->model('User_comment_Model');
+		$this->load->model('search_model');
 		$this->load->library('session');
 		$this->apiver = $this->config->item('api_version');
 	}	//}}}
@@ -23,12 +24,14 @@
 		}
 		return $result;
 	}	//}}}
-	function _no_session_result(){
+
+	function _no_session_result(){	//{{{
 		return array('apiver' => $this->apiver,
 				'errcode' => '5',
 				'msg' => 'need session_id'
 			);
-	}
+	}	//}}}
+
 	function reg (){	//{{{
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
@@ -70,6 +73,18 @@
 	function _passwd_encryption ($passwd){	//密码加密{{{
 		return $passwd;
 	}	//}}}
+
+function search (){	//搜索{{{
+	$keys = array('keywords', 'start', 'limit');
+	$items = $this->_get_more_non_empty($keys);
+	$return = array(
+			'apiver' => $this->apiver,
+			'errcode' => '0',
+			'data' => $this->search_model->search($items, 'data'),
+			'extra' => $this->search_model->search_extra($items),
+			);
+	$this->_json_output($return);
+}	//}}}
 
 	function category (){	//{{{
 		$category = array(

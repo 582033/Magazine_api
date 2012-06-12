@@ -61,11 +61,19 @@ class ApiConfig extends MY_Controller {
 	
         function _api_visitor (){       //{{{
                 $return = array(
+				'getkey' => '/magazine/getkey',
                                 'category' => '/magazine/category',
                                 'mag_list' => '/magazine/mag_list',
                                 'download' => '/magazine/download',
 				'detail' => '/magazine/detail',
 				'login' => '/magazine/login',
+				'reg' => '/magazine/reg',
+				'search' => '/magazine/search',
+				'love' => '/magazine/love',
+				'comment' => '/magazine/get_user_comment',
+				'loved_nums' => '/magazine/get_loved_nums',
+				'loved_data' => '/magazine/get_loved_data',
+				'mag_element' => '/magazine/get_mag_element',
                                 );
 
                 return $return;
