@@ -1,7 +1,7 @@
 <?php class Magazine extends MY_Controller { 
 
 	var $apiver;
-	
+
 	function Magazine (){	//{{{ 
 		parent::__construct();
 		$this->load->model('mag_db');
@@ -69,7 +69,7 @@
 	function _generate_key(){	//{{{
 		return random_string('alnum',7);
 	}	//}}}
-	
+
 	function _passwd_encryption ($passwd){	//密码加密{{{
 		return $passwd;
 	}	//}}}
@@ -94,13 +94,13 @@ function search (){	//搜索{{{
 				);
 		$this->_json_output($category);
 	}	//}}}
-	
+
 	function _get_user_id(){		//获取user_id {{{ 
 		$this->session->initSession();
 		$userdata = $this->session->userdata;
 		return $userdata['user_id'];
 	}//}}}
-	
+
 	function mag_list(){	//{{{
 		$key = array('start', 'limit');
 		$from_url = $this->_get_more_non_empty($key);
@@ -155,7 +155,7 @@ function search (){	//搜索{{{
 				);
 		$this->_json_output($return);
 	}	//}}}
-	
+
 	function love(){					//喜欢{{{
 		$user_id = $this->_get_user_id();
 		$loved_id = $this->_get_non_empty('loved_id');
@@ -252,14 +252,15 @@ function search (){	//搜索{{{
 
 	}
 
-	function pwd (){
+	function pwd (){	//登录测试用{{{
 		$usr = $this->input->get('u');
 		$pwd = $this->input->get('p');
-		$key = $this->input->get('k');
+		$getkey = json_decode(file_get_contents($this->config->item('api_hosts')."/magazine/getkey"), TRUE);
+		$key = $getkey['key'];
+		$sid = $getkey['session_id'];
 		$pwd = md5(md5($pwd).$key);
-		$sid = $this->input->get('s');
 		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
 		echo "<a href=$url>$url</a>";
-	}
+	}	//}}}
 }
 
