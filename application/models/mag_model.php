@@ -54,4 +54,18 @@ class Mag_Model extends mag_db {
 		}	
 		return $mag_list;
 	}	//}}}
+	
+	function _get_index_mag_list($table2, $field1, $field2, $limit, $start, $where){
+		$result = $this->db
+						->select ('m.*, u.nickname')
+						->from("magazine as m")
+						->join("$table2 as u", "m.".$field1."= u.".$field2)
+						->where($where)
+						->order_by('m.weight desc')
+						->limit($limit)
+						->offset($start)
+						->get()
+						->result_array();
+		return $result;
+	}
 }

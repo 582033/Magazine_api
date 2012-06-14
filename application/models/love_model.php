@@ -28,7 +28,7 @@ class Love_Model extends mag_db {
 		return $return;
 	}		//}}}
 	
-	function _loved_nums($user_id){		//喜欢数量{{{
+	function _loved_nums($user_id){		//用户个人喜欢数量{{{
 		$where_mag = array('user_id' => $user_id, 'loved_type' => 'magazine');
 		$where_author = array('user_id' => $user_id, 'loved_type' => 'author');
 		$where_elem = array('user_id' => $user_id, 'loved_type' => 'element');
@@ -43,7 +43,7 @@ class Love_Model extends mag_db {
 		return $item;
 	}//}}}
 	
-	function _loved_data($user_id, $limit, $start, $type){
+	function _loved_data($user_id, $limit, $start, $type){		//获取喜欢数据{{{
 		if ($type == ''){
 				$where_mag = array('user_love.user_id' => $user_id, 'loved_type' => 'magazine');
 				$where_author = array('user_love.user_id' => $user_id, 'loved_type' => 'author');
@@ -80,6 +80,10 @@ class Love_Model extends mag_db {
 				}
 		}
 		return $return;
-	}
+	}//}}}
 	
+	function _nums_loved($where){		//获取杂志、元素、作者被喜欢的次数{{{
+		$nums = $this->mag_db->total(USER_LOVE_TABLE, $where);
+		return $nums;
+	}//}}}
 }

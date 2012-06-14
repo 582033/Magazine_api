@@ -167,8 +167,9 @@ function search (){	//搜索{{{
 		$this->_json_output($return);
 	}		//}}}
 	
-	function get_loved_nums(){			//喜欢数量取得	{{{
-		$user_id = $this->_get_user_id();
+	function get_loved_nums(){			//个人喜欢数量取得	{{{
+	//	$user_id = $this->_get_user_id();
+		$user_id =1;
 		$data = $this->Love_Model->_loved_nums($user_id);
 		$return = array(
 					'apiver' => $this->apiver,
@@ -179,7 +180,8 @@ function search (){	//搜索{{{
 	}	//}}}
 	
 	function get_loved_data(){				//喜欢数据取得	{{{
-		$user_id = $this->_get_user_id();
+	//	$user_id = $this->_get_user_id();
+		$user_id = 1;
 		$type = $this->input->get('type');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
@@ -212,7 +214,7 @@ function search (){	//搜索{{{
 	
 	function get_user_comment(){//{{{         杂志评论取得
 		$user_id = $this->_get_user_id();
-		$magazine_id = $this->input->get('magazine_id');
+		$magazine_id = $this->_get_non_empty('magazine_id');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
 		$item = $this->User_comment_Model->_get_user_comment($user_id, $magazine_id, $limit, $start);
@@ -234,6 +236,34 @@ function search (){	//搜索{{{
 						'apiver' => $this->apiver,
 						'errcode' => $item['errcode'],
 						'data' => $item['data'],
+						);
+		$this->_json_output($return);
+	}//}}}
+	
+	function nums_of_loved(){		//获取对象被喜欢的次数{{{
+		$loved_id = $this->_get_non_empty('loved_id');
+		$loved_type = $this->_get_non_empty('loved_type');
+		$where = array('loved_id' => $loved_id, 'loved_type' => $loved_type);
+		$nums = $this->Love_Model->_nums_loved($where);
+		$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $nums,
+						);
+		$this->_json_output($return);
+	}//}}}
+	
+	function judge_loved(){		//判断是否喜欢过对象{{{
+		//$user_id = $this->_get_user_id();
+		$user_id = 1;
+		$loved_id = $this->input->get('loved_id');
+		$loved_type = $this->input->get('loved_type');
+		$where = array('user_id' => $user_id, 'loved_id' => $loved_id, 'loved_type' => $loved_type);
+		$nums = $this->mag_db->total(USER_LOVE_TABLE, $where);
+		$return = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $nums,
 						);
 		$this->_json_output($return);
 	}//}}}
@@ -262,5 +292,14 @@ function search (){	//搜索{{{
 		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
+	function get_index_mag_list(){
+		$limit = 13;
+		$start = 0;
+		$table = USER_TABLE;
+		$field1 = $field2 = 'user_id';
+		$where = array();
+		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
+		$this->_json_output($mag);
+	}
 }
 

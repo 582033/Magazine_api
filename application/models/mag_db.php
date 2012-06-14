@@ -47,7 +47,8 @@ class mag_db extends CI_Model {
 		$this->db
 				->from($mag)
 				->join($magfile, $magfile.".mag_file_id=".$mag.".mag_file_id")
-				->where($where);
+				->where($where)
+				->order_by('weight desc');
 		if ($limit){
 			$this->db
 				->limit($limit)
@@ -87,6 +88,5 @@ class mag_db extends CI_Model {
 		$row = $this->db->insert($table, $data);
 		return $this->db->insert_id();
 	}	//}}}
-	
 	
 }
