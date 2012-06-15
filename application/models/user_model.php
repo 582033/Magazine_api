@@ -80,4 +80,23 @@ class User_Model extends mag_db {
 		return md5($passwd);
 	}       //}}}	
 
+	function get_nickname ($user_id){	//获取用户昵称{{{
+		$where = array('user_id' => $user_id);
+		$userdata = $this->mag_db->row(USER_TABLE, $where);
+		if ($userdata == array()) {
+			$return = array(
+					'apiver' => $this->apiver,
+					'errcode' => '1',	//代表无此用户
+					);
+		}
+		else {
+			$return = array(
+					'apiver' => $this->apiver,
+					'errcode' => '0',
+					'nickname' => $userdata['nickname'],
+					);
+		}
+		return $return;
+	}	//}}}
+
 }

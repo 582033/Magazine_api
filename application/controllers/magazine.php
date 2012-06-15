@@ -282,6 +282,22 @@ function search (){	//搜索{{{
 
 	}
 
+	function get_index_mag_list(){	//{{{
+		$limit = 13;
+		$start = 0;
+		$table = USER_TABLE;
+		$field1 = $field2 = 'user_id';
+		$where = array();
+		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
+		$this->_json_output($mag);
+	}	//}}}
+
+	function get_nickname (){	//通过user_id获取username{{{
+		$user_id = $this->_get_non_empty('user_id');
+		$data = $this->User_Model->get_nickname($user_id);
+		$this->_json_output($data);
+	}	//}}}
+
 	function pwd (){	//登录测试用{{{
 		$usr = $this->input->get('u');
 		$pwd = $this->input->get('p');
@@ -292,14 +308,5 @@ function search (){	//搜索{{{
 		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
-	function get_index_mag_list(){
-		$limit = 13;
-		$start = 0;
-		$table = USER_TABLE;
-		$field1 = $field2 = 'user_id';
-		$where = array();
-		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
-		$this->_json_output($mag);
-	}
 }
 
