@@ -99,20 +99,23 @@ class User_Model extends mag_db {
 		return $return;
 	}	//}}}
 
+	function get_user_info ($user_id) {	//{{{
+		$where = array('user_id' => $user_id);
+		$user_info = $this->row(USER_TABLE, $where);
+		return $user_info;
+	}	//}}}
+
 	function set_user_info ($user_id, $user_info){	//{{{
 		$where = array('user_id' => $user_id);
-		$user_is_exists = $this->row(USER_TABLE, $where);
+		$user_is_exists = $this->get_user_info($user_id);
 		$return = array('apiver' => $this->config->item('api_version'));
 		if($user_is_exists != array()){
 			$data = json_decode($user_info, TRUE);
 			$this->update_row(USER_TABLE, $data, $where);
 			$return['errcode'] = '0';
-			$return['data'] = $this->row(USER_TABLE, $where);
+			$return['data'] = $this->get_user_info($user_id);
 		}
 		return $return;
 	}	//}}}
-
-
-
 
 }

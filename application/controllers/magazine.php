@@ -299,6 +299,12 @@ function search (){	//搜索{{{
 		$this->_json_output($return);
 	}//}}}
 	
+	function user_info () {	//获取个人信息{{{
+		$user_id = $this->_get_user_id();		
+		$user_info = $this->User_Model->get_user_info($user_id);
+		$this->_json_output($user_info);
+	}	//}}}
+	
 	function set_user_info () {	//设置个人信息{{{
 		$user_id = $this->_get_user_id();		
 		$user_info = $this->input->post('user_info');
