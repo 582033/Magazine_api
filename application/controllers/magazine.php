@@ -1,8 +1,8 @@
-<?php class Magazine extends MY_Controller { 
+<?php class Magazine extends MY_Controller {
 
 	var $apiver;
 
-	function Magazine (){	//{{{ 
+	function Magazine (){	//{{{
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
@@ -50,7 +50,7 @@
 	}	//}}}
 
 	function login (){ //{{{
-		
+
 	    if(!$this->session->checkAndRead()){
 			return $this->_no_session_result();
 		}
@@ -103,7 +103,7 @@ function search (){	//搜索{{{
 		$this->_json_output($category);
 	}	//}}}
 
-	function _get_user_id(){		//获取user_id {{{ 
+	function _get_user_id(){		//获取user_id {{{
 		$this->session->initSession();
 		$userdata = $this->session->userdata;
 		if(isset($userdata['user_id']) && $userdata['user_id'] != ''){
@@ -137,7 +137,7 @@ function search (){	//搜索{{{
 				'data' => $this->Mag_Model->_get_mag_list($where, $from_url),
 				'extra' => $this->Mag_Model->_mag_list_extra($where, $from_url),
 				);
-		$this->_json_output($mag_list); 
+		$this->_json_output($mag_list);
 	}	//}}}
 
 	function detail(){	//{{{
@@ -148,7 +148,7 @@ function search (){	//搜索{{{
 				'apiver' => $this->apiver,
 				'errcode' => '0',
 				'data' => $data[0],
-				);	
+				);
 		$this->_json_output($detail);
 	}	//}}}
 
@@ -185,9 +185,9 @@ function search (){	//搜索{{{
 		$return['data'] = $result['data'];
 		$this->_json_output($return);
 	}		//}}}
-	
+
 	function get_loved_nums(){			//个人喜欢数量取得	{{{
-	//	$user_id = $this->_get_user_id();
+//		$user_id = $this->_get_user_id();
 		$user_id =1;
 		$data = $this->Love_Model->_loved_nums($user_id);
 		$return = array(
@@ -197,7 +197,7 @@ function search (){	//搜索{{{
 					);
 		$this->_json_output($return);
 	}	//}}}
-	
+
 	function get_loved_data(){				//喜欢数据取得	{{{
 		$user_id = $this->_get_user_id();
 		$type = $this->input->get('type');
@@ -213,17 +213,22 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}	//}}}
-	
+
 	function comment(){ //{{{		杂志评论
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
-		$user_id = $this->_get_user_id();
-		$com_data = $this->input->post('data');
-//		$com_data = '{"magazine_id":"1","comment":"good!good!good!","user_name":"zhangsan","parents_id":"2"}';
-		$data = json_decode($com_data, true);
-		$data['send_time'] = $date;
-		$data['user_id'] = $user_id;
-		$item = $this->User_comment_Model->comment($data);
+//		$user_id = $this->_get_user_id();
+		$user_id = 1;
+		$com_data = array(
+			'type' => $this->_get_non_empty('type'),
+			'object_id' => $this->_get_non_empty('object_id'),
+			'comment' => $this->_get_non_empty('comment'),
+			'parent_id' => $this->_get_non_empty('parent_id'),
+			'user_id' => $user_id,
+			'send_time' => date('Y-m-d H:i:s'),
+		);
+		$data = json_encode($com_data, true);
+		$item = $this->User_comment_Model->comment($com_data);
 		$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => '0',
@@ -231,13 +236,19 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}	//}}}
-	
-	function get_user_comment(){//{{{         杂志评论取得
-		$user_id = $this->_get_user_id();
-		$magazine_id = $this->_get_non_empty('magazine_id');
-		$limit = $this->_get_non_empty('limit');
-		$start = $this->_get_non_empty('start');
-		$item = $this->User_comment_Model->_get_user_comment($user_id, $magazine_id, $limit, $start);
+
+	function get_user_comment(){//{{{		杂志评论取得
+//		$user_id = $this->_get_user_id();
+		$user_id = 1;
+		$type = $this->_get_non_empty('type');
+		$object_id = $this->_get_non_empty('object_id');
+		$limit = $this->_get('limit');
+		$start = $this->_get('start');
+		if($limit){
+			$item = $this->User_comment_Model->_get_user_comment($user_id, $type, $object_id, $limit, $start);
+		}else{
+			$item = $this->User_comment_Model->_get_user_comment($user_id, $type, $object_id);
+		}
 		$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => $item['errcode'],
@@ -245,8 +256,8 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}	//}}}
-	
-	function get_mag_element(){		//{{{		元素取得接口		
+
+	function get_mag_element(){		//{{{		元素取得接口
 		$for = $this->_get_non_empty('for');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
@@ -259,7 +270,7 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}//}}}
-	
+
 	function nums_of_loved(){		//获取对象被喜欢的次数{{{
 		$loved_id = $this->_get_non_empty('loved_id');
 		$loved_type = $this->_get_non_empty('loved_type');
@@ -272,7 +283,7 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}//}}}
-	
+
 	function judge_loved(){		//判断是否喜欢过对象{{{
 		//$user_id = $this->_get_user_id();
 		$user_id = 1;
@@ -299,7 +310,7 @@ function search (){	//搜索{{{
 	function uploadfile(){
 		if(!$this->session->checkAndRead()){
 			return $this->_no_session_result();
-		}		
+		}
 		$user_id = $this->session->userdata('user_id');
 		$data = $this->input->post('data');
 		$file_data = json_decode($data, true);
@@ -336,5 +347,15 @@ function search (){	//搜索{{{
 		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
-}
 
+	function get_index_mag_list(){
+		$limit = 13;
+		$start = 0;
+		$table = USER_TABLE;
+		$field1 = $field2 = 'user_id';
+		$where = array();
+		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
+		$this->_json_output($mag);
+	}
+
+}
