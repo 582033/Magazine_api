@@ -17,6 +17,14 @@
 		$this->apiver = $this->config->item('api_version');
 	}	//}}}
 
+	function _get_values ($more, $action){	//{{{
+		$result = array();
+		foreach ($more as $data){
+			$result[$data] = $this->input->$action($data);
+		}
+		return $result;
+	}	//}}}
+
 	function _get_more_non_empty ($more){	//{{{
 		$result = array();
 		foreach ($more as $data){
@@ -98,7 +106,18 @@ function search (){	//搜索{{{
 	function _get_user_id(){		//获取user_id {{{ 
 		$this->session->initSession();
 		$userdata = $this->session->userdata;
-		return $userdata['user_id'];
+		if(isset($userdata['user_id']) && $userdata['user_id'] != ''){
+			return $userdata['user_id'];
+		}
+		else {
+			$err = array(
+					'apiver' => $this->apiver,
+					'errcode' => '4',
+					'msg' => "session_id error",
+					);
+			//$this->_json_output($err); 
+			echo "session_id error";exit;
+		}
 	}//}}}
 
 	function mag_list(){	//{{{
@@ -268,6 +287,14 @@ function search (){	//搜索{{{
 						);
 		$this->_json_output($return);
 	}//}}}
+	
+	function set_user_info () {	//设置个人信息{{{
+		$user_id = $this->_get_user_id();		
+		$user_info = $this->input->post('user_info');
+		//$user_info = json_encode(array('sex' => '男', 'birthday' => '1977-09-09 12:00:00'));
+		$return = $this->User_Model->set_user_info($user_id, $user_info);	
+		$this->_json_output($return);
+	}	//}}}
 	
 	function uploadfile(){
 		if(!$this->session->checkAndRead()){

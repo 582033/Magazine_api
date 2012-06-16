@@ -31,7 +31,7 @@ class mag_db extends CI_Model {
 		return $result;
 	}	//}}}
 	
-	function elem_rows ($table, $where, $limit = NULL, $start = NULL, $order_by = 'mag_element_id asc'){
+	function elem_rows ($table, $where, $limit = NULL, $start = NULL, $order_by = 'mag_element_id asc'){	//{{{
 		$result = $this->db
 						->from($table)
 						->where($where)
@@ -41,7 +41,7 @@ class mag_db extends CI_Model {
 						->get()
 						->result_array(); 
 		return $result;
-	}
+	}	//}}}
 	
 	function mag_rows ($mag, $magfile, $where, $limit = NULL, $start = NULL){	//获取杂志数据{{{
 		$this->db
@@ -60,7 +60,7 @@ class mag_db extends CI_Model {
 		return $result;
 	}	//}}}
 
-	function loved_rows ($user_love, $table2, $field, $where, $limit = NULL, $start = NULL){
+	function loved_rows ($user_love, $table2, $field, $where, $limit = NULL, $start = NULL){	//{{{
 		$this->db
 				->from($user_love)
 				->join($table2, $user_love.".loved_id=".$table2.".".$field)
@@ -74,7 +74,7 @@ class mag_db extends CI_Model {
 				->get()
 				->result_array();
 		return $result;
-	}
+	}	//}}}
 	
 	function total ($table, $where){	//统计数量{{{
 		$return = $this->db
@@ -89,4 +89,8 @@ class mag_db extends CI_Model {
 		return $this->db->insert_id();
 	}	//}}}
 	
+	function update_row ($table, $data, $where)	{	//{{{
+		$this->db->update($table, $data, $where);
+	}	//}}}
+
 }
