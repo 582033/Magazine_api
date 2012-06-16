@@ -180,12 +180,13 @@ function search (){	//搜索{{{
 	}	//}}}
 	
 	function get_loved_data(){				//喜欢数据取得	{{{
-	//	$user_id = $this->_get_user_id();
-		$user_id = 1;
+		$user_id = $this->_get_user_id();
 		$type = $this->input->get('type');
+		$mag_category = $this->input->get('mag_category');
+		$element_type = $this->input->get('element_type');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
-		$item = $this->Love_Model->_loved_data($user_id, $limit, $start, $type);
+		$item = $this->Love_Model->_loved_data($user_id, $limit, $start, $type, $mag_category, $element_type);
 		$return = array(
 						'apiver' => $this->apiver,
 						'errcode' => $item['errcode'],

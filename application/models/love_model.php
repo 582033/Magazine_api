@@ -43,7 +43,7 @@ class Love_Model extends mag_db {
 		return $item;
 	}//}}}
 	
-	function _loved_data($user_id, $limit, $start, $type){		//获取喜欢数据{{{
+	function _loved_data($user_id, $limit, $start, $type, $mag_category, $element_type){		//获取喜欢数据{{{
 		if ($type == ''){
 				$where_mag = array('user_love.user_id' => $user_id, 'loved_type' => 'magazine');
 				$where_author = array('user_love.user_id' => $user_id, 'loved_type' => 'author');
@@ -62,10 +62,16 @@ class Love_Model extends mag_db {
 		}else{
 				$where = array('user_love.user_id' => $user_id, 'loved_type' => $type);
 				if ($type == 'element'){
+					if ($element_type != ''){
+						$where['element_type'] = $element_type;
+					}
 					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAG_ELEMENT_TABLE, 'mag_element_id', $where, $limit, $start);
 				}else if ($type == 'author'){
 					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, USER_TABLE, 'user_id', $where, $limit, $start);
 				}else if ($type == 'magazine'){
+					if ($mag_category != ''){
+						$where['mag_category'] = $mag_category;
+					}
 					$result = $this->mag_db->loved_rows(USER_LOVE_TABLE, MAGAZINE_TABLE, 'magazine_id', $where, $limit, $start);
 				}else{
 					$result = NULL;
