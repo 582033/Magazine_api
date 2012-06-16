@@ -115,7 +115,7 @@ function search (){	//搜索{{{
 					'errcode' => '4',
 					'msg' => "session_id error",
 					);
-			//$this->_json_output($err); 
+			//$this->_json_output($err);
 			echo "session_id error";exit;
 		}
 	}//}}}
@@ -304,15 +304,15 @@ function search (){	//搜索{{{
 		$user_info = $this->User_Model->get_user_info($user_id);
 		$this->_json_output($user_info);
 	}	//}}}
-	
+
 	function set_user_info () {	//设置个人信息{{{
-		$user_id = $this->_get_user_id();		
+		$user_id = $this->_get_user_id();
 		$user_info = $this->input->post('user_info');
 		//$user_info = json_encode(array('sex' => '男', 'birthday' => '1977-09-09 12:00:00'));
-		$return = $this->User_Model->set_user_info($user_id, $user_info);	
+		$return = $this->User_Model->set_user_info($user_id, $user_info);
 		$this->_json_output($return);
 	}	//}}}
-	
+
 	function uploadfile(){
 		if(!$this->session->checkAndRead()){
 			return $this->_no_session_result();
@@ -353,15 +353,5 @@ function search (){	//搜索{{{
 		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
-
-	function get_index_mag_list(){
-		$limit = 13;
-		$start = 0;
-		$table = USER_TABLE;
-		$field1 = $field2 = 'user_id';
-		$where = array();
-		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
-		$this->_json_output($mag);
-	}
 
 }
