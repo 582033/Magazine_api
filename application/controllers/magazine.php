@@ -88,14 +88,14 @@
 	}//}}}
 
 	function mag_list(){	//{{{
-		$key = array('start', 'limit');
+		$key = array('start', 'limit', 'status');
 		$from_url = $this->_get_more_non_empty($key);
 		$from_url['type'] = $this->input->get('type');
 		if ($from_url['type']){
-			$where = array('mag_category' => $from_url['type']);
+			$where = array('mag_category' => $from_url['type'], 'status' => $from_url['status']);
 		}
 		else {
-			$where = array();
+			$where = array('status' => $from_url['status']);
 			$from_url['type'] = null;
 		}
 		$mag_list = array(
@@ -178,6 +178,7 @@
 						'errcode' => $item['errcode'],
 						'data' => $item['data'],
 						);
+		echo $this->db->last_query();
 		$this->_json_output($return);
 	}	//}}}
 
@@ -284,16 +285,6 @@
 
 	}
 
-	function get_index_mag_list(){	//{{{
-		$limit = 13;
-		$start = 0;
-		$table = USER_TABLE;
-		$field1 = $field2 = 'user_id';
-		$where = array();
-		$mag = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
-		$this->_json_output($mag);
-	}	//}}}
-
 	function get_nickname (){	//通过user_id获取username{{{
 		$user_id = $this->_get_non_empty('user_id');
 		$data = $this->User_Model->get_nickname($user_id);
@@ -307,4 +298,74 @@
 	}	//}}}
 
 
+	function get_index_mag_list(){		//首页杂志列表{{{
+		$limit = 13;
+		$start = 0;
+		$table = USER_TABLE;
+		$field1 = $field2 = 'user_id';
+		$where = array('status' => '2');
+		$result = $this->Mag_Model->_get_index_mag_list($table, $field1, $field2, $limit, $start, $where);
+		$mag = array(
+					'apiver' => $this->apiver,
+					'errcode' => '0',
+					'data' => $result,
+					);
+		$this->_json_output($mag);
+	}//}}}
+	
+	function get_same_author_mag(){		//获取该作者的其他杂志{{{
+		$magazine_id = $this->_get_non_empty('mag_id');
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$status = $this->input->get('status');
+		if ($status == ''){
+			$result = $this->Mag_Model->_get_same_author_mag($magazine_id, $limit, $start);
+		}else{
+			$result = $this->Mag_Model->_get_same_author_mag($magazine_id, $limit, $start, $status);
+		}
+		$mag_list = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $result,
+						);
+		$this->_json_output($mag_list);
+	}//}}}
+	
+	function get_same_category_mag(){		//获取同类型的杂志{{{
+		$magazine_id = $this->_get_non_empty('mag_id');
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$status = $this->input->get('status');
+		if ($status == ''){
+			$result = $this->Mag_Model->_get_same_category_mag($magazine_id, $limit, $start);
+		}else{
+			$result = $this->Mag_Model->_get_same_category_mag($magazine_id, $limit, $start, $status);
+		}
+		$mag_list = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $result,
+						);
+
+		$this->_json_output($mag_list);
+	}//}}}
+	
+	function get_mag_for_list(){
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$mag_category = $this->_get_non_empty('mag_category');
+		$tag = $this->input->get('tag');
+		$status = $this->_get_non_empty('status');
+		$where = array('mag_category' => $mag_category, 'tag like' => "%$tag%", 'status' => $status);
+		$result = $this->Mag_Model->_get_mag_for_list($where, $limit, $start);
+		$mag_list = array(
+						'apiver' => $this->apiver,
+						'errcode' => '0',
+						'data' => $result,
+						);
+		$this->_json_output($mag_list);
+	}
+
+
 }
+
