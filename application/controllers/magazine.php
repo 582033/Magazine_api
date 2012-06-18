@@ -308,7 +308,6 @@ function search (){	//搜索{{{
 	function set_user_info () {	//设置个人信息{{{
 		$user_id = $this->_get_user_id();
 		$user_info = $this->input->post('user_info');
-		//$user_info = json_encode(array('sex' => '男', 'birthday' => '1977-09-09 12:00:00'));
 		$return = $this->User_Model->set_user_info($user_id, $user_info);
 		$this->_json_output($return);
 	}	//}}}
