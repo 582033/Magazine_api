@@ -82,17 +82,17 @@
 		return $passwd;
 	}	//}}}
 
-function search (){	//搜索{{{
-	$keys = array('keywords', 'start', 'limit');
-	$items = $this->_get_more_non_empty($keys);
-	$return = array(
-			'apiver' => $this->apiver,
-			'errcode' => '0',
-			'data' => $this->search_model->search($items, 'data'),
-			'extra' => $this->search_model->search_extra($items),
-			);
-	$this->_json_output($return);
-}	//}}}
+	function search (){	//搜索{{{
+		$keys = array('keywords', 'start', 'limit');
+		$items = $this->_get_more_non_empty($keys);
+		$return = array(
+				'apiver' => $this->apiver,
+				'errcode' => '0',
+				'data' => $this->search_model->search($items, 'data'),
+				'extra' => $this->search_model->search_extra($items),
+				);
+		$this->_json_output($return);
+	}	//}}}
 
 	function category (){	//{{{
 		$category = array(
@@ -339,6 +339,12 @@ function search (){	//搜索{{{
 	function get_nickname (){	//通过user_id获取username{{{
 		$user_id = $this->_get_non_empty('user_id');
 		$data = $this->User_Model->get_nickname($user_id);
+		$this->_json_output($data);
+	}	//}}}
+
+	function userindex(){		//用户个人首页{{{
+		$user_id = $this->_get_non_empty('user_id');
+		$data = $this->User_Model->user_index($user_id);
 		$this->_json_output($data);
 	}	//}}}
 

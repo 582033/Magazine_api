@@ -116,4 +116,31 @@ class User_Model extends mag_db {
 		return $return;
 	}	//}}}
 
+	function user_index($user_id){	//{{{
+		$data = array(
+			'apiver' => $this->apiver,
+			'errcode' => '0',
+			'data' => array(
+				'user_info' => $this->_get_user_info($user_id),
+				'user_loved_author' => $this->_get_user_loved_user($user_id),
+				'user_mag' => $this->_get_user_mag($user_id),
+			),
+		);
+		return $data;
+	}	//}}}
+	
+	function _get_user_mag($user_id){	//{{{
+		$sql = "select * from magazine where user_id='$user_id'";
+		$result = $this->db->query($sql);
+		$result = $result->result_array();
+		return $result;
+	}	//}}}
+
+	function _get_user_loved_user($user_id){	//{{{
+		$sql = "select * from user_love as L,user as U where L.user_id='$user_id' and L.loved_type='author' and U.user_id=L.loved_id";
+		$result = $this->db->query($sql);
+		$result = $result->result_array();
+		return $result;
+	}	//}}}
+
 }
