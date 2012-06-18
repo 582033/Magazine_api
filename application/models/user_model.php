@@ -14,7 +14,8 @@ class User_Model extends mag_db {
 							'created_at' => time(),
 							);
 			$user_id = $this->insert_row(ACCOUNT_TABLE, $account_info);
-			$this->insert_row(USER_TABLE, array('user_id' => $user_id));
+			$nickname = preg_replace('/@.+/', '', $username);
+			$this->insert_row(USER_TABLE, array('user_id' => $user_id, 'nickname' => $nickname));
 			$return = array(
 							'errcode' => '0',
 							'msg' => 'ok',
