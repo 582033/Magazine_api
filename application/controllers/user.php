@@ -7,7 +7,6 @@
 		$this->load->library('session');
 	}	//}}}
 
-
 	function user_info(){
 		$user_id = $this->_get_non_empty('user_id');
 		$user = $this->User_Model->get_user_info($user_id);
@@ -20,12 +19,21 @@
 		$data = $this->User_Model->get_all_users($start,$limit);
 		$this->_json_output($data);
 	}
-	
-	function ftpinfo ($userId) {	//{{{
-		//$user_id = $userId == 'me' ? $this->session->userdata('user_id') : $userId;
-		$user_id = '1';
-		$ftpinfo = $this->User_Model->get_ftp_info($user_id);
-		$this->_json_output($ftpinfo);
+
+	function followers ($userId) {	//{{{
+		$start = $this->_get_non_empty('start');
+		$limit = $this->_get_non_empty('limit');
+		$followers = $this->User_Model->get_followers($userId, $start, $limit);
+		$this->_json_output($followers);
 	}	//}}}
+
+	function followees ($userId) {	//{{{
+		$start = $this->_get_non_empty('start');
+		$limit = $this->_get_non_empty('limit');
+		//$followees = $this->User_Model->get_followees($userId, $start, $limit);
+		$followees = $this->User_Model->get_followers($userId, $start, $limit);
+		$this->_json_output($followees);
+	}	//}}}
+
 
 }

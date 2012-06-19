@@ -153,4 +153,35 @@ class User_Model extends mag_db {
 		return $result;
 	}	//}}}
 
+	function get_followers ($userId, $start, $limit) {	//{{{
+		$where = array();
+		$users = $this->rows(USER_TABLE, $where, $limit, $start);
+		$user_infos = array();
+		foreach ($users as $user) {
+			switch ($user['user_type']) {
+				case '0':
+					$role = "reader";
+					break;
+				case '1':
+					$role = "author";
+					break;
+			}
+			$tags = explode(",", $user['tag']);
+			$user_infos[] = array(
+					'id' => $user['user_id'],
+					'nickname' => $user['nickname'],
+					'birthday' => $user['birthday'],
+					'gender' => $user['sex'],
+					'image' => $user['avatar'],
+					'intro' => $user['intro'],
+					'tags' => $tags,
+					'role' =>$role,
+					'followers' => '999',
+					'followees' => '999',
+					'magazines' => '999',
+					);	
+		}
+		return $user_infos;
+	}	//}}}
+
 }
