@@ -67,8 +67,6 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
-
 $route['v1/user/(:any)/ftpinfo']='user/ftpinfo/$1';//user/{userId}/ftpinfo
-
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

@@ -247,19 +247,10 @@
 		$user_id = 1;
 		$type = $this->_get_non_empty('type');
 		$object_id = $this->_get_non_empty('object_id');
-		$limit = $this->_get('limit');
-		$start = $this->_get('start');
-		if($limit){
-			$item = $this->User_comment_Model->_get_user_comment($user_id, $type, $object_id, $limit, $start);
-		}else{
-			$item = $this->User_comment_Model->_get_user_comment($user_id, $type, $object_id);
-		}
-		$return = array(
-						'apiver' => $this->apiver,
-						'errcode' => $item['errcode'],
-						'data' => $item['data'],
-						);
-		$this->_json_output($return);
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$result = $this->User_comment_Model->_get_user_comment($user_id, $type, $object_id, $limit, $start);
+		$this->_json_output($result);
 	}	//}}}
 
 	function get_mag_element(){		//{{{		元素取得接口
@@ -347,9 +338,9 @@
 		$this->_json_output($data);
 	}	//}}}
 
-	function userindex(){		//用户个人首页{{{
+	function bookstore(){		//用户书店{{{
 		$user_id = $this->_get_non_empty('user_id');
-		$data = $this->User_Model->user_index($user_id);
+		$data = $this->User_Model->bookstore($user_id);
 		$this->_json_output($data);
 	}	//}}}
 

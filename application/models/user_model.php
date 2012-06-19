@@ -48,7 +48,7 @@ class User_Model extends mag_db {
 					);	
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
-				$user_info = array_merge($user_is_exist, $this->_get_user_info($user_is_exist['account_id']));
+				$user_info = array_merge($user_is_exist, $this->get_user_info($user_is_exist['account_id']));
 				return $user_info;
 			 }
 			 else {
@@ -60,12 +60,6 @@ class User_Model extends mag_db {
 		}
 	}       //}}}
 	
-	function _get_user_info ($account_id){	//获得user表里用户的详细信息{{{
-		$where = array('user_id' => $account_id);
-		$user_info = $this->row(USER_TABLE, $where);	
-		return $user_info;
-	}	//}}}
-
 	function _get_user_by_accountname($username){       //检测用户名是否存在{{{
 		$where = array('account_name' => $username);
 		$user_result = $this->row(ACCOUNT_TABLE, $where);
@@ -99,7 +93,7 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function get_ftp_info ($user_id) {	//{{{
-		$user_info = $this->_get_user_info($user_id);			
+		$user_info = $this->get_user_info($user_id);			
 		$ftpinfo = array(
 				'user' => 'internet', // ftp用户名
 				'passwd' => 'ltinternet', // ftp密码
@@ -132,12 +126,12 @@ class User_Model extends mag_db {
 		return $return;
 	}	//}}}
 
-	function user_index($user_id){	//{{{
+	function bookstore($user_id){	//{{{
 		$data = array(
 			'apiver' => $this->apiver,
 			'errcode' => '0',
 			'data' => array(
-				'user_info' => $this->_get_user_info($user_id),
+				'user_info' => $this->get_user_info($user_id),
 				'user_loved_author' => $this->_get_user_loved_user($user_id),
 				'user_mag' => $this->_get_user_mag($user_id),
 			),
