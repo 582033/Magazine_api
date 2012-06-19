@@ -1,7 +1,6 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * CodeIgniter
- *
+ * CodeIgniter *
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * NOTICE OF LICENSE
@@ -407,13 +406,15 @@ $config['mq_pass'] = 'guest';
 $config['api_version'] = "1";
 $config['api_hosts'] = "http://api.1001s.cn";
 $config['file_hosts'] = "http://api.1001s.cn";
+$config['ftp_host'] = "60.28.194.156";
+$config['ftp_port'] = "21";
 
 $config['signup'] = 'http://www.1001s.cn/user/signup';
 $config['management'] = 'http://www.1001s.cn/magazine/management';
-$config['getkey'] = 'http://api.1001s.cn/magazine/getkey';
-$config['signin'] = 'http://api.1001s.cn/magazine/login';
-$config['ftpinfo'] = 'http://api.1001s.cn/magazine/ftpinfo';
-$config['uploadcomplete'] = 'http://api.1001s.cn/magazine/uploadcomplete';
+$config['getkey'] = '/auth/getkey';
+$config['signin'] = '/auth/signin';
+$config['ftpinfo'] = '/user/ftpinfo';
+$config['uploadcomplete'] = '/pctool/uploadcomplete';
 $config['versionname'] = 'pctool_api';
 $config['versioncode'] = '1.0'; 
 

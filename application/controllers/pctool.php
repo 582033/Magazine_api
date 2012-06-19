@@ -2,6 +2,7 @@
 class pctool extends MY_Controller {
 	function pctool (){   //{{{
 		parent::__construct();
+		$this->load->model('ftp_model');
 		$this->apiver = $this->config->item('api_version');
 	} 
 	
@@ -24,4 +25,14 @@ class pctool extends MY_Controller {
                                 );
 		$this->_json_output($config);
     }        //}}}
+
+	function uploadComplete () {	//{{{
+		$filename = $this->_get_non_empty('filename');
+		$filemd5 = $this->_get_non_empty('filemd5');
+		//还未进行用户检测	
+		$info = array(
+				'status' => $this->ftp_model->check($filename, $filemd5),
+				);
+		$this->_json_output($info);
+	}	//}}}
 }

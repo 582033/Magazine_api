@@ -98,6 +98,21 @@ class User_Model extends mag_db {
 		return $return;
 	}	//}}}
 
+	function get_ftp_info ($user_id) {	//{{{
+		$user_info = $this->_get_user_info($user_id);			
+		$ftpinfo = array(
+				'user' => 'internet', // ftp用户名
+				'passwd' => 'ltinternet', // ftp密码
+				'host' => $this->config->item('ftp_host'), // ftp host, 如 ftp.1001s.cn
+				'port' => $this->config->item('ftp_port'), // ftp端口
+				'path' => '/', // 上传的路径, 如 "/users/{userId$user_info['']"
+				'spaceQuota' => '99999999', // 用户空间配额 (Bytes)
+				'spaceLeft' => '99999999', // 剩余空间, (Byt
+				
+				);
+		return $ftpinfo;
+	}	//}}}
+
 	function get_user_info ($user_id) {	//{{{
 		$where = array('user_id' => $user_id);
 		$user_info = $this->row(USER_TABLE, $where);
