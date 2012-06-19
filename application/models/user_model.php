@@ -23,7 +23,7 @@ class User_Model extends mag_db {
 							'user_type' => '0',     //用户类型:0读者,1作者,2vip作者,3管理员
 							);
 		}
-		else { 
+		else {
 			$return = array(
 							'errcode' => '1',
 							'msg' => '用户名已存在',
@@ -31,21 +31,21 @@ class User_Model extends mag_db {
 		}
 		return $return;
 	} //}}}
-	
+
 	function login ($username, $passwd, $key){ //{{{
 		if ($key == null)
 		{
 			return array(
 					'errcode' => '1',
 					'msg' => '缺少key',
-					);	
+					);
 		}
 		$user_is_exist = $this->_get_user_by_accountname($username);
 		if(!$user_is_exist){
 		return array(
 					'errcode' => '1',
 					'msg' => '用户不存在',
-					);	
+					);
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
 				$user_info = array_merge($user_is_exist, $this->get_user_info($user_is_exist['account_id']));
@@ -59,7 +59,7 @@ class User_Model extends mag_db {
 			}
 		}
 	}       //}}}
-	
+
 	function _get_user_by_accountname($username){       //检测用户名是否存在{{{
 		$where = array('account_name' => $username);
 		$user_result = $this->row(ACCOUNT_TABLE, $where);
@@ -71,7 +71,7 @@ class User_Model extends mag_db {
 
 	function _passwd_encryption ($passwd){  //密码加密{{{
 		return md5($passwd);
-	}       //}}}	
+	}       //}}}
 
 	function get_nickname ($user_id){	//获取用户昵称{{{
 		$where = array('user_id' => $user_id);
@@ -93,7 +93,7 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function get_ftp_info ($user_id) {	//{{{
-		$user_info = $this->get_user_info($user_id);			
+		$user_info = $this->get_user_info($user_id);
 		$ftpinfo = array(
 				'user' => 'internet', // ftp用户名
 				'passwd' => 'ltinternet', // ftp密码
@@ -102,7 +102,7 @@ class User_Model extends mag_db {
 				'path' => '/', // 上传的路径, 如 "/users/{userId$user_info['']"
 				'spaceQuota' => '99999999', // 用户空间配额 (Bytes)
 				'spaceLeft' => '99999999', // 剩余空间, (Byt
-				
+
 				);
 		return $ftpinfo;
 	}	//}}}
@@ -138,7 +138,7 @@ class User_Model extends mag_db {
 		);
 		return $data;
 	}	//}}}
-	
+
 	function _get_user_mag($user_id){	//{{{
 		$sql = "select * from magazine where user_id='$user_id'";
 		$result = $this->db->query($sql);
@@ -183,5 +183,17 @@ class User_Model extends mag_db {
 		}
 		return $user_infos;
 	}	//}}}
+	function to_be_author($user_id){
+		$where = array('user_id' => $user_id);
+		$data = array('user_type' => 1);
+		$this->db->update(USER_TABLE, $data, $where);
+	}
+
+	function edit_user($user_id, $user_info){
+		$where = array('user_id' => $user_id);
+		$this->db->update(USER_TABLE, $user_info, $where);
+		$new = $this->get_user_info($user_id);
+		return $new;
+	}
 
 }

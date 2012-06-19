@@ -15,9 +15,15 @@
 	}
 
 	function user_info(){
-		$user_id = $this->_get_non_empty('user_id');
-		$user = $this->User_Model->get_user_info($user_id);
-		$this->_json_output($user);
+		if($_SERVER['REQUEST_METHOD'] == put){
+			$user_json = file_get_contents('php://input', 'r');
+			$user_info = json_decode($user_json, true);
+			$return = $this->User_Model->edit_user($user_id, $user_info);
+			return $return;
+		}else{
+			$user = $this->User_Model->get_user_info($user_id);
+			$this->_json_output($user);
+		}
 	}
 
 	function users_info(){
@@ -42,6 +48,32 @@
 		$this->_json_output($followees);
 	}	//}}}
 
+	function like($type, $id, $yes){
+		$user_id = 1;//$this->session->userdata('user_id');
+		if($yes == 1){
+			$this->love_model->like($type, $id, $user_id);
+		}else{
+			$this->love_model->cancellike($type, $id, $user_id);
+		}
+	}
+
+	function follow($id, $yes){
+		$user_id = $this->session->userdata('user_id');
+		if($yes == 1){
+			$this->love_model->like('author', $id, $user_id);
+		}else{
+			$this->love_model->cancellike('author', $id, $user_id);
+		}
+	}
+
+	function apply_author($user_id){
+		$user_id = $this->session->userdata('user_id');
+		$this->User_Model->to_be_author($user_id);
+	}
+
+	function user_avatar($user_id){
+
+	}
 
 
 }

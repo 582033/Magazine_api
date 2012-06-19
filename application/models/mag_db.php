@@ -30,7 +30,7 @@ class mag_db extends CI_Model {
 				->result_array();
 		return $result;
 	}	//}}}
-	
+
 	function elem_rows ($table, $where, $limit = NULL, $start = NULL, $order_by = 'mag_element_id asc'){	//{{{
 		if($limit){
 			$this->db
@@ -78,7 +78,7 @@ class mag_db extends CI_Model {
 				->result_array();
 		return $result;
 	}	//}}}
-	
+
 	function total ($table, $where){	//统计数量{{{
 		$return = $this->db
 				->from($table)
@@ -91,7 +91,7 @@ class mag_db extends CI_Model {
 		$row = $this->db->insert($table, $data);
 		return $this->db->insert_id();
 	}	//}}}
-	
+
 	function update_row ($table, $data, $where)	{	//{{{
 		$this->db->update($table, $data, $where);
 	}	//}}}
