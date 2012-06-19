@@ -407,15 +407,15 @@ $config['mq_pass'] = 'guest';
 $config['api_version'] = "1";
 $config['api_hosts'] = "http://api.1001s.cn";
 $config['file_hosts'] = "http://api.1001s.cn";
-$config['regurl'] = 'http://www.1001s.cn/reg';
-$config['keyurl'] = 'http://api.1001s.cn/magazine/getkey';
-$config['loginurl'] = 'http://api.1001s.cn/magazine/login';
-$config['ftpurl'] = 'ftp.1001s.cn';
-$config['ftpport'] = '21';
-$config['uploadcurl'] = 'http://api.1001s.cn/magazine/uploadfile';
-$config['manageurl'] = 'http://www.1001s.cn/userCenter';
-$config['toolversion'] = '1.0'; 
-$config['ftp_path'] = '/mnt/data3/ftp/';
+
+$config['signup'] = 'http://www.1001s.cn/user/signup';
+$config['management'] = 'http://www.1001s.cn/magazine/management';
+$config['getkey'] = 'http://api.1001s.cn/magazine/getkey';
+$config['signin'] = 'http://api.1001s.cn/magazine/login';
+$config['ftpinfo'] = 'http://api.1001s.cn/magazine/ftpinfo';
+$config['uploadcomplete'] = 'http://api.1001s.cn/magazine/uploadcomplete';
+$config['versionname'] = 'pctool_api';
+$config['versioncode'] = '1.0'; 
 
 
 if (file_exists(APPPATH . 'config/local.config.php')){

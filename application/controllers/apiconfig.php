@@ -12,11 +12,7 @@ class ApiConfig extends MY_Controller {
         }       //}}}
 
 	function tool(){    //{{{
-		$base_config =  array(
-                                'errcode' => '0',
-                                'data' => $this->_tool_config()
-                                ); 
-			
+		$base_config = $this->_tool_config(); 
 		$this->_json_output($base_config);		
 	}      //}}}
 
@@ -32,14 +28,20 @@ class ApiConfig extends MY_Controller {
 
 	function _tool_config(){ //{{{
 		$return = array(
-				'regurl' => $this->config->item('regurl'),
-				'keyurl' => $this->config->item('keyurl'),
-				'loginurl' => $this->config->item('loginurl'),
-				'ftpurl' => $this->config->item('ftpurl'),
-				'ftpport' => $this->config->item('ftpport'),
-				'uploadcurl' => $this->config->item('uploadcurl'),
-				'manageurl' => $this->config->item('manageurl'),
-				'toolversion' => $this->config->item('toolversion')
+				'weblinks' => array(
+					'signup' => $this->config->item('signup'),
+					'management' => $this->config->item('management'),
+					),
+				'apilinks' => array(
+					'getkey' => $this->config->item('getkey'),
+					'signin' => $this->config->item('signin'),
+					'ftpinfo' => $this->config->item('ftpinfo'),
+					'uploadcomplete' => $this->config->item('uploadcomplete'),
+					),
+				'tool' => array(
+					'versionname' => $this->config->item('versionname'),
+					'versioncode' => $this->config->item('versioncode'),
+					),
                                 );
                 return $return;
 	}        //}}}
