@@ -1,11 +1,18 @@
 <?php class User extends MY_Controller {
 
-	function User () {	//{{{
+	function User(){
 		parent::__construct();
-		$this->load->model('mag_db');
-		$this->load->model('User_Model');
-		$this->load->library('session');
-	}	//}}}
+                $this->load->model('mag_db');
+                $this->load->model('User_Model');
+                $this->load->model('Ads_Model');
+                $this->load->model('Mag_Model');
+                $this->load->model('Love_Model');
+                $this->load->model('mag_element_model');
+                $this->load->model('mag_file_model');
+                $this->load->model('User_comment_Model');
+                $this->load->model('search_model');
+                $this->load->library('session');
+	}
 
 	function user_info(){
 		$user_id = $this->_get_non_empty('user_id');
@@ -34,6 +41,7 @@
 		$followees = $this->User_Model->get_followers($userId, $start, $limit);
 		$this->_json_output($followees);
 	}	//}}}
+
 
 
 }
