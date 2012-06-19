@@ -25,6 +25,7 @@ class pctool extends MY_Controller {
                     'versionname' => $this->config->item('versionname'),
                     'versioncode' => $this->config->item('versioncode'),
                     ),
+				'api_hosts' => $this->config->item('api_hosts'),
                                 );
 		$this->_json_output($config);
     }        //}}}
