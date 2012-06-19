@@ -51,11 +51,11 @@ class Mag_Model extends mag_db {
 				$mag['download'] = $this->config->item('file_hosts').$mag['filepath'].$mag['filename_ftp'];
 			else
 				$mag['download'] = null;
-		}	
+		}
 		return $mag_list;
 	}	//}}}
 	
-	function _get_index_mag_list($table2, $field1, $field2, $limit, $start, $where){
+	function _get_index_mag_list($table2, $field1, $field2, $limit, $start, $where){		//获取首页杂志列表{{{
 		$result = $this->db
 						->select ('m.*, u.nickname')
 						->from("magazine as m")
@@ -67,7 +67,7 @@ class Mag_Model extends mag_db {
 						->get()
 						->result_array();
 		return $result;
-	}
+	}//}}}
 	
 	function _get_same_author_mag($magazine_id, $limit, $start, $status = '2'){		//获得该作者的其他杂志{{{
 		$result = $this->db
@@ -107,18 +107,42 @@ class Mag_Model extends mag_db {
 		return $row;
 	}//}}}
 	
-	function _get_mag_for_list($where, $limit, $start){		//杂志列表页数据{{{
+	function _get_mag_for_list($style, $where, $limit, $start){		//杂志列表页数据{{{
 		//tag mag_category order_by
-		$result = $this->db
-						->select ('m.*,u.nickname')
-						->from(MAGAZINE_TABLE . ' as m')
-						->join('user as u', "m.user_id = u.user_id")
-						->where($where)
-						->order_by('weight desc')
-						->limit($limit)
-						->offset($start)
-						->get()
-						->result_array();
+		if ($style == 'new'){
+			$result = $this->db
+							->select ('m.*,u.nickname, u.avatar')
+							->from(MAGAZINE_TABLE . ' as m')
+							->join('user as u', "m.user_id = u.user_id")
+							->where($where)
+							->order_by('m.publish_time desc')
+							->limit($limit)
+							->offset($start)
+							->get()
+							->result_array();
+		}else if ($style == 'hot'){
+			$result = $this->db
+							->select ('m.*,u.nickname, u.avatar')
+							->from(MAGAZINE_TABLE . ' as m')
+							->join('user as u', "m.user_id = u.user_id")
+							->where($where)
+							->order_by('m.num_loved desc')
+							->limit($limit)
+							->offset($start)
+							->get()
+							->result_array();
+		}else if ($style == 'common'){
+			$result = $this->db
+							->select ('m.*,u.nickname,u.avatar')
+							->from(MAGAZINE_TABLE . ' as m')
+							->join('user as u', "m.user_id = u.user_id")
+							->where($where)
+							->order_by('m.weight desc')
+							->limit($limit)
+							->offset($start)
+							->get()
+							->result_array();
+		}
 		return $result;
 	}//}}}
 }

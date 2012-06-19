@@ -154,8 +154,8 @@
 	}		//}}}
 
 	function get_loved_nums(){			//个人喜欢数量取得	{{{
-//		$user_id = $this->_get_user_id();
-		$user_id =1;
+		$user_id = $this->_get_user_id();
+		$user_id = 1;
 		$data = $this->Love_Model->_loved_nums($user_id);
 		$return = array(
 					'apiver' => $this->apiver,
@@ -178,15 +178,13 @@
 						'errcode' => $item['errcode'],
 						'data' => $item['data'],
 						);
-		echo $this->db->last_query();
 		$this->_json_output($return);
 	}	//}}}
 
 	function comment(){ //{{{		杂志评论
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
-//		$user_id = $this->_get_user_id();
-		$user_id = 1;
+		$user_id = $this->_get_user_id();
 		$com_data = array(
 			'type' => $this->_get_non_empty('type'),
 			'object_id' => $this->_get_non_empty('object_id'),
@@ -206,8 +204,7 @@
 	}	//}}}
 
 	function get_user_comment(){//{{{		杂志评论取得
-//		$user_id = $this->_get_user_id();
-		$user_id = 1;
+		$user_id = $this->_get_user_id();
 		$type = $this->_get_non_empty('type');
 		$object_id = $this->_get_non_empty('object_id');
 		$limit = $this->_get_non_empty('limit');
@@ -244,8 +241,7 @@
 	}//}}}
 
 	function judge_loved(){		//判断是否喜欢过对象{{{
-		//$user_id = $this->_get_user_id();
-		$user_id = 1;
+		$user_id = $this->_get_user_id();
 		$loved_id = $this->input->get('loved_id');
 		$loved_type = $this->input->get('loved_type');
 		$where = array('user_id' => $user_id, 'loved_id' => $loved_id, 'loved_type' => $loved_type);
@@ -350,21 +346,26 @@
 		$this->_json_output($mag_list);
 	}//}}}
 	
-	function get_mag_for_list(){
+	function get_mag_for_list(){		//获取杂志列表页	杂志数据	order_by publish_time(最新){{{
+		$style = $this->_get_non_empty('style');
 		$limit = $this->_get_non_empty('limit');
 		$start = $this->_get_non_empty('start');
 		$mag_category = $this->_get_non_empty('mag_category');
 		$tag = $this->input->get('tag');
 		$status = $this->_get_non_empty('status');
-		$where = array('mag_category' => $mag_category, 'tag like' => "%$tag%", 'status' => $status);
-		$result = $this->Mag_Model->_get_mag_for_list($where, $limit, $start);
+		if (strlen($tag) > 0){
+			$where = array('m.mag_category' => $mag_category, 'm.tag like' => "%$tag%", 'm.status' => $status);
+		}else{
+			$where = array('m.mag_category' => $mag_category, 'm.status' => $status);
+		}
+			$result = $this->Mag_Model->_get_mag_for_list($style, $where, $limit, $start);
 		$mag_list = array(
 						'apiver' => $this->apiver,
 						'errcode' => '0',
 						'data' => $result,
 						);
 		$this->_json_output($mag_list);
-	}
+	}//}}}
 
 
 }
