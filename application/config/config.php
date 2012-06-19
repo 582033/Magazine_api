@@ -417,6 +417,8 @@ $config['uploadcomplete'] = 'http://api.1001s.cn/magazine/uploadcomplete';
 $config['versionname'] = 'pctool_api';
 $config['versioncode'] = '1.0'; 
 
+$config['redis_server'] = "tcp://redishost:6379";
+$config['redis_expires'] = "300";	//redis过期时间
 
 if (file_exists(APPPATH . 'config/local.config.php')){
 	include APPPATH . 'config/local.config.php';

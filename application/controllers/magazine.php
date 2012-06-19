@@ -40,6 +40,12 @@
 			);
 	}	//}}}
 
+	function get_redis () {	//{{{
+		$redis = new Redis();
+		$redis->connect($this->config->item('redis_server'));
+		return $redis;
+	}	//}}}
+
 	function reg (){	//{{{
 		$keys = array('username', 'passwd');
 		$user_data = $this->_get_more_non_empty($keys);
@@ -50,15 +56,14 @@
 	}	//}}}
 
 	function login (){ //{{{
-
-	    if(!$this->session->checkAndRead()){
-			return $this->_no_session_result();
-		}
-		$key = $this->session->flashdata('key');
+		$redis = $this->get_redis();
+		$key = $redis->get('key');
+		$redis->delete('key');
 		$username = $this->_get_non_empty('username');
 		$passwd = $this->_get_non_empty('passwd');
 		$return = $this->User_Model->login($username, $passwd, $key);
 		if(isset($return['user_id'])){
+			$this->session->initSession();
 			$this->session->set_userdata('user_id',$return['user_id']);
 		}
 		$return['session_id'] = $this->session->get_session_id();
@@ -67,10 +72,10 @@
 
 	function getKey (){	//{{{
 		$key = $this->_generate_key();
-		$this->session->initSession();
-		$this->session->set_flashdata('key',$key);
-		$return['session_id'] = $this->session->get_session_id();
+		$redis = $this->get_redis();
+		$redis->setex('key', $this->config->item('redis_expires'), $key);
 		$return['key'] = $key;
+		$return['expires_in'] = '600';
 		$this->_json_output($return);
 	}	//}}}
 
@@ -353,9 +358,8 @@
 		$pwd = $this->input->get('p');
 		$getkey = json_decode(file_get_contents($this->config->item('api_hosts')."/magazine/getkey"), TRUE);
 		$key = $getkey['key'];
-		$sid = $getkey['session_id'];
 		$pwd = md5(md5($pwd).$key);
-		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd&session_id=$sid";
+		$url = $this->config->item('api_hosts')."/magazine/login?username=$usr&passwd=$pwd";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
 
