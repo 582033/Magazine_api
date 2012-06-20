@@ -5,9 +5,9 @@
  * An open source application development framework for PHP 5.1.6 or newer
  *
  * NOTICE OF LICENSE
- * 
+ *
  * Licensed under the Academic Free License version 3.0
- * 
+ *
  * This source file is subject to the Academic Free License (AFL 3.0) that is
  * bundled with this package in the files license_afl.txt / license_afl.rst.
  * It is also available through the world wide web at this URL:
@@ -74,6 +74,9 @@ $route['v1/user/(:num)/elements/like'] = 'user/elements/$1';
 
 $route['v1/pctool/(.*)'] = 'pctool/$1';
 $route['v1/auth/(.*)'] = 'auth/$1';
+
+$route['/v1/magazine/:magazineId/comments'] =
+$route['v1/(magazine|element)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

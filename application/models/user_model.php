@@ -175,11 +175,11 @@ class User_Model extends mag_db {
 					'image' => $user['avatar'],
 					'intro' => $user['intro'],
 					'tags' => $tags,
-					'role' =>$role,
+					'role' => $role,
 					'followers' => '999',
 					'followees' => '999',
 					'magazines' => '999',
-					);	
+					);
 		}
 		return $user_infos;
 	}	//}}}
