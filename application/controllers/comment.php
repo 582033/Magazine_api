@@ -10,15 +10,15 @@ class Comment extends MY_Controller {
 	function comments($magazineId){ //{{{		杂志评论
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
-		$request_method = strtolower($_SERVER[REQUEST_METHOD]);
+		$request_method = strtolower($_SERVER['REQUEST_METHOD']);
 //		$user_id = $this->_get_user_id();
 		$user_id = 1;
 		if($request_method == 'post'){
 			$com_data = array(
 				'type' => 'magazine',
 				'object_id' => $magazineId,
-				'comment' => $this->_get_non_empty('comment'),
-				'parent_id' => $this->_get_non_empty('parent_id'),
+				'comment' => $this->input->post('comment'),
+				'parent_id' => $this->input->post('parent_id'),
 				'user_id' => $user_id,
 				'send_time' => date('Y-m-d H:i:s'),
 			);
