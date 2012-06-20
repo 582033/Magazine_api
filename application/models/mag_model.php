@@ -162,6 +162,15 @@ class Mag_Model extends mag_db {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	function _get_magazine_list($where, $limit, $start){		//获取杂志列表(new){{{
 		$result = $this->db
 						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
@@ -174,6 +183,17 @@ class Mag_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
+		$num_rows =	$this->db
+						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+						->from(MAGAZINE_TABLE . ' as mg')
+						->join('user as us', "mg.user_id = us.user_id")
+						->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+						->where($where)
+						->order_by('mg.weight desc')
+						->limit($limit)
+						->offset($start)
+						->get()
+						->num_rows();
 		for ($i = 0; $i < count($result); $i++){
 			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 			for ($x = 0; $x < count($edit_index_img); $x++){
@@ -197,7 +217,7 @@ class Mag_Model extends mag_db {
 												'id' => $result[$i]['user_id'],
 												'nickname' => $result[$i]['nickname'],
 												//'image' => $result[$i]['avatar'],
-												'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
+												'image' => 'http://misc.360buyimg.com/lib/img/e/logo.png',
 												),
 								'file' => array(
 												'size' => $result[$i]['filesize'],
@@ -205,7 +225,13 @@ class Mag_Model extends mag_db {
 												),
 							);
 		}
-		return $mag_list;
+		$item = array(
+					'kind' => 'magazine#magazines',
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $mag_list,
+					);
+		return $item;
 	}//}}}
 	
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
@@ -269,6 +295,17 @@ class Mag_Model extends mag_db {
 				->offset($start)
 				->get()
 				->result_array();
+		$num_rows = $this->db
+				->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+				->from(MAGAZINE_TABLE . ' as mg')
+				->join('user as us', "mg.user_id = us.user_id")
+				->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+				->where($where)
+				->order_by('mg.weight desc')
+				->limit($limit)
+				->offset($start)
+				->get()
+				->num_rows();
 		if ($result == array()) {
 			$mag_list = null;
 		}
@@ -304,7 +341,13 @@ class Mag_Model extends mag_db {
 								);
 			}
 		}
-		return $mag_list;
+		$item = array(
+					'kind' => 'magazine#magazines',
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $mag_list,
+					);
+		return $item;
 	}//}}}
 	
 	function _get_element($elementId){		//获取单个杂志元素{{{
@@ -356,6 +399,15 @@ class Mag_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
+		$num_rows = $this->db
+						->select ('me.*,mz.magazine_id,mz.user_id')
+						->from(MAG_ELEMENT_TABLE . ' as me')
+						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
+						->where($where)
+						->limit($limit)
+						->offset($start)
+						->get()
+						->num_rows();
 		for ($i = 0; $i < count($result); $i++){
 			$element_list[$i] = array(
 							'id' => $result[$i]['mag_element_id'],
@@ -380,7 +432,13 @@ class Mag_Model extends mag_db {
 			$element_list[$i]['likes'] = $result[$i]['num_loved'];
 			$element_list[$i]['shares'] = $result[$i]['shares'];
 		}
-		return $element_list;
+		$item = array(
+					'kind' => 'magazine#elements',
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $element_list,
+					);
+		return $item;
 	}//}}}
 	
 	function _user_liked_elements($userId, $limit, $start){		//用户喜欢的元素{{{
@@ -395,6 +453,16 @@ class Mag_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
+		$num_rows = $this->db
+						->select ('me.*,mz.magazine_id,mz.user_id')
+						->from(MAG_ELEMENT_TABLE . ' as me')
+						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
+						->join('user_love as ul', "ul.loved_id = me.mag_element_id")
+						->where($where)
+						->limit($limit)
+						->offset($start)
+						->get()
+						->num_rows();
 		if ($result == array()){
 			$element_list = null;
 		}else{
@@ -423,7 +491,13 @@ class Mag_Model extends mag_db {
 				$element_list[$i]['shares'] = $result[$i]['shares'];
 			}
 		}
-		return $element_list;
+		$item = array(
+					'kind' => 'magazine#elements',
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $element_list,
+					);
+		return $item;
 	}//}}}
 	
 	function _get_mag_cates(){		//获取杂志类型{{{
@@ -436,23 +510,45 @@ class Mag_Model extends mag_db {
 					'name' => $cat['dic_value'],
 					);
 		}
-		return $category_return;
+		$num_rows = count($category_return);
+		$item = array(
+					'totalResults' => $num_rows,
+					'items' => $category_return,
+					);
+		return $item;
 	}//}}}
 	
-	function _get_mag_tags(){		//杂志标签{{{
+	function _get_mag_tags($limit, $start){		//杂志标签{{{
 		$result = $this->db
 						->select ('tag')
 						->from(MAGAZINE_TABLE)
 						->group_by('tag')
+						->limit($limit)
+						->offset($start)
 						->get()
 						->result_array();
 		for ($i =0; $i < count($result); $i++){
 			$tags[$i] = $result[$i]['tag'];
 		}
-		return $tags;
+		for ($j = 0; $j < count($tags); $j++){
+			$where = array('tag like' => "%$tags[$j]%");
+			$rows = $this->db
+							->from(MAGAZINE_TABLE)
+							->where($where)
+							->get()
+							->num_rows();
+			$result_item[$j] = array('name' => "$tags[$j]", 'count' => "$rows");
+		}
+		$num_rows = count($tags);
+		$item = array(
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $result_item
+					);
+		return $item;
 	}//}}}
 	
-	function _get_user_tags($userId){		//用户标签{{{
+	function _get_user_tags($userId, $limit, $start){		//用户标签{{{
 		$new_result = array();
 		$tag_temp = array();
 		$tags = array();
@@ -462,6 +558,8 @@ class Mag_Model extends mag_db {
 						->from(MAGAZINE_TABLE)
 						->where($where)
 						->group_by('tag')
+						->limit($limit)
+						->offset($start)
 						->get()
 						->result_array();
 		if ($result == array()){
@@ -489,6 +587,20 @@ class Mag_Model extends mag_db {
 				}
 			}
 		}
-		return $tags;
+		$num_rows = count($tags);
+		for ($x = 0; $x < $num_rows; $x++){
+			$count = $this->db
+							->from(MAGAZINE_TABLE)
+							->where(array('tag like' => "%$tags[$x]%"))
+							->get()
+							->num_rows();
+			$item[$x] = array('name' => $tags[$x], 'count' => $count);
+		}
+		$items = array(
+					'totalResults' => "$num_rows",
+					'start' => "$start",
+					'items' => $item,
+					);
+		return $items;
 	}//}}}
 }

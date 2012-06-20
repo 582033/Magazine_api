@@ -89,9 +89,13 @@ $route['v1/magazines'] = 'mag/magazines';
 $route['v1/element/(:num)'] = 'mag/element/$1';
 $route['v1/elements'] = 'mag/elements';
 $route['v1/user/(:num)/elements/like'] = 'mag/user_liked_elements/$1';
+$route['v1/cates'] = 'mag/cates';
+$route['v1/tags'] = 'mag/tags';
 
 $route['v1/recommendation/magazines/cate/(:num)'] = 'recommendation/by_category/$1';
+$route['v1/recommendation/magazines/maylike'] = 'recommendation/maylike';
 $route['v1/recommendation/(.*)'] = 'recommendation/$1';
+
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

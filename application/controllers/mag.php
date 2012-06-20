@@ -432,7 +432,9 @@
 	}//}}}
 	
 	function tags(){		//杂志标签{{{
-		$tags = $this->Mag_Model->_get_mag_tags();
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
+		$tags = $this->Mag_Model->_get_mag_tags($limit, $start);
 		$this->_json_output($tags);
 	}//}}}
 	
@@ -443,7 +445,9 @@
 		if ($collection == NULL){
 			header("HTTP/1.1 401");
 		}
-		$user_tags = $this->Mag_Model->_get_user_tags($userId);
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
+		$user_tags = $this->Mag_Model->_get_user_tags($userId, $limit, $start);
 		$this->_json_output($user_tags);
 	}//}}}
 }
