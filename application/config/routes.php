@@ -67,10 +67,13 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 
-$route['v1/pctool/(:any)/ftpinfo']='pctool/ftpinfo/$1';//user/{userId}/ftpinfo
+$route['v1/pctool/(:any)/ftpinfo']='pctool/ftpinfo/$1';//pctool/{userId}/ftpinfo
 $route['v1/user/(:any)/(followers|followees)']='user/$2/$1';//user/{userId}/ftpinfo
 
+$route['v1/user/(:num)/elements/like'] = 'user/elements/$1';
+
 $route['v1/pctool/(.*)'] = 'pctool/$1';
+$route['v1/auth/(.*)'] = 'auth/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

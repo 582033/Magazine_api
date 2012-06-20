@@ -411,10 +411,10 @@ $config['ftp_port'] = "21";
 
 $config['signup'] = 'http://www.1001s.cn/user/signup';
 $config['management'] = 'http://www.1001s.cn/magazine/management';
-$config['getkey'] = '/auth/getkey';
-$config['signin'] = '/auth/signin';
-$config['ftpinfo'] = '/user/ftpinfo';
-$config['uploadcomplete'] = '/pctool/uploadcomplete';
+$config['getkey'] = '/v1/auth/getkey';
+$config['signin'] = '/v1/auth/signin';
+$config['ftpinfo'] = '/v1/user/ftpinfo';
+$config['uploadcomplete'] = '/v1/pctool/uploadcomplete';
 $config['versionname'] = 'pctool_api';
 $config['versioncode'] = '1.0'; 
 

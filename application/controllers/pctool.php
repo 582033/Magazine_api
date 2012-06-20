@@ -7,25 +7,25 @@ class pctool extends MY_Controller {
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
 		$this->load->library('session');
-	} 
+	} 	//}}}
 	
 	function config(){ //{{{
         $config = array(
-                'weblinks' => array(
+                'webLinks' => array(
                     'signup' => $this->config->item('signup'),
                     'management' => $this->config->item('management'),
                     ),
-                'apilinks' => array(
+                'apiLinks' => array(
                     'getkey' => $this->config->item('getkey'),
                     'signin' => $this->config->item('signin'),
                     'ftpinfo' => $this->config->item('ftpinfo'),
-                    'uploadcomplete' => $this->config->item('uploadcomplete'),
+                    'uploadComplete' => $this->config->item('uploadcomplete'),
                     ),
                 'tool' => array(
-                    'versionname' => $this->config->item('versionname'),
-                    'versioncode' => $this->config->item('versioncode'),
+                    'versionName' => $this->config->item('versionname'),
+                    'versionCode' => $this->config->item('versioncode'),
                     ),
-				'api_hosts' => $this->config->item('api_hosts'),
+				'apiHost' => $this->config->item('api_hosts'),
                                 );
 		$this->_json_output($config);
     }        //}}}
