@@ -176,7 +176,10 @@ class Mag_Model extends mag_db {
 						->result_array();
 		for ($i = 0; $i < count($result); $i++){
 			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-			$pageThumbs = json_encode($edit_index_img);
+			for ($x = 0; $x < count($edit_index_img); $x++){
+				$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+			}
+			$pageThumbs = $edit_index_img;
 			$mag_list[$i] = array(
 								'id' => $result[$i]['magazine_id'],
 								'name' => $result[$i]['name'],
@@ -193,11 +196,12 @@ class Mag_Model extends mag_db {
 								'author' => array(
 												'id' => $result[$i]['user_id'],
 												'nickname' => $result[$i]['nickname'],
-												'image' => $result[$i]['avatar'],
+												//'image' => $result[$i]['avatar'],
+												'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 												),
 								'file' => array(
 												'size' => $result[$i]['filesize'],
-												'downloadUrl' => $this->config->item('file_hosts').$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+												'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
 												),
 							);
 		}
@@ -220,7 +224,10 @@ class Mag_Model extends mag_db {
 		}
 		else {
 			$edit_index_img = explode(',', trim($result['edit_index_img']));
-			$pageThumbs = json_encode($edit_index_img);
+			for ($x = 0; $x < count($edit_index_img); $x++){
+				$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x];
+			}
+			$pageThumbs = $edit_index_img;
 			$mag = array(
 						'id' => $result['magazine_id'],
 						'name' => $result['name'],
@@ -237,7 +244,8 @@ class Mag_Model extends mag_db {
 						'author' => array(
 										'id' => $result['user_id'],
 										'nickname' => $result['nickname'],
-										'image' => $result['avatar'],
+										//'image' => $this->config->item('api_hosts').$result['avatar'],
+										'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 										),
 						'file' => array(
 										'size' => $result['filesize'],
@@ -267,7 +275,10 @@ class Mag_Model extends mag_db {
 		else {
 			for ($i = 0; $i < count($result); $i++){
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				$pageThumbs = json_encode($edit_index_img);
+				for ($x = 0; $x < count($edit_index_img); $x++){
+					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+				}
+				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
@@ -284,12 +295,12 @@ class Mag_Model extends mag_db {
 									'author' => array(
 													'id' => $result[$i]['user_id'],
 													'nickname' => $result[$i]['nickname'],
-													'image' => $result[$i]['avatar'],
+													//'image' => $result[$i]['avatar'],
+													'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('file_hosts').$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
-													),
+													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",													),
 								);
 			}
 		}

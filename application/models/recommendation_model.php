@@ -22,7 +22,10 @@ class Recommendation_Model extends mag_db {
 		}else{
 			for ($i = 0; $i < count($result); $i++){
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				$pageThumbs = json_encode($edit_index_img);
+				for ($x = 0; $x < count($edit_index_img); $x++){
+					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+				}
+				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
@@ -39,7 +42,8 @@ class Recommendation_Model extends mag_db {
 									'author' => array(
 													'id' => $result[$i]['user_id'],
 													'nickname' => $result[$i]['nickname'],
-													'image' => $result[$i]['avatar'],
+													//'image' => $result[$i]['avatar'],
+													'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
@@ -68,7 +72,10 @@ class Recommendation_Model extends mag_db {
 		}else{
 			for ($i = 0; $i < count($result); $i++){
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				$pageThumbs = json_encode($edit_index_img);
+				for ($x = 0; $x < count($edit_index_img); $x++){
+					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+				}
+				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
@@ -85,7 +92,8 @@ class Recommendation_Model extends mag_db {
 									'author' => array(
 													'id' => $result[$i]['user_id'],
 													'nickname' => $result[$i]['nickname'],
-													'image' => $result[$i]['avatar'],
+													//'image' => $result[$i]['avatar'],
+													'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
@@ -114,7 +122,10 @@ class Recommendation_Model extends mag_db {
 		}else{
 			for ($i = 0; $i < count($result); $i++){
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				$pageThumbs = json_encode($edit_index_img);
+				for ($x = 0; $x < count($edit_index_img); $x++){
+					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+				}
+				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
@@ -131,7 +142,8 @@ class Recommendation_Model extends mag_db {
 									'author' => array(
 													'id' => $result[$i]['user_id'],
 													'nickname' => $result[$i]['nickname'],
-													'image' => $result[$i]['avatar'],
+													//'image' => $result[$i]['avatar'],
+													'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
