@@ -404,7 +404,7 @@ $config['mq_pass'] = 'guest';
 
 
 $config['api_version'] = "1";
-$config['api_hosts'] = "http://api.1001s.cn";
+$config['api_hosts'] = "api.1001s.cn";
 $config['file_hosts'] = "http://api.1001s.cn";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
@@ -413,8 +413,8 @@ $config['signup'] = 'http://www.1001s.cn/user/signup';
 $config['management'] = 'http://www.1001s.cn/magazine/management';
 $config['getkey'] = '/v1/auth/getkey';
 $config['signin'] = '/v1/auth/signin';
-$config['ftpinfo'] = '/v1/user/ftpinfo';
-$config['uploadcomplete'] = '/v1/pctool/uploadcomplete';
+$config['ftpinfo'] = '/v1/pctool/me/ftpinfo';
+$config['uploadcomplete'] = '/v1/pctool/uploadComplete';
 $config['versionname'] = 'pctool_api';
 $config['versioncode'] = '1.0'; 
 
