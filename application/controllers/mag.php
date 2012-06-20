@@ -1,8 +1,8 @@
-<?php class Magazine extends MY_Controller {
+<?php class Mag extends MY_Controller {
 
 	var $apiver;
 
-	function Magazine (){	//{{{
+	function Mag (){	//{{{
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
@@ -358,15 +358,66 @@
 		}else{
 			$where = array('m.mag_category' => $mag_category, 'm.status' => $status);
 		}
-			$result = $this->Mag_Model->_get_mag_for_list($style, $where, $limit, $start);
-		$mag_list = array(
-						'apiver' => $this->apiver,
-						'errcode' => '0',
-						'data' => $result,
-						);
-		$this->_json_output($mag_list);
+		$result = $this->Mag_Model->_get_mag_for_list($style, $where, $limit, $start);
+		$this->_json_output($result);
 	}//}}}
 
 
+
+
+
+
+
+
+//根据新的API定义，完成新的API
+
+
+	function magazines(){		//获取杂志列表(new){{{
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$where = array();
+		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
+		$this->_json_output($mag_list);
+	}//}}}
+	
+	function magazine($magazine_id){
+		$mag = $this->Mag_Model->_get_magazine($magazine_id);
+		$this->_json_output($mag);
+	}
+	
+	function user_magazines($userId, $limit, $start){		//用户的杂志(发布|喜欢|未发布){{{
+		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start);
+		$this->_json_output($mag_list);
+	}//}}}
+	
+	function element($elementId){		//获取单个杂志元素{{{
+		$element = $this->Mag_Model->_get_element($elementId);
+		$this->_json_output($element);
+	}//}}}
+	
+	function elements(){		//获取杂志元素列表{{{
+		$element_list = $this->Mag_Model->_get_element_list();
+		$this->_json_output($element_list);
+	}//}}}
+	
+	function user_liked_elements(){		//用户喜欢的元素{{{
+		$element = $this->Mag_Model->_user_liked_elements($userId, $limit, $start);
+		$this->_json_output($element);
+	}//}}}
+	
+	function cates(){		//杂志类型{{{
+		$cates = $this->Mag_Model->_get_mag_cates();
+		$this->_json_output($cates);
+	}//}}}
+	
+	function tags(){		//杂志标签{{{
+		$tags = $this->Mag_Model->_get_mag_tags();
+		$this->_json_output($tags);
+	}//}}}
+	
+	function user_tags($userId){		//作者对杂志定义的标签{{{
+		$user_tags = $this->Mag_Model->_get_user_tags();
+		$this->_json_output($user_tags);
+	}//}}}
 }
 
