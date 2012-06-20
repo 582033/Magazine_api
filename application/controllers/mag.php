@@ -385,7 +385,9 @@
 		$this->_json_output($mag);
 	}
 	
-	function user_magazines($userId, $limit, $start){		//用户的杂志(发布|喜欢|未发布){{{
+	function user_magazines($userId, $collection){		//用户的杂志(发布|喜欢|未发布){{{
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
 		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
@@ -396,11 +398,15 @@
 	}//}}}
 	
 	function elements(){		//获取杂志元素列表{{{
-		$element_list = $this->Mag_Model->_get_element_list();
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
+		$element_list = $this->Mag_Model->_get_element_list($limit, $start);
 		$this->_json_output($element_list);
 	}//}}}
 	
-	function user_liked_elements(){		//用户喜欢的元素{{{
+	function user_liked_elements($userId){		//用户喜欢的元素{{{
+		$limit = $this->_get_non_empty('limit');
+		$start = $this->_get_non_empty('start');
 		$element = $this->Mag_Model->_user_liked_elements($userId, $limit, $start);
 		$this->_json_output($element);
 	}//}}}
@@ -415,8 +421,8 @@
 		$this->_json_output($tags);
 	}//}}}
 	
-	function user_tags($userId){		//作者对杂志定义的标签{{{
-		$user_tags = $this->Mag_Model->_get_user_tags();
+	function user_tags($userId, $collection='own'){		//作者对杂志定义的标签{{{
+		$user_tags = $this->Mag_Model->_get_user_tags($userId);
 		$this->_json_output($user_tags);
 	}//}}}
 }
