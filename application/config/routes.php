@@ -85,6 +85,7 @@ $route['v1/user/(:num)/magazines/(like|published|unpublished)'] = 'mag/user_maga
 $route['v1/mag/(.*)'] = 'mag/$1';
 $route['v1/user/(:any)/tags/own'] = 'mag/user_tags/$1/$2';
 $route['v1/magazine/(:num)'] = 'mag/magazine/$1';
+$route['v1/magazines'] = 'mag/magazines';
 $route['v1/element/(:num)'] = 'mag/element/$1';
 $route['v1/elements'] = 'mag/elements';
 $route['v1/user/(:num)/elements/like'] = 'mag/user_liked_elements/$1';
