@@ -18,25 +18,28 @@
 		$this->apiver = $this->config->item('api_version');
 	}	//}}}
 	
-	function by_category(){		//按照分类推荐{{{
-		$limit = 13;
-		$start = 0;
+	function by_category($cateId){		//按照分类推荐{{{
+		if ($cateId == NULL){
+			header("HTTP/1.1 401");
+		}
 		$where = array();
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$mag_list = $this->recommendation_model->_get_by_category($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 	
 	function maylike(){		//猜你喜欢{{{
-		$limit = 13;
-		$start = 0;
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$where = array();
 		$mag_list = $this->recommendation_model->_get_maylike($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 	
 	function authors(){		//按照作者推荐{{{
-		$limit = 13;
-		$start = 0;
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$where = array();
 		$mag_list = $this->recommendation_model->_get_authors($where, $limit, $start);
 		$this->_json_output($mag_list);

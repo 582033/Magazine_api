@@ -17,32 +17,36 @@ class Recommendation_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
-		for ($i = 0; $i < count($result); $i++){
-			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-			$pageThumbs = json_encode($edit_index_img);
-			$mag_list[$i] = array(
-								'id' => $result[$i]['magazine_id'],
-								'name' => $result[$i]['name'],
-								'cate' => $result[$i]['mag_category'],
-								'intro' => $result[$i]['description'],
-								'publishedAt' => $result[$i]['publish_time'],
-								'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['index_img'],//$result[$i]['index_img'],
-								'pageThumbs' => $pageThumbs,
-								'likes' => $result[$i]['num_loved'],
-								'shares' => $result[$i]['shares'],
-								'downloads' => $result[$i]['downloads'],
-								'views' => $result[$i]['views'],
-								'status' => $result[$i]['status'],
-								'author' => array(
-												'id' => $result[$i]['user_id'],
-												'nickname' => $result[$i]['nickname'],
-												'image' => $result[$i]['avatar'],
-												),
-								'file' => array(
-												'size' => $result[$i]['filesize'],
-												'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['magazine_id'].".mag",
-												),
-							);
+		if ($result == array()){
+			$mag_list = null;
+		}else{
+			for ($i = 0; $i < count($result); $i++){
+				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
+				$pageThumbs = json_encode($edit_index_img);
+				$mag_list[$i] = array(
+									'id' => $result[$i]['magazine_id'],
+									'name' => $result[$i]['name'],
+									'cate' => $result[$i]['mag_category'],
+									'intro' => $result[$i]['description'],
+									'publishedAt' => $result[$i]['publish_time'],
+									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'pageThumbs' => $pageThumbs,
+									'likes' => $result[$i]['num_loved'],
+									'shares' => $result[$i]['shares'],
+									'downloads' => $result[$i]['downloads'],
+									'views' => $result[$i]['views'],
+									'status' => $result[$i]['status'],
+									'author' => array(
+													'id' => $result[$i]['user_id'],
+													'nickname' => $result[$i]['nickname'],
+													'image' => $result[$i]['avatar'],
+													),
+									'file' => array(
+													'size' => $result[$i]['filesize'],
+													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													),
+								);
+			}
 		}
 		return $mag_list;
 	}//}}}
@@ -59,32 +63,36 @@ class Recommendation_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
-		for ($i = 0; $i < count($result); $i++){
-			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-			$pageThumbs = json_encode($edit_index_img);
-			$mag_list[$i] = array(
-								'id' => $result[$i]['magazine_id'],
-								'name' => $result[$i]['name'],
-								'cate' => $result[$i]['mag_category'],
-								'intro' => $result[$i]['description'],
-								'publishedAt' => $result[$i]['publish_time'],
-								'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['index_img'],//$result[$i]['index_img'],
-								'pageThumbs' => $pageThumbs,
-								'likes' => $result[$i]['num_loved'],
-								'shares' => $result[$i]['shares'],
-								'downloads' => $result[$i]['downloads'],
-								'views' => $result[$i]['views'],
-								'status' => $result[$i]['status'],
-								'author' => array(
-												'id' => $result[$i]['user_id'],
-												'nickname' => $result[$i]['nickname'],
-												'image' => $result[$i]['avatar'],
-												),
-								'file' => array(
-												'size' => $result[$i]['filesize'],
-												'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['magazine_id'].".mag",
-												),
-							);
+		if ($result == array()){
+			$mag_list = null;
+		}else{
+			for ($i = 0; $i < count($result); $i++){
+				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
+				$pageThumbs = json_encode($edit_index_img);
+				$mag_list[$i] = array(
+									'id' => $result[$i]['magazine_id'],
+									'name' => $result[$i]['name'],
+									'cate' => $result[$i]['mag_category'],
+									'intro' => $result[$i]['description'],
+									'publishedAt' => $result[$i]['publish_time'],
+									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'pageThumbs' => $pageThumbs,
+									'likes' => $result[$i]['num_loved'],
+									'shares' => $result[$i]['shares'],
+									'downloads' => $result[$i]['downloads'],
+									'views' => $result[$i]['views'],
+									'status' => $result[$i]['status'],
+									'author' => array(
+													'id' => $result[$i]['user_id'],
+													'nickname' => $result[$i]['nickname'],
+													'image' => $result[$i]['avatar'],
+													),
+									'file' => array(
+													'size' => $result[$i]['filesize'],
+													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													),
+								);
+			}
 		}
 		return $mag_list;
 	}//}}}
@@ -101,34 +109,37 @@ class Recommendation_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
-		for ($i = 0; $i < count($result); $i++){
-			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-			$pageThumbs = json_encode($edit_index_img);
-			$mag_list[$i] = array(
-								'id' => $result[$i]['magazine_id'],
-								'name' => $result[$i]['name'],
-								'cate' => $result[$i]['mag_category'],
-								'intro' => $result[$i]['description'],
-								'publishedAt' => $result[$i]['publish_time'],
-								'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['index_img'],//$result[$i]['index_img'],
-								'pageThumbs' => $pageThumbs,
-								'likes' => $result[$i]['num_loved'],
-								'shares' => $result[$i]['shares'],
-								'downloads' => $result[$i]['downloads'],
-								'views' => $result[$i]['views'],
-								'status' => $result[$i]['status'],
-								'author' => array(
-												'id' => $result[$i]['user_id'],
-												'nickname' => $result[$i]['nickname'],
-												'image' => $result[$i]['avatar'],
-												),
-								'file' => array(
-												'size' => $result[$i]['filesize'],
-												'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['magazine_id'].".mag",
-												),
-							);
+		if ($result == array()){
+			$mag_list = null;
+		}else{
+			for ($i = 0; $i < count($result); $i++){
+				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
+				$pageThumbs = json_encode($edit_index_img);
+				$mag_list[$i] = array(
+									'id' => $result[$i]['magazine_id'],
+									'name' => $result[$i]['name'],
+									'cate' => $result[$i]['mag_category'],
+									'intro' => $result[$i]['description'],
+									'publishedAt' => $result[$i]['publish_time'],
+									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'pageThumbs' => $pageThumbs,
+									'likes' => $result[$i]['num_loved'],
+									'shares' => $result[$i]['shares'],
+									'downloads' => $result[$i]['downloads'],
+									'views' => $result[$i]['views'],
+									'status' => $result[$i]['status'],
+									'author' => array(
+													'id' => $result[$i]['user_id'],
+													'nickname' => $result[$i]['nickname'],
+													'image' => $result[$i]['avatar'],
+													),
+									'file' => array(
+													'size' => $result[$i]['filesize'],
+													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													),
+								);
+			}
 		}
 		return $mag_list;
-
 	}
 }

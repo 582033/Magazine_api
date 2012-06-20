@@ -313,7 +313,7 @@ class Mag_Model extends mag_db {
 						'type' => $result['element_type'],
 						'magId' => $result['magazine_id'],
 						'page' => $result['parent'],
-						'size' => $result['size'],
+						'size' => $result['filesize'],
 						'thumbSize' => '1x1',
 						);
 			if ($result['element_type'] == 'img'){
@@ -351,7 +351,7 @@ class Mag_Model extends mag_db {
 							'type' => $result[$i]['element_type'],
 							'magId' => $result[$i]['magazine_id'],
 							'page' => $result[$i]['parent'],
-							'size' => $result[$i]['size'],
+							'size' => $result[$i]['filesize'],
 							'thumbSize' => '1x1',
 							);
 			if ($result[$i]['element_type'] == 'img'){
@@ -393,7 +393,7 @@ class Mag_Model extends mag_db {
 								'type' => $result[$i]['element_type'],
 								'magId' => $result[$i]['magazine_id'],
 								'page' => $result[$i]['parent'],
-								'size' => $result[$i]['size'],
+								'size' => $result[$i]['filesize'],
 								'thumbSize' => '1x1',
 								);
 				if ($result[$i]['element_type'] == 'img'){

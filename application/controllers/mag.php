@@ -373,40 +373,55 @@
 
 
 	function magazines(){		//获取杂志列表(new){{{
-		$limit = $this->_get_non_empty('limit');
-		$start = $this->_get_non_empty('start');
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$where = array();
 		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 	
 	function magazine($magazine_id){
+		if ($magazine_id == NULL){
+			header("HTTP/1.1 401");
+		}
 		$mag = $this->Mag_Model->_get_magazine($magazine_id);
 		$this->_json_output($mag);
 	}
 	
 	function user_magazines($userId, $collection){		//用户的杂志(发布|喜欢|未发布){{{
-		$limit = $this->_get_non_empty('limit');
-		$start = $this->_get_non_empty('start');
+		if ($userId == NULL){
+			header("HTTP/1.1 401");
+		}
+		if ($collection == NULL){
+			header("HTTP/1.1 401");
+		}
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 	
 	function element($elementId){		//获取单个杂志元素{{{
+		if ($elementId == NULL){
+			header("HTTP/1.1 401");
+		}
 		$element = $this->Mag_Model->_get_element($elementId);
 		$this->_json_output($element);
 	}//}}}
 	
 	function elements(){		//获取杂志元素列表{{{
-		$limit = $this->_get_non_empty('limit');
-		$start = $this->_get_non_empty('start');
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$element_list = $this->Mag_Model->_get_element_list($limit, $start);
 		$this->_json_output($element_list);
 	}//}}}
 	
 	function user_liked_elements($userId){		//用户喜欢的元素{{{
-		$limit = $this->_get_non_empty('limit');
-		$start = $this->_get_non_empty('start');
+		if ($userId == NULL){
+			header("HTTP/1.1 401");
+		}
+		$limit = $this->_get('limit', 10);
+		$start = $this->_get('start', 0);
 		$element = $this->Mag_Model->_user_liked_elements($userId, $limit, $start);
 		$this->_json_output($element);
 	}//}}}
@@ -422,6 +437,12 @@
 	}//}}}
 	
 	function user_tags($userId, $collection='own'){		//作者对杂志定义的标签{{{
+		if ($userId == NULL){
+			header("HTTP/1.1 401");
+		}
+		if ($collection == NULL){
+			header("HTTP/1.1 401");
+		}
 		$user_tags = $this->Mag_Model->_get_user_tags($userId);
 		$this->_json_output($user_tags);
 	}//}}}
