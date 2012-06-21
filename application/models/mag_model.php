@@ -349,14 +349,15 @@ class Mag_Model extends mag_db {
 					);
 		return $item;
 	}//}}}
-	
 	function _get_element($elementId){		//获取单个杂志元素{{{
 		$where = array('mag_element_id' => $elementId);
+		$type = array('img', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
+						->where_in('element_type', $type)
 						->get()
 						->row_array();
 		if ($result == array()){
@@ -368,15 +369,21 @@ class Mag_Model extends mag_db {
 						'magId' => $result['magazine_id'],
 						'page' => $result['parent'],
 						'size' => $result['filesize'],
-						'thumbSize' => '1x1',
 						);
 			if ($result['element_type'] == 'img'){
+				$element['thumbSize'] = '1x1';
 				$element['image'] = array(
 									'128' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
 									'180' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
 									'url' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
 									);
 			}else if ($result['element_type'] == 'video'){
+				$element['thumbSize'] = '2x1';
+				$element['image'] = array(
+										'128' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'],
+										'180' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'],
+										'url' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'],
+										);
 				$element['video'] = array(
 									'format' => 'mp4',
 									'fileurl' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
@@ -390,11 +397,13 @@ class Mag_Model extends mag_db {
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
 		$where = array();
+		$type = array('img', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
+						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
 						->get()
@@ -404,6 +413,7 @@ class Mag_Model extends mag_db {
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
+						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
 						->get()
@@ -418,12 +428,19 @@ class Mag_Model extends mag_db {
 							'thumbSize' => '1x1',
 							);
 			if ($result[$i]['element_type'] == 'img'){
+				$element_list[$i]['thumbSize'] = '1x1';
 				$element_list[$i]['image'] = array(
 									'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 									'180' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 									);
 			}else if ($result[$i]['element_type'] == 'video'){
+				$element_list[$i]['thumbSize'] = '2x1';
+				$element_list[$i]['image'] = array(
+									'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+									'180' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+									);
 				$element_list[$i]['video'] = array(
 											'format' => 'mp4',
 											'fileurl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
@@ -443,12 +460,14 @@ class Mag_Model extends mag_db {
 	
 	function _user_liked_elements($userId, $limit, $start){		//用户喜欢的元素{{{
 		$where = array('ul.user_id' => $userId);
+		$type = array('img', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->join('user_love as ul', "ul.loved_id = me.mag_element_id")
 						->where($where)
+						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
 						->get()
@@ -459,6 +478,7 @@ class Mag_Model extends mag_db {
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->join('user_love as ul', "ul.loved_id = me.mag_element_id")
 						->where($where)
+						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
 						->get()
@@ -473,15 +493,21 @@ class Mag_Model extends mag_db {
 								'magId' => $result[$i]['magazine_id'],
 								'page' => $result[$i]['parent'],
 								'size' => $result[$i]['filesize'],
-								'thumbSize' => '1x1',
 								);
 				if ($result[$i]['element_type'] == 'img'){
+					$element_list[$i]['thumbSize'] = '1x1';
 					$element_list[$i]['image'] = array(
 										'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 										'180' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 										'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 										);
 				}else if ($result[$i]['element_type'] == 'video'){
+					$element_list[$i]['thumbSize'] = '2x1';
+					$element_list[$i]['image'] = array(
+										'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+										'180' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+										'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+										);
 					$element_list[$i]['video'] = array(
 												'format' => 'mp4',
 												'fileurl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
