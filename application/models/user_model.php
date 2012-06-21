@@ -32,6 +32,32 @@ class User_Model extends mag_db {
 		return $return;
 	} //}}}
 
+	function mapping_user_info ($user_info) {	//数据库用户信息映射{{{
+		switch ($user_info['user_type']) {
+			case '0':
+				$role = "reader";
+				break;
+			case '1':
+				$role = "author";
+				break;
+		}
+		$tags = explode(",", $user_info['tag']);
+		$user_info = array(
+				'id' => $user_info['user_id'],
+				'nickname' => $user_info['nickname'],
+				'birthday' => $user_info['birthday'],
+				'gender' => $user_info['sex'],
+				'image' => $user_info['avatar'],
+				'intro' => $user_info['intro'],
+				'tags' => $tags,
+				'role' => $role,
+				'followers' => '999',
+				'followees' => '999',
+				'magazines' => '999',
+				);
+		return $user_info;
+	}	//}}}
+
 	function login ($username, $passwd, $key){ //{{{
 		if ($key == null)
 		{
@@ -48,8 +74,9 @@ class User_Model extends mag_db {
 					);
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
-				$user_info = array_merge($user_is_exist, $this->get_user_info($user_is_exist['account_id']));
-				return $user_info;
+				$user_info = $this->get_user_info($user_is_exist['account_id']);
+				$return = $this->mapping_user_info($user_info);
+				return $return;
 			 }
 			 else {
 				return  array(
@@ -157,43 +184,23 @@ class User_Model extends mag_db {
 		$where = array();
 		$users = $this->rows(USER_TABLE, $where, $limit, $start);
 		$user_infos = array();
-		foreach ($users as $user) {
-			switch ($user['user_type']) {
-				case '0':
-					$role = "reader";
-					break;
-				case '1':
-					$role = "author";
-					break;
-			}
-			$tags = explode(",", $user['tag']);
-			$user_infos[] = array(
-					'id' => $user['user_id'],
-					'nickname' => $user['nickname'],
-					'birthday' => $user['birthday'],
-					'gender' => $user['sex'],
-					'image' => $user['avatar'],
-					'intro' => $user['intro'],
-					'tags' => $tags,
-					'role' => $role,
-					'followers' => '999',
-					'followees' => '999',
-					'magazines' => '999',
-					);
+		foreach ($users as $user_info) {
+			$user_infos[] = $this->mapping_user_info($user_info);
 		}
 		return $user_infos;
 	}	//}}}
-	function to_be_author($user_id){
+
+	function to_be_author($user_id){	//{{{
 		$where = array('user_id' => $user_id);
 		$data = array('user_type' => 1);
 		$this->db->update(USER_TABLE, $data, $where);
-	}
+	}	//}}}
 
-	function edit_user($user_id, $user_info){
+	function edit_user($user_id, $user_info){	//{{{
 		$where = array('user_id' => $user_id);
 		$this->db->update(USER_TABLE, $user_info, $where);
 		$new = $this->get_user_info($user_id);
 		return $new;
-	}
+	}	//}}}
 
 }

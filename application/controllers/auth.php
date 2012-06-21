@@ -33,13 +33,13 @@
 		$redis->delete('key');
 		$username = $this->_get_non_empty('username');
 		$passwd = $this->_get_non_empty('passwd');
-		$return = $this->User_Model->login($username, $passwd, $key);
-		if(isset($return['user_id'])){
+		$user_info = $this->User_Model->login($username, $passwd, $key);
+		if(isset($user_info['id'])){
 			$this->session->initSession();
-			$this->session->set_userdata('user_id',$return['user_id']);
+			$this->session->set_userdata('user_id',$user_info['id']);
 		}
-		$return['session_id'] = $this->session->get_session_id();
-		$this->_json_output($return);
+		$user_info['session_id'] = $this->session->get_session_id();
+		$this->_json_output($user_info);
 	}	//}}}
 
 	function pwd (){	//登录测试用{{{
