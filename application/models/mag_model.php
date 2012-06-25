@@ -194,8 +194,6 @@ class Mag_Model extends mag_db {
 							->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 							->where($where)
 							->order_by('mg.weight desc')
-							->limit($limit)
-							->offset($start)
 							->get()
 							->num_rows();
 			for ($i = 0; $i < count($result); $i++){
@@ -307,8 +305,6 @@ class Mag_Model extends mag_db {
 				->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 				->where($where)
 				->order_by('mg.weight desc')
-				->limit($limit)
-				->offset($start)
 				->get()
 				->num_rows();
 		if ($result == array()) {
@@ -419,8 +415,6 @@ class Mag_Model extends mag_db {
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
 						->where_in('element_type', $type)
-						->limit($limit)
-						->offset($start)
 						->get()
 						->num_rows();
 		for ($i = 0; $i < count($result); $i++){
@@ -484,8 +478,6 @@ class Mag_Model extends mag_db {
 						->join('user_love as ul', "ul.loved_id = me.mag_element_id")
 						->where($where)
 						->where_in('element_type', $type)
-						->limit($limit)
-						->offset($start)
 						->get()
 						->num_rows();
 		if ($result == array()){
