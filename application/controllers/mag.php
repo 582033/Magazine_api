@@ -373,9 +373,14 @@
 
 
 	function magazines(){		//获取杂志列表(new){{{
+		$tag = $this->input->get('tag');
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$where = array();
+		if ($tag == ''){
+			$where = array();
+		}else{
+			$where = array('mg.tag' => $tag);
+		}
 		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}

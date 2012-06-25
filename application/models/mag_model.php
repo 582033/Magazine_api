@@ -183,47 +183,52 @@ class Mag_Model extends mag_db {
 						->offset($start)
 						->get()
 						->result_array();
-		$num_rows =	$this->db
-						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
-						->from(MAGAZINE_TABLE . ' as mg')
-						->join('user as us', "mg.user_id = us.user_id")
-						->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
-						->where($where)
-						->order_by('mg.weight desc')
-						->limit($limit)
-						->offset($start)
-						->get()
-						->num_rows();
-		for ($i = 0; $i < count($result); $i++){
-			$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-			for ($x = 0; $x < count($edit_index_img); $x++){
-				$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+		if ($result == array()){
+			$mag_list = null;
+			$num_rows = 0;
+		}else{
+			$num_rows =	$this->db
+							->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+							->from(MAGAZINE_TABLE . ' as mg')
+							->join('user as us', "mg.user_id = us.user_id")
+							->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+							->where($where)
+							->order_by('mg.weight desc')
+							->limit($limit)
+							->offset($start)
+							->get()
+							->num_rows();
+			for ($i = 0; $i < count($result); $i++){
+				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
+				for ($x = 0; $x < count($edit_index_img); $x++){
+					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+				}
+				$pageThumbs = $edit_index_img;
+				$mag_list[$i] = array(
+									'id' => $result[$i]['magazine_id'],
+									'name' => $result[$i]['name'],
+									'cate' => $result[$i]['mag_category'],
+									'intro' => $result[$i]['description'],
+									'publishedAt' => $result[$i]['publish_time'],
+									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'pageThumbs' => $pageThumbs,
+									'likes' => $result[$i]['num_loved'],
+									'shares' => $result[$i]['shares'],
+									'downloads' => $result[$i]['downloads'],
+									'views' => $result[$i]['views'],
+									'status' => $result[$i]['status'],
+									'author' => array(
+													'id' => $result[$i]['user_id'],
+													'nickname' => $result[$i]['nickname'],
+													//'image' => $result[$i]['avatar'],
+													'image' => 'http://misc.360buyimg.com/lib/img/e/logo.png',
+													),
+									'file' => array(
+													'size' => $result[$i]['filesize'],
+													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													),
+								);
 			}
-			$pageThumbs = $edit_index_img;
-			$mag_list[$i] = array(
-								'id' => $result[$i]['magazine_id'],
-								'name' => $result[$i]['name'],
-								'cate' => $result[$i]['mag_category'],
-								'intro' => $result[$i]['description'],
-								'publishedAt' => $result[$i]['publish_time'],
-								'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
-								'pageThumbs' => $pageThumbs,
-								'likes' => $result[$i]['num_loved'],
-								'shares' => $result[$i]['shares'],
-								'downloads' => $result[$i]['downloads'],
-								'views' => $result[$i]['views'],
-								'status' => $result[$i]['status'],
-								'author' => array(
-												'id' => $result[$i]['user_id'],
-												'nickname' => $result[$i]['nickname'],
-												//'image' => $result[$i]['avatar'],
-												'image' => 'http://misc.360buyimg.com/lib/img/e/logo.png',
-												),
-								'file' => array(
-												'size' => $result[$i]['filesize'],
-												'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
-												),
-							);
 		}
 		$item = array(
 					'kind' => 'magazine#magazines',
@@ -370,7 +375,7 @@ class Mag_Model extends mag_db {
 						'page' => $result['parent'],
 						'size' => $result['filesize'],
 						);
-			if ($result['element_type'] == 'img'){
+			if ($result['element_type'] == 'image'){
 				$element['thumbSize'] = '1x1';
 				$element['image'] = array(
 									'128' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
@@ -397,7 +402,7 @@ class Mag_Model extends mag_db {
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
 		$where = array();
-		$type = array('img', 'video');
+		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
@@ -427,7 +432,7 @@ class Mag_Model extends mag_db {
 							'size' => $result[$i]['filesize'],
 							'thumbSize' => '1x1',
 							);
-			if ($result[$i]['element_type'] == 'img'){
+			if ($result[$i]['element_type'] == 'image'){
 				$element_list[$i]['thumbSize'] = '1x1';
 				$element_list[$i]['image'] = array(
 									'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
@@ -460,7 +465,7 @@ class Mag_Model extends mag_db {
 	
 	function _user_liked_elements($userId, $limit, $start){		//用户喜欢的元素{{{
 		$where = array('ul.user_id' => $userId);
-		$type = array('img', 'video');
+		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
@@ -494,7 +499,7 @@ class Mag_Model extends mag_db {
 								'page' => $result[$i]['parent'],
 								'size' => $result[$i]['filesize'],
 								);
-				if ($result[$i]['element_type'] == 'img'){
+				if ($result[$i]['element_type'] == 'image'){
 					$element_list[$i]['thumbSize'] = '1x1';
 					$element_list[$i]['image'] = array(
 										'128' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
