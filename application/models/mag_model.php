@@ -285,30 +285,78 @@ class Mag_Model extends mag_db {
 		return $mag;
 	}//}}}
 	
-	function _get_user_magazines($userId, $limit, $start){		//获取用户杂志列表{{{
-		$where = array('mg.user_id' => $userId);
-		$result = $this->db
-				->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
-				->from(MAGAZINE_TABLE . ' as mg')
-				->join('user as us', "mg.user_id = us.user_id")
-				->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
-				->where($where)
-				->order_by('mg.weight desc')
-				->limit($limit)
-				->offset($start)
-				->get()
-				->result_array();
-		$num_rows = $this->db
-				->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
-				->from(MAGAZINE_TABLE . ' as mg')
-				->join('user as us', "mg.user_id = us.user_id")
-				->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
-				->where($where)
-				->order_by('mg.weight desc')
-				->get()
-				->num_rows();
+	function _get_user_magazines($userId, $limit, $start, $collection){		//获取用户杂志列表{{{
+		if ($collection == 'published'){
+			$where = array('mg.user_id' => $userId);
+			$result = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->limit($limit)
+					->offset($start)
+					->get()
+					->result_array();
+			$num_rows = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->get()
+					->num_rows();
+		}else if ($collection == 'unpublished'){
+			$where = array('mg.user_id' => $userId);
+			$result = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->limit($limit)
+					->offset($start)
+					->get()
+					->result_array();
+			$num_rows = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->get()
+					->num_rows();
+		}else if ($collection == 'like'){
+			$where = array('ul.user_id' => $userId, 'ul.loved_type' => 'magazine');
+			$result = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->join('user_love as ul', "mg.magazine_id = ul.loved_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->limit($limit)
+					->offset($start)
+					->get()
+					->result_array();
+			$num_rows = $this->db
+					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+					->from(MAGAZINE_TABLE . ' as mg')
+					->join('user as us', "mg.user_id = us.user_id")
+					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
+					->join('user_love as ul', "mg.magazine_id = ul.loved_id")
+					->where($where)
+					->order_by('mg.weight desc')
+					->get()
+					->num_rows();
+		}
 		if ($result == array()) {
-			$mag_list = null;
+				$mag_list = null;
 		}
 		else {
 			for ($i = 0; $i < count($result); $i++){
@@ -350,6 +398,7 @@ class Mag_Model extends mag_db {
 					);
 		return $item;
 	}//}}}
+
 	function _get_element($elementId){		//获取单个杂志元素{{{
 		$where = array('mag_element_id' => $elementId);
 		$type = array('img', 'video');

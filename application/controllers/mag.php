@@ -402,7 +402,7 @@
 		}
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start);
+		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start, $collection);
 		$this->_json_output($mag_list);
 	}//}}}
 	
