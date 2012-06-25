@@ -15,12 +15,13 @@
 	}
 
 	function user(){
-		if($_SERVER['REQUEST_METHOD'] == put){
+		$method = strtolower($_SERVER['REQUEST_METHOD']);
+		if($method == 'post'){
 			$user_json = file_get_contents('php://input', 'r');
 			$user_info = json_decode($user_json, true);
 			$return = $this->User_Model->edit_user($user_id, $user_info);
 			return $return;
-		}else{
+		}elseif($method == 'get'){
 			$user = $this->User_Model->get_user_info($user_id);
 			$this->_json_output($user);
 		}
