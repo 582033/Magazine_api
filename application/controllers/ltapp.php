@@ -9,9 +9,9 @@ class Ltapp extends MY_Controller {
 	}
 
 	function ads($type, $slot){
-//		$type = $this->_get_non_empty('type');
-//		$slot = $this->_get_non_empty('slot');
-		$res = $this->ads_model->ads($type, $slot);
+		$start = $this->_get('start');
+		$limit = $this->_get('limit');
+		$res = $this->ads_model->ads($type, $slot, $start, $limit);
 		$this->_json_output($res);
 	}
 

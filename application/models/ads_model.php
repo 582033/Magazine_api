@@ -22,11 +22,11 @@ class Ads_Model extends mag_db {
 		return $item;
 	}
 
-	function ads($type, $slot){
+	function ads($type, $slot, $start=0, $limit=10){
 		$where = array('type' => $type, 'position' => $slot);
-		$result = $this->mag_db->rows(AD_TABLE, $where);
+		$result = $this->mag_db->rows(AD_TABLE, $where, $limit, $start);
 		foreach($result as $k => $v){
-			$res[] = array(
+			$item[] = array(
 				'kind' => 'magazine#ads',
 				'id' => $v['ad_id'],
 				'type' => $v['type'],
@@ -36,6 +36,12 @@ class Ads_Model extends mag_db {
 				$type => $type == 'image' ? array('size' => $v['image_size'], 'url' => $v['image_url']) : $v['text_detail']
 			);
 		}
+		$res = array(
+			'kind' => 'magazine#ads',
+			'totalResult' => sizeof($result),
+			'start' => $start,
+			'item' => $item,
+		);
 		return $res;
 	}
 }
