@@ -27,7 +27,7 @@ class Ads_Model extends mag_db {
 		$result = $this->mag_db->rows(AD_TABLE, $where, $limit, $start);
 		foreach($result as $k => $v){
 			$item[] = array(
-				'kind' => 'magazine#ads',
+				'kind' => 'magazine#ad',
 				'id' => $v['ad_id'],
 				'type' => $v['type'],
 				'weight' => $v['weight'],
@@ -38,9 +38,9 @@ class Ads_Model extends mag_db {
 		}
 		$res = array(
 			'kind' => 'magazine#ads',
-			'totalResult' => sizeof($result),
+			'totalResults' => sizeof($result),
 			'start' => $start,
-			'item' => $item,
+			'items' => $item,
 		);
 		return $res;
 	}
