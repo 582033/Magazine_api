@@ -22,7 +22,7 @@ class Ads_Model extends mag_db {
 		return $item;
 	}
 
-	function ads($type, $slot, $start=0, $limit=10){
+	function ads($type, $slot, $start, $limit){
 		$where = array('type' => $type, 'position' => $slot);
 		$result = $this->mag_db->rows(AD_TABLE, $where, $limit, $start);
 		foreach($result as $k => $v){
