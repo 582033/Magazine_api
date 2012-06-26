@@ -96,6 +96,7 @@ $route['v1/recommendation/magazines/cate/(:num)'] = 'recommendation/by_category/
 $route['v1/recommendation/magazines/maylike'] = 'recommendation/maylike';
 $route['v1/recommendation/(.*)'] = 'recommendation/$1';
 
+$route['v1/ltapp/ads/(image|text)/(indexmaga|indexelement)']='ltapp/ads/$1/$2';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

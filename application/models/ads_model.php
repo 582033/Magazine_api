@@ -32,6 +32,7 @@ class Ads_Model extends mag_db {
 				'type' => $v['type'],
 				'weight' => $v['weight'],
 				'url' => $v['url'],
+				'title' => $v['title'],
 				$type => $type == 'image' ? array('size' => $v['image_size'], 'url' => $v['image_url']) : $v['text_detail']
 			);
 		}
