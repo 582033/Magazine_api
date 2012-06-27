@@ -379,7 +379,7 @@
 		if ($tag == ''){
 			$where = array();
 		}else{
-			$where = array('mg.tag' => $tag);
+			$where = array('mg.tag like' => "%$tag%");
 		}
 		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
 		$this->_json_output($mag_list);

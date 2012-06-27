@@ -32,18 +32,29 @@ class Recommendation_Model extends mag_db {
 			$mag_list = null;
 		}else{
 			for ($i = 0; $i < count($result); $i++){
+				if (strpos($result[$i]['edit_index_img'], '，')){
+					str_replace('，', ',', $result[$i]['edit_index_img']);
+				}
+				if (strpos($result[$i]['tag'], '，')){
+					str_replace('，', ',', $result[$i]['tag']);
+				}
+				$tag = explode(',', trim($result[$i]['tag']));
+				for ($y = 0; $y < count($tag); $y++){
+					$tags[$y] = $tag[$y];
+				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
 									'cate' => $result[$i]['mag_category'],
+									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' => "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -67,7 +78,7 @@ class Recommendation_Model extends mag_db {
 					'kind' => 'magazine#magazines',
 					'totalResults' => "$num_rows",
 					'start' => $start,
-					'item' => $mag_list,
+					'items' => $mag_list,
 					);
 		return $item;
 	}//}}}
@@ -99,18 +110,29 @@ class Recommendation_Model extends mag_db {
 			$mag_list = null;
 		}else{
 			for ($i = 0; $i < count($result); $i++){
+				if (strpos($result[$i]['edit_index_img'], '，')){
+					str_replace('，', ',', $result[$i]['edit_index_img']);
+				}
+				if (strpos($result[$i]['tag'], '，')){
+					str_replace('，', ',', $result[$i]['tag']);
+				}
+				$tag = explode(',', trim($result[$i]['tag']));
+				for ($y = 0; $y < count($tag); $y++){
+					$tags[$y] = $tag[$y];
+				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
 									'cate' => $result[$i]['mag_category'],
+									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' => "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -134,7 +156,7 @@ class Recommendation_Model extends mag_db {
 					'kind' => 'magazine#magazines',
 					'totalResults' => "$num_rows",
 					'start' => $start,
-					'item' => $mag_list,
+					'items' => $mag_list,
 					);
 		return $item;
 	}//}}}
@@ -181,7 +203,7 @@ class Recommendation_Model extends mag_db {
 					'kind' => 'magazine#persons',
 					'totalResults' => "$num_rows",
 					'start' => "$start",
-					'item' => $user_infos,
+					'items' => $user_infos,
 					);
 		return $item;
 	}

@@ -197,15 +197,26 @@ class Mag_Model extends mag_db {
 							->get()
 							->num_rows();
 			for ($i = 0; $i < count($result); $i++){
+				if (strpos($result[$i]['edit_index_img'], '，')){
+					str_replace('，', ',', $result[$i]['edit_index_img']);
+				}
+				if (strpos($result[$i]['tag'], '，')){
+					str_replace('，', ',', $result[$i]['tag']);
+				}
+				$tag = explode(',', trim($result[$i]['tag']));
+				for ($y = 0; $y < count($tag); $y++){
+					$tags[$y] = $tag[$y];
+				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
 									'cate' => $result[$i]['mag_category'],
+									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
 									'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
@@ -252,15 +263,26 @@ class Mag_Model extends mag_db {
 			$mag = null;
 		}
 		else {
+			if (strpos($result['edit_index_img'], '，')){
+				str_replace('，', ',', $result['edit_index_img']);
+			}
+			if (strpos($result['tag'], '，')){
+				str_replace('，', ',', $result['tag']);
+			}
+			$tag = explode(',', trim($result['tag']));
+			for ($y = 0; $y < count($tag); $y++){
+				$tags[$y] = $tag[$y];
+			}
 			$edit_index_img = explode(',', trim($result['edit_index_img']));
 			for ($x = 0; $x < count($edit_index_img); $x++){
-				$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x];
+				$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x];
 			}
 			$pageThumbs = $edit_index_img;
 			$mag = array(
 						'id' => $result['magazine_id'],
 						'name' => $result['name'],
 						'cate' => $result['mag_category'],
+						'tag' => $tags,
 						'intro' => $result['description'],
 						'publishedAt' => $result['publish_time'],
 						'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['index_img'],//$result[$i]['index_img'],
@@ -360,15 +382,26 @@ class Mag_Model extends mag_db {
 		}
 		else {
 			for ($i = 0; $i < count($result); $i++){
+				if (strpos($result[$i]['edit_index_img'], '，')){
+					str_replace('，', ',', $result[$i]['edit_index_img']);
+				}
+				if (strpos($result[$i]['tag'], '，')){
+					str_replace('，', ',', $result[$i]['tag']);
+				}
+				$tag = explode(',', trim($result[$i]['tag']));
+				for ($y = 0; $y < count($tag); $y++){
+					$tags[$y] = $tag[$y];
+				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
 									'name' => $result[$i]['name'],
 									'cate' => $result[$i]['mag_category'],
+									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
 									'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
