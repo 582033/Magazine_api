@@ -377,9 +377,9 @@
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		if ($tag == ''){
-			$where = array();
+			$where = array('mg.status' => '4');
 		}else{
-			$where = array('mg.tag like' => "%$tag%");
+			$where = array('mg.tag like' => "%$tag%", 'mg.status' => '4');
 		}
 		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
 		$this->_json_output($mag_list);

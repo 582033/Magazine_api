@@ -22,7 +22,7 @@
 		if ($cateId == NULL){
 			header("HTTP/1.1 401");
 		}
-		$where = array();
+		$where = array('mg.status' => '4');
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		$mag_list = $this->recommendation_model->_get_by_category($where, $limit, $start);
@@ -32,12 +32,12 @@
 	function maylike(){		//猜你喜欢{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$where = array();
+		$where = array('mg.status' => '4');
 		$mag_list = $this->recommendation_model->_get_maylike($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 	
-	function authors(){		//按照作者推荐{{{
+	function authors(){		//作者推荐{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		$where = array();
