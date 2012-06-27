@@ -35,14 +35,6 @@ class User_Model extends mag_db {
 	} //}}}
 
 	function mapping_user_info ($user_info) {	//数据库用户信息映射{{{
-		switch ($user_info['user_type']) {
-			case '0':
-				$role = "reader";
-				break;
-			case '1':
-				$role = "author";
-				break;
-		}
 		$tags = explode(",", $user_info['tag']);
 		$user_info = array(
 				'id' => $user_info['user_id'],
@@ -52,7 +44,7 @@ class User_Model extends mag_db {
 				'image' => $user_info['avatar'],
 				'intro' => $user_info['intro'],
 				'tags' => $tags,
-				'role' => $role,
+				'role' => $user_info['user_type'],
 				'followers' => '999',
 				'followees' => '999',
 				'magazines' => '999',
