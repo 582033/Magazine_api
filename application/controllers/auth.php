@@ -34,11 +34,6 @@
 		$username = $this->_get_non_empty('username');
 		$passwd = $this->_get_non_empty('passwd');
 		$user_info = $this->User_Model->login($username, $passwd, $key);
-		if(isset($user_info['id'])){
-			$this->session->initSession();
-			$this->session->set_userdata('user_id',$user_info['id']);
-		}
-		$user_info['session_id'] = $this->session->get_session_id();
 		$this->_json_output($user_info);
 	}	//}}}
 

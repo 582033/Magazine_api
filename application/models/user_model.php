@@ -64,26 +64,32 @@ class User_Model extends mag_db {
 		if ($key == null)
 		{
 			return array(
-					'errcode' => '1',
-					'msg' => '缺少key',
+					'status' => 'INVALID_KEY',
 					);
 		}
 		$user_is_exist = $this->_get_user_by_accountname($username);
 		if(!$user_is_exist){
 		return array(
-					'errcode' => '1',
-					'msg' => '用户不存在',
+					'status' => 'AUTH_FAIL',
 					);
 		}else{
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
 				$user_info = $this->get_user_info($user_is_exist['account_id']);
-				$return = $this->mapping_user_info($user_info);
+				$this->session->initSession();
+				$this->session->set_userdata('user_id', $user_info['id']);
+				$session_id = $this->session->get_session_id();
+				$return = array(
+						'status' => 'OK',
+						'session_id' => $session_id,
+						'expires_in' => '200',
+						'nickname' => $user_info['nickname'],
+						'id' => $user_info['id'],
+						);
 				return $return;
 			 }
 			 else {
 				return  array(
-					'errcode' => '1',
-					'msg' => '用户名密码错误',
+					'status' => 'AUTH_FAIL',
 					);
 			}
 		}
@@ -138,7 +144,7 @@ class User_Model extends mag_db {
 
 	function get_user_info ($user_id) {	//{{{
 		$where = array('user_id' => $user_id);
-		$user_info = $this->row(USER_TABLE, $where);
+		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where));
 		return $user_info;
 	}	//}}}
 

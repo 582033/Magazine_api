@@ -70,7 +70,7 @@ $route['404_override'] = '';
 $route['v1/user/(:any)/ftpinfo'] = 'pctool/ftpinfo/$1';
 $route['v1/user/(:any)/(followers|followees)'] ='person/$2/$1';
 
-$route['v1/user/(:num)'] = 'person/users/$1';
+$route['v1/user/(:num)'] = 'person/user/$1';
 $route['v1/(magazine|element)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
 
 $route['v1/pctool/(.*)'] = 'pctool/$1';

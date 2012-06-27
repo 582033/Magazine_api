@@ -14,7 +14,7 @@
 		$this->load->library('session');
 	}
 
-	function user(){
+	function user($user_id){
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
 		if($method == 'post'){
 			$user_json = file_get_contents('php://input', 'r');
