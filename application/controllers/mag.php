@@ -253,9 +253,9 @@
 						);
 		$this->_json_output($return);
 	}//}}}
-	
+
 	function user_info () {	//获取个人信息{{{
-		$user_id = $this->_get_user_id();		
+		$user_id = $this->_get_user_id();
 		$user_info = $this->User_Model->get_user_info($user_id);
 		$this->_json_output($user_info);
 	}	//}}}
@@ -293,7 +293,6 @@
 		$this->_json_output($data);
 	}	//}}}
 
-
 	function get_index_mag_list(){		//首页杂志列表{{{
 		$limit = 13;
 		$start = 0;
@@ -308,7 +307,7 @@
 					);
 		$this->_json_output($mag);
 	}//}}}
-	
+
 	function get_same_author_mag(){		//获取该作者的其他杂志{{{
 		$magazine_id = $this->_get_non_empty('mag_id');
 		$limit = $this->_get_non_empty('limit');
@@ -326,7 +325,7 @@
 						);
 		$this->_json_output($mag_list);
 	}//}}}
-	
+
 	function get_same_category_mag(){		//获取同类型的杂志{{{
 		$magazine_id = $this->_get_non_empty('mag_id');
 		$limit = $this->_get_non_empty('limit');
@@ -345,7 +344,7 @@
 
 		$this->_json_output($mag_list);
 	}//}}}
-	
+
 	function get_mag_for_list(){		//获取杂志列表页	杂志数据	order_by publish_time(最新){{{
 		$style = $this->_get_non_empty('style');
 		$limit = $this->_get_non_empty('limit');
@@ -384,7 +383,7 @@
 		$mag_list = $this->Mag_Model->_get_magazine_list($where, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
-	
+
 	function magazine($magazine_id){
 		if ($magazine_id == NULL){
 			header("HTTP/1.1 401");
@@ -392,7 +391,7 @@
 		$mag = $this->Mag_Model->_get_magazine($magazine_id);
 		$this->_json_output($mag);
 	}
-	
+
 	function user_magazines($userId, $collection){		//用户的杂志(发布|喜欢|未发布){{{
 		if ($userId == NULL){
 			header("HTTP/1.1 401");
@@ -405,7 +404,7 @@
 		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start, $collection);
 		$this->_json_output($mag_list);
 	}//}}}
-	
+
 	function element($elementId){		//获取单个杂志元素{{{
 		if ($elementId == NULL){
 			header("HTTP/1.1 401");
@@ -413,14 +412,14 @@
 		$element = $this->Mag_Model->_get_element($elementId);
 		$this->_json_output($element);
 	}//}}}
-	
+
 	function elements(){		//获取杂志元素列表{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		$element_list = $this->Mag_Model->_get_element_list($limit, $start);
 		$this->_json_output($element_list);
 	}//}}}
-	
+
 	function user_liked_elements($userId){		//用户喜欢的元素{{{
 		if ($userId == NULL){
 			header("HTTP/1.1 401");
@@ -430,19 +429,19 @@
 		$element = $this->Mag_Model->_user_liked_elements($userId, $limit, $start);
 		$this->_json_output($element);
 	}//}}}
-	
+
 	function cates(){		//杂志类型{{{
 		$cates = $this->Mag_Model->_get_mag_cates();
 		$this->_json_output($cates);
 	}//}}}
-	
+
 	function tags(){		//杂志标签{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		$tags = $this->Mag_Model->_get_mag_tags($limit, $start);
 		$this->_json_output($tags);
 	}//}}}
-	
+
 	function user_tags($userId, $collection='own'){		//作者对杂志定义的标签{{{
 		if ($userId == NULL){
 			header("HTTP/1.1 401");
