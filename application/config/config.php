@@ -408,6 +408,7 @@ $config['api_hosts'] = "api.1001s.cn";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
 $config['file_hosts'] = "http://pub.1001s.cn";
+$config['thumb_host'] = "http://ping.service.wowpad.cn";
 
 $config['signup'] = 'http://www.1001s.cn/user/signup';
 $config['management'] = 'http://www.1001s.cn/magazine/management';

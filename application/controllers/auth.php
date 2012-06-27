@@ -42,6 +42,15 @@
 		$this->_json_output($user_info);
 	}	//}}}
 
+	function signup () {	//{{{
+		$username = $this->input->post('username');
+		$passwd = $this->input->post('passwd');
+		$nickname = $this->input->post('nickname');
+		$nickname = $nickname ? $nickname : null;
+		$return = $this->User_Model->regasReader($username, $passwd, $nickname);
+		$this->_json_output($return);
+	}	//}}}
+
 	function pwd (){	//登录测试用{{{
 		$usr = $this->input->get('u');
 		$pwd = $this->input->get('p');

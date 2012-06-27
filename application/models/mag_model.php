@@ -3,6 +3,7 @@ class Mag_Model extends mag_db {
 	
 	function Mag_model(){
 		parent::__construct();
+		$this->load->library('PicThumb');
 	}
 
 	function _get_category_list (){	//获取杂志分类{{{
@@ -151,26 +152,6 @@ class Mag_Model extends mag_db {
 		return $mag_list;
 	}//}}}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	function _get_magazine_list($where, $limit, $start){		//获取杂志列表(new){{{
 		$result = $this->db
 						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
@@ -209,7 +190,7 @@ class Mag_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -219,7 +200,7 @@ class Mag_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276') ,//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -275,7 +256,7 @@ class Mag_Model extends mag_db {
 			}
 			$edit_index_img = explode(',', trim($result['edit_index_img']));
 			for ($x = 0; $x < count($edit_index_img); $x++){
-				$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x];
+				$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 			}
 			$pageThumbs = $edit_index_img;
 			$mag = array(
@@ -285,7 +266,7 @@ class Mag_Model extends mag_db {
 						'tag' => $tags,
 						'intro' => $result['description'],
 						'publishedAt' => $result['publish_time'],
-						'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['index_img'],//$result[$i]['index_img'],
+						'cover' =>   $this->picThumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['index_img'], '180x276'), //$result[$i]['index_img'],
 						'pageThumbs' => $pageThumbs,
 						'likes' => $result['num_loved'],
 						'shares' => $result['shares'],
@@ -394,7 +375,7 @@ class Mag_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->config->item('thumb_host'). $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -404,7 +385,7 @@ class Mag_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => "http://ping.service.wowpad.cn/thumb?size=180x276&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' =>  $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],

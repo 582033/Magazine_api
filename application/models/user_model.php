@@ -5,7 +5,7 @@ class User_Model extends mag_db {
 		 parent::__construct();
 	}
 
-	function regasReader ($username, $passwd){   //注册为读者{{{
+	function regasReader ($username, $passwd, $nickname=NULL){   //注册为读者{{{
 		$user_is_exist = $this-> _get_user_by_accountname($username);
 		if (!$user_is_exist){
 			$account_info = array(
@@ -14,19 +14,21 @@ class User_Model extends mag_db {
 							'created_at' => time(),
 							);
 			$user_id = $this->insert_row(ACCOUNT_TABLE, $account_info);
-			$nickname = preg_replace('/@.+/', '', $username);
+			if (!$nickname) $nickname = preg_replace('/@.+/', '', $username);
 			$this->insert_row(USER_TABLE, array('user_id' => $user_id, 'nickname' => $nickname));
+			$this->session->initSession();
+			$this->session->set_userdata('user_id', $user_id);
 			$return = array(
-							'errcode' => '0',
-							'msg' => 'ok',
-							'username' => $username,
-							'user_type' => '0',     //用户类型:0读者,1作者,2vip作者,3管理员
+							'status' => 'OK',
+							'session_id' => $this->session->get_session_id(),
+							'expires_in' => 200,     //用户类型:0读者,1作者,2vip作者,3管理员
+							'nickname' => $nickname,
+							'id' => $user_id,
 							);
 		}
 		else {
 			$return = array(
-							'errcode' => '1',
-							'msg' => '用户名已存在',
+							'status' => 'USER_EXISTS',
 							);
 		}
 		return $return;

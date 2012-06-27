@@ -3,6 +3,7 @@ class Recommendation_Model extends mag_db {
 	
 	function Recommendation_model(){
 		parent::__construct();
+		$this->load->library('PicThumb');
 	}
 	
 	function _get_by_category($where, $limit, $start){		//按照分类推荐{{{
@@ -44,7 +45,7 @@ class Recommendation_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -54,7 +55,7 @@ class Recommendation_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -122,7 +123,7 @@ class Recommendation_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x];
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -132,7 +133,7 @@ class Recommendation_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => "http://ping.service.wowpad.cn/thumb?size=104x160&fit=c&src=" . $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'],//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
