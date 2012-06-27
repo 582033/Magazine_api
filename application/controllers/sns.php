@@ -60,6 +60,7 @@ class Sns extends MY_Controller {
 		}
 		parse_str($query,$params);
 		$oauthResult = $oauth->getAccessToken($params,'code');
+		if(isset($params['state'])) $oauthResult['state'] = $params['state'];
 		if(!$oauthResult) {
 			header('HTTP/1.1 403');
 			return $this->_json_output($return);
