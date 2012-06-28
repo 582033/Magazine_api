@@ -7,7 +7,6 @@
 		$this->load->library('session');
 	}
 
-
 	function _generate_key(){	//{{{
 		return random_string('alnum',7);
 	}	//}}}

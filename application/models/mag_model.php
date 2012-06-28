@@ -658,6 +658,7 @@ class Mag_Model extends mag_db {
 		$new_result = array();
 		$tag_temp = array();
 		$tags = array();
+		$item = array();
 		$where = array('user_id' => $userId);
 		$result = $this->db
 						->select ('tag')
