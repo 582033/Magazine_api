@@ -277,7 +277,7 @@ class Mag_Model extends mag_db {
 										'id' => $result['user_id'],
 										'nickname' => $result['nickname'],
 										//'image' => $this->config->item('api_hosts').$result['avatar'],
-										'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
+										'image' => 'http://pic.baike.soso.com/p/20120222/bki-20120222155839-1825332713.jpg',
 										),
 						'file' => array(
 										'size' => $result['filesize'],
