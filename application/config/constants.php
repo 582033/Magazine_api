@@ -89,7 +89,8 @@ define('MAGAZINE_TABLE', 'magazine');
 define('MAG_FILE_TABLE', 'mag_file');
 define('USER_LOVE_TABLE', 'user_love');
 define('MAG_ELEMENT_TABLE', 'mag_element');
-define('AD_TABLE', 'ad');
+define('MSG_TABLE', 'msg');
 define('USER_COMMENT_TABLE', 'user_comment');
+define('AD_TABLE', 'ad_ads');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

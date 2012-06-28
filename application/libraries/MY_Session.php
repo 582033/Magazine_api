@@ -23,7 +23,7 @@ class MY_Session {
 	//var $cookie_path				= '';
 	//var $cookie_domain				= '';
 	//var $cookie_secure				= FALSE;
-	var $sess_time_to_update		= 300;
+	var $sess_time_to_update		= 7200;
 	//var $encryption_key				= '';
 	var $flashdata_key				= 'flash';
 	var $time_reference				= 'time';

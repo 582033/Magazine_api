@@ -286,7 +286,7 @@ $config['sess_table_name']		= 'ci_sessions';
 $config['sess_url_name'] = 'session_id';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= FALSE;
-$config['sess_time_to_update']	= 300;
+$config['sess_time_to_update']	= 7200;
 
 /*
 |--------------------------------------------------------------------------
@@ -421,6 +421,8 @@ $config['versioncode'] = '1.0';
 
 $config['redis_server'] = "tcp://redishost:6379";
 $config['redis_expires'] = "300";	//redis过期时间
+$config['start'] = "0";	//默认查询start值
+$config['limit'] = "10";	//默认查询limit值
 
 if (file_exists(APPPATH . 'config/local.config.php')){
 	include APPPATH . 'config/local.config.php';

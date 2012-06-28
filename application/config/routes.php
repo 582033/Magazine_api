@@ -107,5 +107,10 @@ $route['v1/sns/bind'] = 'sns/bind';
 $route['v1/sns/bindinfo'] = 'sns/bindinfo';
 $route['v1/sns/share'] = 'sns/share';
 
+$route['v1/user/(:num)/activities'] = 'msg/msg_list/$1';
+$route['v1/activity/(:num)'] = 'msg/msg_delput/$1';
+$route['v1/activity/add'] = 'msg/msg_add';
+
+$route['v1/ads/(image|text)/(.*)']='ad/ad_list/$1/$2';
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
