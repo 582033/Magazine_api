@@ -98,5 +98,12 @@ $route['v1/recommendation/(.*)'] = 'recommendation/$1';
 
 $route['v1/ltapp/ads/(image|text)/(indexmaga|indexelement)']='ltapp/ads/$1/$2';
 
+$route['v1/sns/oauthzieurl'] = 'sns/oauthzieurl';
+$route['v1/sns/callback'] = 'sns/callback';
+$route['v1/sns/unbind'] = 'sns/unbind';
+$route['v1/sns/bind'] = 'sns/bind';
+$route['v1/sns/bindinfo'] = 'sns/bindinfo';
+$route['v1/sns/share'] = 'sns/share';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
