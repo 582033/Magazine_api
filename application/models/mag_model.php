@@ -467,7 +467,7 @@ class Mag_Model extends mag_db {
 	}//}}}
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
-		$where = array();
+		$where = array('me.width >' => 900);
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
@@ -489,7 +489,7 @@ class Mag_Model extends mag_db {
 						->num_rows();
 		for ($i = 0; $i < count($result); $i++){
 			if ($result[$i]['width'] > $result[$i]['height']){
-				$thumbSize[$i] = array('thumbSize' => '2x1', '128' => '256x128', '180' => '360x180');
+				$thumbSize[$i] = array('thumbSize' => '2x1', '128' => '256x128', '180' => '380x180');
 			}else if ($result[$i]['width'] == $result[$i]['height']){
 				$thumbSize[$i] = array('thumbSize' => '1x1', '128' => '128x128', '180' => '180x180');
 			}else if ($result[$i]['width'] < $result[$i]['height']){
