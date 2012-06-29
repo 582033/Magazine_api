@@ -151,7 +151,11 @@ class Mag_Model extends mag_db {
 		}
 		return $mag_list;
 	}//}}}
+	
+	
 //新定义的API	
+
+
 	function _get_magazine_list($where, $limit, $start){		//获取杂志列表(new){{{
 		$result = $this->db
 						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
@@ -192,6 +196,11 @@ class Mag_Model extends mag_db {
 				for ($x = 0; $x < count($edit_index_img); $x++){
 					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
@@ -200,7 +209,7 @@ class Mag_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276') ,//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276') ,//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -215,7 +224,7 @@ class Mag_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													'downloadUrl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
 													),
 								);
 			}
@@ -244,6 +253,11 @@ class Mag_Model extends mag_db {
 			$mag = null;
 		}
 		else {
+			if (strlen($result['magazine_id']) <= 3){
+				$read_mag_id = $result['magazine_id'];
+			}else{
+				$read_mag_id = substr($result['magazine_id'], 0, 3);
+			}
 			if (strpos($result['edit_index_img'], '，')){
 				str_replace('，', ',', $result['edit_index_img']);
 			}
@@ -256,7 +270,7 @@ class Mag_Model extends mag_db {
 			}
 			$edit_index_img = explode(',', trim($result['edit_index_img']));
 			for ($x = 0; $x < count($edit_index_img); $x++){
-				$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$edit_index_img[$x], '104x160');
+				$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 			}
 			$pageThumbs = $edit_index_img;
 			$mag = array(
@@ -266,7 +280,7 @@ class Mag_Model extends mag_db {
 						'tag' => $tags,
 						'intro' => $result['description'],
 						'publishedAt' => $result['publish_time'],
-						'cover' =>   $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['index_img'], '180x276'), //$result[$i]['index_img'],
+						'cover' =>   $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['index_img'], '180x276'), //$result[$i]['index_img'],
 						'pageThumbs' => $pageThumbs,
 						'likes' => $result['num_loved'],
 						'shares' => $result['shares'],
@@ -281,7 +295,7 @@ class Mag_Model extends mag_db {
 										),
 						'file' => array(
 										'size' => $result['filesize'],
-										'downloadUrl' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/".$result['magazine_id'].".mag",
+										'downloadUrl' => $this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/".$result['magazine_id'].".mag",
 										),
 					);
 		}
@@ -377,6 +391,12 @@ class Mag_Model extends mag_db {
 				for ($x = 0; $x < count($edit_index_img); $x++){
 					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
+
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
 									'id' => $result[$i]['magazine_id'],
@@ -385,7 +405,7 @@ class Mag_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' =>  $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276'),//$result[$i]['index_img'],
+									'cover' =>  $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -400,7 +420,7 @@ class Mag_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",													),
+													'downloadUrl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",													),
 								);
 			}
 		}
@@ -441,23 +461,28 @@ class Mag_Model extends mag_db {
 			}else if ($result['width'] < $result['height']){
 				$thumbSize = array('thumbSize' => '1x2', '128' => '128x256', '180' => '180x360');
 			}
+			if (strlen($result['magazine_id']) <= 3){
+				$read_mag_id = $result['magazine_id'];
+			}else{
+				$read_mag_id = substr($result['magazine_id'], 0, 3);
+			}
 			if ($result['element_type'] == 'image'){
 				$element['thumbSize'] = $thumbSize['thumbSize'];
 				$element['image'] = array(
-									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'], $thumbSize['128']),
-									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'], $thumbSize['180']),
-									'url' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
+									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['url'], $thumbSize['128']),
+									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['url'], $thumbSize['180']),
+									'url' => $this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['url'],
 									);
 			}else if ($result['element_type'] == 'video'){
 				$element['thumbSize'] = '2x1';
 				$element['image'] = array(
-										'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'], '256x128'),
-										'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'], '360x128'),
-										'url' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['poster'],
+										'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['poster'], '256x128'),
+										'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['poster'], '360x128'),
+										'url' => $this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['poster'],
 										);
 				$element['video'] = array(
 									'format' => 'mp4',
-									'fileurl' => $this->config->item('file_hosts')."/".$result['user_id']."/".$result['magazine_id']."/web/".$result['url'],
+									'fileurl' => $this->config->item('file_hosts')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['url'],
 									);
 			}
 			$element['likes'] = $result['num_loved'];
@@ -467,7 +492,7 @@ class Mag_Model extends mag_db {
 	}//}}}
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
-		$where = array('me.width >' => 900);
+		$where = array();
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
@@ -487,42 +512,52 @@ class Mag_Model extends mag_db {
 						->where_in('element_type', $type)
 						->get()
 						->num_rows();
-		for ($i = 0; $i < count($result); $i++){
-			if ($result[$i]['width'] > $result[$i]['height']){
-				$thumbSize[$i] = array('thumbSize' => '2x1', '128' => '256x128', '180' => '380x180');
-			}else if ($result[$i]['width'] == $result[$i]['height']){
-				$thumbSize[$i] = array('thumbSize' => '1x1', '128' => '128x128', '180' => '180x180');
-			}else if ($result[$i]['width'] < $result[$i]['height']){
-				$thumbSize[$i] = array('thumbSize' => '1x2', '128' => '128x256', '180' => '180x360');
+		if ($result == array()){
+			$element_list = null;
+			$num_rows = 0;
+		}else{
+			for ($i = 0; $i < count($result); $i++){
+				if ($result[$i]['width'] > $result[$i]['height']){
+					$thumbSize[$i] = array('thumbSize' => '2x1', '128' => '256x128', '180' => '380x180');
+				}else if ($result[$i]['width'] == $result[$i]['height']){
+					$thumbSize[$i] = array('thumbSize' => '1x1', '128' => '128x128', '180' => '180x180');
+				}else if ($result[$i]['width'] < $result[$i]['height']){
+					$thumbSize[$i] = array('thumbSize' => '1x2', '128' => '128x256', '180' => '180x360');
+				}
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
+				$element_list[$i] = array(
+								'id' => $result[$i]['mag_element_id'],
+								'type' => $result[$i]['element_type'],
+								'magId' => $result[$i]['magazine_id'],
+								'page' => $result[$i]['parent'],
+								'size' => $result[$i]['filesize'],
+								);
+				if ($result[$i]['element_type'] == 'image'){
+					$element_list[$i]['thumbSize'] = $thumbSize[$i]['thumbSize'];
+					$element_list[$i]['image'] = array(
+										'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['128']),
+										'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['180']),
+										'url' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
+										);
+				}else if ($result[$i]['element_type'] == 'video'){
+					$element_list[$i]['thumbSize'] = '2x1';
+					$element_list[$i]['image'] = array(
+										'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '256x128'),
+										'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '360x180'),
+										'url' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+										);
+					$element_list[$i]['video'] = array(
+												'format' => 'mp4',
+												'fileurl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
+												);
+				}
+				$element_list[$i]['likes'] = $result[$i]['num_loved'];
+				$element_list[$i]['shares'] = $result[$i]['shares'];
 			}
-			$element_list[$i] = array(
-							'id' => $result[$i]['mag_element_id'],
-							'type' => $result[$i]['element_type'],
-							'magId' => $result[$i]['magazine_id'],
-							'page' => $result[$i]['parent'],
-							'size' => $result[$i]['filesize'],
-							);
-			if ($result[$i]['element_type'] == 'image'){
-				$element_list[$i]['thumbSize'] = $thumbSize[$i]['thumbSize'];
-				$element_list[$i]['image'] = array(
-									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['128']),
-									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['180']),
-									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
-									);
-			}else if ($result[$i]['element_type'] == 'video'){
-				$element_list[$i]['thumbSize'] = '2x1';
-				$element_list[$i]['image'] = array(
-									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '256x128'),
-									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '360x180'),
-									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
-									);
-				$element_list[$i]['video'] = array(
-											'format' => 'mp4',
-											'fileurl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
-											);
-			}
-			$element_list[$i]['likes'] = $result[$i]['num_loved'];
-			$element_list[$i]['shares'] = $result[$i]['shares'];
 		}
 		$item = array(
 					'kind' => 'magazine#elements',
@@ -567,6 +602,11 @@ class Mag_Model extends mag_db {
 			}else if ($result[$i]['width'] < $result[$i]['height']){
 				$thumbSize[$i] = array('thumbSize' => '1x2', '128' => '128x256', '180' => '180x360');
 			}
+			if (strlen($result[$i]['magazine_id']) <= 3){
+				$read_mag_id[$i] = $result[$i]['magazine_id'];
+			}else{
+				$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+			}
 				$element_list[$i] = array(
 								'id' => $result[$i]['mag_element_id'],
 								'type' => $result[$i]['element_type'],
@@ -577,20 +617,20 @@ class Mag_Model extends mag_db {
 			if ($result[$i]['element_type'] == 'image'){
 				$element_list[$i]['thumbSize'] = $thumbSize[$i]['thumbSize'];
 				$element_list[$i]['image'] = array(
-									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['128']),
-									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['180']),
-									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
+									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['128']),
+									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'], $thumbSize[$i]['180']),
+									'url' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 									);
 			}else if ($result[$i]['element_type'] == 'video'){
 				$element_list[$i]['thumbSize'] = '2x1';
 				$element_list[$i]['image'] = array(
-									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '256x128'),
-									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '360x180'),
-									'url' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
+									'128' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '256x128'),
+									'180' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'], '360x180'),
+									'url' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['poster'],
 									);
 				$element_list[$i]['video'] = array(
 											'format' => 'mp4',
-											'fileurl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
+											'fileurl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['url'],
 											);
 			}
 				$element_list[$i]['likes'] = $result[$i]['num_loved'];

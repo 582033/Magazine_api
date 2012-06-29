@@ -28,11 +28,16 @@ class Recommendation_Model extends mag_db {
 						->limit($limit)
 						->offset($start)
 						->get()
-						->num_rows();		
+						->num_rows();
 		if ($result == array()){
 			$mag_list = null;
 		}else{
 			for ($i = 0; $i < count($result); $i++){
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
 				if (strpos($result[$i]['edit_index_img'], '，')){
 					str_replace('，', ',', $result[$i]['edit_index_img']);
 				}
@@ -45,7 +50,7 @@ class Recommendation_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -55,7 +60,7 @@ class Recommendation_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -70,7 +75,7 @@ class Recommendation_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													'downloadUrl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
 													),
 								);
 			}
@@ -111,6 +116,11 @@ class Recommendation_Model extends mag_db {
 			$mag_list = null;
 		}else{
 			for ($i = 0; $i < count($result); $i++){
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
 				if (strpos($result[$i]['edit_index_img'], '，')){
 					str_replace('，', ',', $result[$i]['edit_index_img']);
 				}
@@ -123,7 +133,7 @@ class Recommendation_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -133,7 +143,7 @@ class Recommendation_Model extends mag_db {
 									'tag' => $tags,
 									'intro' => $result[$i]['description'],
 									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
+									'cover' => $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '104x160'),//$result[$i]['index_img'],
 									'pageThumbs' => $pageThumbs,
 									'likes' => $result[$i]['num_loved'],
 									'shares' => $result[$i]['shares'],
@@ -148,7 +158,7 @@ class Recommendation_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													'downloadUrl' => $this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
 													),
 								);
 			}
