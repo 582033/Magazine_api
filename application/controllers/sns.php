@@ -86,6 +86,7 @@ class Sns extends MY_Controller {
 				$this->session->initSession();
 				$this->session->set_userdata('user_id',$bind['account_id']);
 				$return['session_id'] = $this->session->get_session_id();
+				$return['oauthstring'] = base64_encode(json_encode($oauthResult));
 			}
 			else {//未绑定
 				$return = array(
