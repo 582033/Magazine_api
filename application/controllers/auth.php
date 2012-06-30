@@ -45,6 +45,10 @@
 		$this->_json_output($return);
 	}	//}}}
 
+	function signout () {	//{{{
+		$this->session->sess_destroy();
+	}	//}}}
+
 	function pwd (){	//登录测试用{{{
 		$usr = $this->input->get('u');
 		$pwd = $this->input->get('p');

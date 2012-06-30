@@ -11,6 +11,7 @@
 		$this->load->model('mag_file_model');
 		$this->load->model('User_comment_Model');
 		$this->load->model('search_model');
+		$this->load->model('check_session_model');
 		$this->load->library('session');
 	}
 
@@ -50,7 +51,8 @@
 	}	//}}}
 
 	function like($type, $id, $action){
-		$user_id = 1;//$this->session->userdata('user_id');
+		//$user_id = 1;//$this->session->userdata('user_id');
+		$user_id = $this->check_session_model->check_session();
 		if($action == 'like'){
 			$this->Love_Model->like($type, $id, $user_id);
 		}else{
