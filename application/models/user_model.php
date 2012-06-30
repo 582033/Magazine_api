@@ -13,6 +13,7 @@ class User_Model extends mag_db {
 							'account_name' => $username,
 							'passwd' => $this->_passwd_encryption($passwd),
 							'created_at' => time(),
+							'rmsalt' => random_string('alnum', 7).uniqid(),
 							);
 			$user_id = $this->insert_row(ACCOUNT_TABLE, $account_info);
 			if (!$nickname) $nickname = preg_replace('/@.+/', '', $username);
