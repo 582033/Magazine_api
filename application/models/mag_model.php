@@ -182,6 +182,11 @@ class Mag_Model extends mag_db {
 							->get()
 							->num_rows();
 			for ($i = 0; $i < count($result); $i++){
+				if (strlen($result[$i]['magazine_id']) <= 3){
+					$read_mag_id[$i] = $result[$i]['magazine_id'];
+				}else{
+					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+				}
 				if (strpos($result[$i]['edit_index_img'], '，')){
 					str_replace('，', ',', $result[$i]['edit_index_img']);
 				}
@@ -194,12 +199,7 @@ class Mag_Model extends mag_db {
 				}
 				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
 				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
-				}
-				if (strlen($result[$i]['magazine_id']) <= 3){
-					$read_mag_id[$i] = $result[$i]['magazine_id'];
-				}else{
-					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
+					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('file_hosts')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
 				}
 				$pageThumbs = $edit_index_img;
 				$mag_list[$i] = array(
@@ -492,7 +492,7 @@ class Mag_Model extends mag_db {
 	}//}}}
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
-		$where = array();
+		$where = array('mz.magazine_id ' => 338);
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
@@ -502,6 +502,7 @@ class Mag_Model extends mag_db {
 						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
+						->order_by('me.width desc')
 						->get()
 						->result_array();
 		$num_rows = $this->db
