@@ -367,7 +367,7 @@
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		if ($tag == ''){
-			$where = array('mg.status' => '4');
+			$where = array('mg.status' => '4', 'mg.magazine_id >' => '333');
 		}else{
 			$where = array('mg.tag like' => "%$tag%", 'mg.status' => '4');
 		}
