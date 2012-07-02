@@ -77,7 +77,7 @@ $route['v1/pctool/(.*)'] = 'pctool/$1';
 $route['v1/auth/(.*)'] = 'auth/$1';
 
 $route['v1/comment/(.*)'] = 'comment/$1';
-$route['v1/magazine/(:num)/comments'] = 'comment/comments/$1';
+$route['v1/(magazine)/(:num)/comments'] = 'comment/comments/$1/$2';
 
 $route['v1/(magazine|element)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
 
