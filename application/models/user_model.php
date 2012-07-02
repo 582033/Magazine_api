@@ -36,6 +36,35 @@ class User_Model extends mag_db {
 		return $return;
 	} //}}}
 
+	function  remember_signin ($username, $rmsalt) {	//记住用户名密码时用此方法检测登录{{{
+		$user_is_exist = $this->_get_user_by_accountname($username);
+		if(!$user_is_exist){
+		return array(
+					'status' => 'AUTH_FAIL',
+					);
+		}else{
+			if ($rmsalt == $this->_rmsalt_encryption($user_is_exist['passwd'], $user_is_exist['rmsalt'])){
+				$user_info = $this->get_user_info($user_is_exist['account_id']);
+				$this->session->initSession();
+				$this->session->set_userdata('user_id', $user_info['id']);
+				$session_id = $this->session->get_session_id();
+				$return = array(
+						'status' => 'OK',
+						'session_id' => $session_id,
+						'expires_in' => '200',
+						'nickname' => $user_info['nickname'],
+						'id' => $user_info['id'],
+						);
+				return $return;
+			 }
+			 else {
+				return  array(
+					'status' => 'AUTH_FAIL',
+					);
+			}
+		}
+	}	//}}}
+
 	function mapping_user_info ($user_info) {	//数据库用户信息映射{{{
 		$tags = explode(",", $user_info['tag']);
 		$user_info = array(
@@ -100,6 +129,10 @@ class User_Model extends mag_db {
 
 	function _passwd_encryption ($passwd){  //密码加密{{{
 		return md5($passwd);
+	}       //}}}
+
+	function _rmsalt_encryption ($passwd, $rmsalt){  //记住密码时返回的永久key加密{{{
+		return md5(md5($passwd) . $rmsalt);
 	}       //}}}
 
 	function get_nickname ($user_id){	//获取用户昵称{{{

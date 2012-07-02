@@ -404,14 +404,14 @@ $config['mq_pass'] = 'guest';
 
 
 $config['api_version'] = "1";
-$config['api_hosts'] = "api.1001s.cn";
+$config['api_hosts'] = "api.in1001.com";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
 $config['file_hosts'] = "http://pub.1001s.cn";
 $config['thumb_host'] = "http://ping.service.wowpad.cn";
 
-$config['signup'] = 'http://www.1001s.cn/user/signup';
-$config['management'] = 'http://www.1001s.cn/magazine/management';
+$config['signup'] = '/user/signup';
+$config['management'] = '/magazine/management';
 $config['getkey'] = '/v1/auth/getkey';
 $config['signin'] = '/v1/auth/signin';
 $config['ftpinfo'] = '/v1/user/me/ftpinfo';

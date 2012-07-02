@@ -32,7 +32,13 @@
 		$redis->delete('key');
 		$username = $this->_get_non_empty('username');
 		$passwd = $this->_get_non_empty('passwd');
-		$user_info = $this->User_Model->login($username, $passwd, $key);
+		$rmsalt = $this->input->get('rmsalt');
+		if ($username && ($rmsalt && $rmsalt != '')) {
+			$user_info = $this->User_Model->remember_signin($username, $rmsalt);//记住密码时登录
+		}
+		else {
+			$user_info = $this->User_Model->login($username, $passwd, $key);//正常登录
+		}
 		$this->_json_output($user_info);
 	}	//}}}
 
