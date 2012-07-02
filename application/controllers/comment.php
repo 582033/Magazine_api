@@ -26,8 +26,8 @@ class Comment extends MY_Controller {
 			$this->User_comment_Model->add_comment($com_data);
 		}
 		if($request_method == 'get'){
-			$limit = $this->input->get('limit');
-			$start = $this->input->get('start');
+			$limit = $this->input->get('limit') ? $this->input->get('limit') : '10';
+			$start = $this->input->get('start') ? $this->input->get('start') : '0';
 			$result = $this->User_comment_Model->comments($user_id, $type, $magazineId, $limit, $start);
 			$this->_json_output($result);
 		}

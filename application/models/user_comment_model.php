@@ -13,9 +13,13 @@ class User_comment_Model extends mag_db {
 
 	function comments($user_id, $type, $object_id, $limit=10, $start=0){		//取得评论{{{
 		$where = array('type' => $type, 'object_id' => $object_id);
-		$sql = "select * from user_comment as C,user as U where C.user_id=U.user_id and C.type='$type' and C.object_id=$object_id order by send_time desc limit $limit";
+		$sql = "select * from user_comment as C,user as U where C.user_id=U.user_id and C.type='$type' and C.object_id=$object_id order by send_time desc limit $start,$limit";
 		$result = $this->db->query($sql);
 		$result = $result->result_array();
+		$sql_0 = "select count(*) from user_comment as C,user as U where C.user_id=U.user_id and C.type='$type' and C.object_id=$object_id";
+		$result_0 = $this->db->query($sql_0);
+		$result_0 = $result_0->row_array();
+		$totalResults = $result_0['count(*)'];
 		foreach($result as $k){
 			if($k['parent_id'] != 0){
 				$parent_id = $k['parent_id'];
@@ -44,6 +48,12 @@ class User_comment_Model extends mag_db {
 				'parent' => $parent,
 			);
 		}
+		$res = array(
+			'kind' => "magazine#comments",
+			'totalResults' => $totalResults,
+			'start' => 0,
+			'items' => $res,
+		);
 		return $res;
 	}//}}}
 
