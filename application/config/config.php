@@ -407,7 +407,7 @@ $config['api_version'] = "1";
 $config['api_hosts'] = "api.in1001.com";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
-$config['file_hosts'] = "http://pub.1001s.cn";
+$config['file_hosts'] = "http://pub.in1001.com";
 $config['thumb_host'] = "http://ping.service.wowpad.cn";
 
 $config['signup'] = '/user/signup';
