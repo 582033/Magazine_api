@@ -5,14 +5,14 @@ class Comment extends MY_Controller {
 		parent::__construct();
 		$this->load->model('mag_db');
 		$this->load->model('User_comment_Model');
+		$this->load->model('check_session_model');
 	}
 
 	function comments($type, $magazineId=null){ //{{{		杂志评论
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
 		$request_method = strtolower($_SERVER['REQUEST_METHOD']);
-//		$user_id = $this->_get_user_id();
-		$user_id = 1;
+		echo $user_id = $this->check_session_model->check_session();
 		if($request_method == 'post'){
 			$com_data = array(
 				'type' => $type,

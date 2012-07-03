@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*************************************************
 	如果需要验证session_id是否正确,则调用此Model
 
@@ -6,6 +6,9 @@
 	如果不存在,则设置http头为401
 **************************************************/
 class check_session_model extends CI_Model{
+	function __construct() {
+		$this->load->library('session');
+	}
 
 	function check_session () {	//{{{
 		if(!$this->session->checkAndRead()){
