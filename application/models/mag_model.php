@@ -224,7 +224,7 @@ class Mag_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",
+													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/dist/".$result[$i]['magazine_id'].".magz",
 													),
 								);
 			}
@@ -295,7 +295,7 @@ class Mag_Model extends mag_db {
 										),
 						'file' => array(
 										'size' => $result['filesize'],
-										'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id."/".$result['magazine_id']."/".$result['magazine_id'].".mag",
+										'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id."/".$result['magazine_id']."/dist/".$result['magazine_id'].".magz",
 										),
 					);
 		}
@@ -420,7 +420,8 @@ class Mag_Model extends mag_db {
 													),
 									'file' => array(
 													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/".$result[$i]['magazine_id'].".mag",													),
+													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/dist/".$result[$i]['magazine_id'].".magz",
+													),
 								);
 			}
 		}
