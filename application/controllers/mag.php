@@ -267,7 +267,7 @@
 		$file_data = json_decode($data, true);
 
 		$res = $this->mag_file_model->save_mag_file($file_data, $user_id);
-//		$pubstr = file_get_contents("http://api.1001s.cn/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
+//		$pubstr = file_get_contents("http://api.in1001.com/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
 		$this->_json_output($res);
 
 	}
@@ -367,7 +367,7 @@
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		if ($tag == ''){
-			$where = array('mg.status' => '4', 'mg.magazine_id >' => '333');
+			$where = array('mg.status' => '4', 'mg.magazine_id >' => '371');
 		}else{
 			$where = array('mg.tag like' => "%$tag%", 'mg.status' => '4');
 		}

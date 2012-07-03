@@ -43,6 +43,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
+define('ENVIRONMENT', 'development');
 if (
 	preg_match('/^(10|127)\./', $_SERVER['SERVER_ADDR']) ||
 		preg_match('/^(stag|dev)/', $_SERVER['HTTP_HOST'])) {

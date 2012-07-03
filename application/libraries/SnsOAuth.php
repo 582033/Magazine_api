@@ -6,7 +6,7 @@
  */
 
 abstract class SnsOAuth {
-	const CALLBACK = 'http://test.www.1001s.cn/sns/callback';
+	const CALLBACK = 'http://www.in1001.com/sns/callback';
 	
 	protected $type = null;
 	protected $authResult = array();

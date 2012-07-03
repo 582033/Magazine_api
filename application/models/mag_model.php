@@ -492,7 +492,7 @@ class Mag_Model extends mag_db {
 	}//}}}
 	
 	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
-		$where = array('mz.magazine_id ' => 338);
+		$where = array('mz.magazine_id ' => 371);
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
