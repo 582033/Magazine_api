@@ -48,8 +48,8 @@ class ApiConfig extends MY_Controller {
 	
         function _config_extra (){      //{{{
                 $return = array(
-                                'api_hosts' => $this->config->item('api_hosts'),
-                                'file_hosts' => $this->config->item('file_hosts'),
+                                'api_hosts' => $this->config->item('api_host'),
+                                'pub_host' => $this->config->item('pub_host'),
                                 );
                 return $return;
         }       //}}}

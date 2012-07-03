@@ -404,10 +404,10 @@ $config['mq_pass'] = 'guest';
 
 
 $config['api_version'] = "1";
-$config['api_hosts'] = "api.in1001.com";
+$config['api_host'] = "http://api.in1001.com";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
-$config['file_hosts'] = "http://pub.in1001.com";
+$config['pub_host'] = "http://pub.in1001.com";
 $config['thumb_host'] = "http://thumb.wowpad.cn";
 
 $config['signup'] = '/user/signup';
