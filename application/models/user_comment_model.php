@@ -20,33 +20,38 @@ class User_comment_Model extends mag_db {
 		$result_0 = $this->db->query($sql_0);
 		$result_0 = $result_0->row_array();
 		$totalResults = $result_0['count(*)'];
-		foreach($result as $k){
-			if($k['parent_id'] != 0){
-				$parent_id = $k['parent_id'];
-				$sql_0 = "select * from user where user_id='$parent_id'";
-				$parent_user = $this->db->query($sql_0);
-				$parent_user = $parent_user->row_array();
-				$parent = array(
-					'id' => $k['parent_id'],
+		if ($totalResults > 0) {
+			foreach($result as $k){
+				if($k['parent_id'] != 0){
+					$parent_id = $k['parent_id'];
+					$sql_1 = "select * from user where user_id='$parent_id'";
+					$parent_user = $this->db->query($sql_1);
+					$parent_user = $parent_user->row_array();
+					$parent = array(
+						'id' => $k['parent_id'],
+						'author' => array(
+							'id' => $parent_user['user_id'],
+							'nickname' => $parent_user['nickname'],
+							'image' => $parent_user['avatar'],
+						),
+					);
+				}else{
+					$parent = array();
+				}
+				$res[] = array(
+					'id' => $k['user_comment_id'],
+					'content' => $k['comment'],
 					'author' => array(
-						'id' => $parent_user['user_id'],
-						'nickname' => $parent_user['nickname'],
-						'image' => $parent_user['avatar'],
+						'id' => $k['user_id'],
+						'nickname' => $k['nickname'],
+						'image' => $k['avatar'],
 					),
+					'parent' => $parent,
 				);
-			}else{
-				$parent = array();
 			}
-			$res[] = array(
-				'id' => $k['user_comment_id'],
-				'content' => $k['comment'],
-				'author' => array(
-					'id' => $k['user_id'],
-					'nickname' => $k['nickname'],
-					'image' => $k['avatar'],
-				),
-				'parent' => $parent,
-			);
+		}
+		else {
+			$res = null;
 		}
 		$res = array(
 			'kind' => "magazine#comments",
