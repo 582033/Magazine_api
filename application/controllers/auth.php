@@ -1,5 +1,5 @@
 <?php class Auth extends MY_Controller {
-	
+
 	function __construct () {
 		parent::__construct();
 		$this->load->model('mag_db');
@@ -58,10 +58,10 @@
 	function pwd (){	//登录测试用{{{
 		$usr = $this->input->get('u');
 		$pwd = $this->input->get('p');
-		$getkey = json_decode(file_get_contents($this->config->item('api_host')."/v1/auth/getkey"), TRUE);
+		$getkey = json_decode(file_get_contents($this->config->item('api_host')."/auth/getkey"), TRUE);
 		$key = $getkey['key'];
 		$pwd = md5(md5($pwd).$key);
-		$url = $this->config->item('api_hosts')."/auth/signin?username=$usr&passwd=$pwd";
+		$url = $this->config->item('api_host')."/auth/signin?username=$usr&passwd=$pwd";
 		echo "<a href=$url>$url</a>";
 	}	//}}}
 }

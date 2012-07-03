@@ -12,6 +12,7 @@ class Comment extends MY_Controller {
 		$now = new DateTime;
 		$date = $now->format("Y-m-d H:i:s");
 		$user_id = $this->check_session_model->check_session();
+		$request_method = strtolower($_SERVER['REQUEST_METHOD']);
 		if($request_method == 'post'){
 			$com_data = array(
 				'type' => $type,
