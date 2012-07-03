@@ -15,17 +15,24 @@ class Love_Model extends mag_db {
 		if ($row == array()){
 			$data = $where;
 			$this->mag_db->insert_row(USER_LOVE_TABLE, $data);
-			$return = array(
-							'errcode' => '0',
-							'data' => $data,
-						);
-		}else{
-			$return = array(
-							'errcode' => '1',
-							'data' => null,
-						);
 		}
-		return $return;
+		switch ($loved_type) {
+			case 'magazine':
+				$table = 'magazine';
+				$id_field = 'magazine_id';
+				break;
+			case 'element':
+				$table = 'mag_element';
+				$id_field = 'mag_element_id';
+				break;
+			case 'author':
+				$table = 'user';
+				$id_field = 'user_id';
+				break;
+		}
+		$sql = "update $table set num_loved = num_loved + 1 where $id_field = $loved_id";
+		$this->db->query($sql);
+		//magazine['num_loved']+1 element author
 	}		//}}}
 
 	function cancellike($loved_type, $loved_id, $user_id){
