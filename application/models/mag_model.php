@@ -491,8 +491,8 @@ class Mag_Model extends mag_db {
 		return $element;
 	}//}}}
 	
-	function _get_element_list($limit, $start){		//获取杂志元素列表{{{
-		$where = array('mz.magazine_id ' => 371);
+	function _get_element_list($limit, $start, $order_by){		//获取杂志元素列表{{{
+		$where = array();
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
@@ -502,7 +502,7 @@ class Mag_Model extends mag_db {
 						->where_in('element_type', $type)
 						->limit($limit)
 						->offset($start)
-						->order_by('me.width desc')
+						->order_by($order_by)
 						->get()
 						->result_array();
 		$num_rows = $this->db

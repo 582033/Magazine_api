@@ -367,7 +367,7 @@
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		if ($tag == ''){
-			$where = array('mg.status' => '4', 'mg.magazine_id >' => '371');
+			$where = array('mg.status' => '4');
 		}else{
 			$where = array('mg.tag like' => "%$tag%", 'mg.status' => '4');
 		}
@@ -407,7 +407,8 @@
 	function elements(){		//获取杂志元素列表{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$element_list = $this->Mag_Model->_get_element_list($limit, $start);
+		$order_by = 'me.weight desc';
+		$element_list = $this->Mag_Model->_get_element_list($limit, $start, $order_by);
 		$this->_json_output($element_list);
 	}//}}}
 
