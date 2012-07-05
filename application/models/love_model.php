@@ -16,22 +16,20 @@ class Love_Model extends mag_db {
 			$data = $where;
 			$this->mag_db->insert_row(USER_LOVE_TABLE, $data);
 		}
-		switch ($loved_type) {
-			case 'magazine':
-				$table = 'magazine';
-				$id_field = 'magazine_id';
-				break;
-			case 'element':
-				$table = 'mag_element';
-				$id_field = 'mag_element_id';
-				break;
-			case 'author':
-				$table = 'user';
-				$id_field = 'user_id';
-				break;
+		if ($loved_type != 'author'){
+			switch ($loved_type) {
+				case 'magazine':
+					$table = 'magazine';
+					$id_field = 'magazine_id';
+					break;
+				case 'element':
+					$table = 'mag_element';
+					$id_field = 'mag_element_id';
+					break;
+			}
+			$sql = "update $table set num_loved = num_loved + 1 where $id_field = $loved_id";
+			$this->db->query($sql);
 		}
-		$sql = "update $table set num_loved = num_loved + 1 where $id_field = $loved_id";
-		$this->db->query($sql);
 		//magazine['num_loved']+1 element author
 	}		//}}}
 

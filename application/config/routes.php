@@ -71,7 +71,7 @@ $route['v1/user/(:any)/ftpinfo'] = 'pctool/ftpinfo/$1';
 $route['v1/user/(:any)/(followers|followees)'] ='person/$2/$1';
 
 $route['v1/user/(:num)'] = 'person/user/$1';
-$route['v1/(magazine|element)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
+$route['v1/(magazine|element|author)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
 
 $route['v1/pctool/(.*)'] = 'pctool/$1';
 $route['v1/auth/(.*)'] = 'auth/$1';
@@ -91,6 +91,7 @@ $route['v1/elements'] = 'mag/elements';
 $route['v1/user/(:num)/elements/like'] = 'mag/user_liked_elements/$1';
 $route['v1/cates'] = 'mag/cates';
 $route['v1/tags'] = 'mag/tags';
+$route['v1/user/(:num)/follow/(0|1)'] = 'person/follow/$1/$2';
 
 $route['v1/recommendation/magazines/cate/(:num)'] = 'recommendation/by_category/$1';
 $route['v1/recommendation/magazines/maylike'] = 'recommendation/maylike';
