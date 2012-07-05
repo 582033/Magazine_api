@@ -80,6 +80,8 @@ $route['v1/comment/(.*)'] = 'comment/$1';
 $route['v1/(magazine)/(:num)/comments'] = 'comment/comments/$1/$2';
 
 $route['v1/(magazine|element)/(:num)/(like|cancelLike)'] = 'person/like/$1/$2/$3';
+$route['v1/user/(:num)/follow'] = 'person/follow/$1/1';
+$route['v1/user/(:num)/unfollow'] = 'person/follow/$1/0';
 
 $route['v1/user/(:num)/magazines/(like|published|unpublished)'] = 'mag/user_magazines/$1/$2';
 $route['v1/mag/(.*)'] = 'mag/$1';
@@ -91,7 +93,6 @@ $route['v1/elements'] = 'mag/elements';
 $route['v1/user/(:num)/elements/like'] = 'mag/user_liked_elements/$1';
 $route['v1/cates'] = 'mag/cates';
 $route['v1/tags'] = 'mag/tags';
-$route['v1/user/(:num)/follow/(0|1)'] = 'person/follow/$1/$2';
 
 $route['v1/recommendation/magazines/cate/(:num)'] = 'recommendation/by_category/$1';
 $route['v1/recommendation/magazines/maylike'] = 'recommendation/maylike';
