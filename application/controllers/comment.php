@@ -9,11 +9,11 @@ class Comment extends MY_Controller {
 	}
 
 	function comments($type, $magazineId=null){ //{{{		杂志评论
-		$now = new DateTime;
-		$date = $now->format("Y-m-d H:i:s");
-		$user_id = $this->check_session_model->check_session();
 		$request_method = strtolower($_SERVER['REQUEST_METHOD']);
 		if($request_method == 'post'){
+			$now = new DateTime;
+			$date = $now->format("Y-m-d H:i:s");
+			$user_id = $this->check_session_model->check_session();
 			$com_data = array(
 				'type' => $type,
 				'object_id' => $magazineId,
@@ -28,7 +28,7 @@ class Comment extends MY_Controller {
 		if($request_method == 'get'){
 			$limit = $this->input->get('limit') ? $this->input->get('limit') : '10';
 			$start = $this->input->get('start') ? $this->input->get('start') : '0';
-			$result = $this->User_comment_Model->comments($user_id, $type, $magazineId, $limit, $start);
+			$result = $this->User_comment_Model->comments(null, $type, $magazineId, $limit, $start);
 			$this->_json_output($result);
 		}
 	}	//}}}
