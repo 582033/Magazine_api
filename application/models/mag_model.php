@@ -154,33 +154,45 @@ class Mag_Model extends mag_db {
 	
 	
 //新定义的API	
-
-
-	function _get_magazine_list($where, $limit, $start){		//获取杂志列表(new){{{
-		$result = $this->db
+	
+	function _select_magazines ($tag, $keyword, $limit, $start, $action) {
+		$this->db
 						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 						->from(MAGAZINE_TABLE . ' as mg')
 						->join('user as us', "mg.user_id = us.user_id")
-						->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
-						->where($where)
-						->order_by('mg.weight desc')
+						->join('mag_file as mf', "mg.magazine_id = mf.magazine_id");
+
+		$where = array('mg.status' => '4');
+		if ($tag) $this->db->where("mg.tag like '%$tag%'");
+		if ($keyword) {
+			$this->db->where("(mg.tag like '%$keyword%' OR mg.description like '%$keyword%')");
+		}
+		$this->db->order_by('mg.weight desc');
+		switch ($action) {
+			case 'result_array':	
+				return $this->db
 						->limit($limit)
 						->offset($start)
 						->get()
 						->result_array();
+				break;
+			case 'num_rows':	
+				return $this->db
+						->get()
+						->num_rows();
+				break;
+		}
+		
+	}
+
+
+	function _get_magazine_list($tag, $keyword, $limit, $start){		//获取杂志列表(new){{{
+		$result = $this->_select_magazines($tag, $keyword, $limit, $start, 'result_array');
 		if ($result == array()){
 			$mag_list = null;
 			$num_rows = 0;
 		}else{
-			$num_rows =	$this->db
-							->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
-							->from(MAGAZINE_TABLE . ' as mg')
-							->join('user as us', "mg.user_id = us.user_id")
-							->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
-							->where($where)
-							->order_by('mg.weight desc')
-							->get()
-							->num_rows();
+			$num_rows = $this->_select_magazines($tag, $keyword, $limit, $start, 'num_rows');
 			for ($i = 0; $i < count($result); $i++){
 				if (strlen($result[$i]['magazine_id']) <= 3){
 					$read_mag_id[$i] = $result[$i]['magazine_id'];

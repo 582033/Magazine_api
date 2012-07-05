@@ -29,9 +29,10 @@
 	}
 
 	function users(){
-		$start = $this->_get_non_empty('start');
-		$limit = $this->_get_non_empty('limit');
-		$data = $this->User_Model->get_all_users($start,$limit);
+		$start = $this->input->get('start') ? $this->input->get('start') : 0;
+		$limit = $this->input->get('limit') ? $this->input->get('limit') : 10;
+		$keyword = $this->input->get('q') ? $this->input->get('q') : null;
+		$data = $this->User_Model->get_all_users($start,$limit, $keyword);
 		$this->_json_output($data);
 	}
 

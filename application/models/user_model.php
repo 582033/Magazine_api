@@ -175,6 +175,28 @@ class User_Model extends mag_db {
 		return $user_info;
 	}	//}}}
 
+	function get_all_users ($start, $limit, $keyword=null) {	//{{{
+		$where = $keyword ? "where nickname like'%$keyword%'" : null;
+		$items = $this->db->query("select * from user $where limit $start,$limit;")->result('array');
+		if ($items == array()) {
+			$return = null;
+		}
+		else {
+			$return = array();
+			foreach ($items as $item) {
+				$return[] = $this->mapping_user_info($item);
+			}
+		}
+		$total = $this->db->query("select * from user $where;")->num_rows();
+		$users= array(
+				'kind' => "magazine#persons",
+				'start' => $start, // 结果总数
+				'totalResults' =>  $total, // 返回的初始元素索引
+				'items' => $return,
+				);
+		return $users;
+	}	//}}}
+
 	function set_user_info ($user_id, $user_info){	//{{{
 		$where = array('user_id' => $user_id);
 		$user_is_exists = $this->get_user_info($user_id);
