@@ -225,21 +225,54 @@ class User_Model extends mag_db {
 		return $result;
 	}	//}}}
 
+	/*
 	function _get_user_loved_user($user_id){	//{{{
 		$sql = "select * from user_love as L,user as U where L.user_id='$user_id' and L.loved_type='author' and U.user_id=L.loved_id";
 		$result = $this->db->query($sql);
 		$result = $result->result_array();
 		return $result;
 	}	//}}}
+	*/
 
-	function get_followers ($userId, $start, $limit) {	//{{{
-		$where = array();
-		$users = $this->rows(USER_TABLE, $where, $limit, $start);
+	function _get_response ($kind, $total, $start, $items) {
+		$response = array(
+				'kind' => $kind,
+				'totalResults' => $total,
+				'start' => $start,
+				'items' => $items,
+				);
+		return $response;	
+	}
+
+	function get_user_love($where, $start, $limit, $return_type) {
+		$this->db
+						->from ("user_love")	
+						->join("user", "user.user_id = user_love.user_id")
+						->where($where);
+		switch ($return_type) {
+			case 'result_array':
+				$result = $this->db
+						->limit($limit)
+						->offset($start)
+						->get()
+						->result_array();
+				break;	
+			case 'num_rows':
+				$result = $this->db->get()->num_rows();
+				break;	
+		}
+		return $result;
+	}
+
+	function user_loved ($userId, $type, $start, $limit) {	//{{{
+		$where = $type == 'followers' ? "user_love.loved_type = 'author' and user_love.loved_id =" . $userId : "user_love.loved_type = 'author' and user_love.user_id =" . $userId;
+		$users = $this->get_user_love($where, $start, $limit, 'result_array');
+		$total = $this->get_user_love($where, $start, $limit, 'num_rows');
 		$user_infos = array();
 		foreach ($users as $user_info) {
 			$user_infos[] = $this->mapping_user_info($user_info);
 		}
-		return $user_infos;
+		return $this->_get_response("magazine#persons", $total, $start, $user_infos);
 	}	//}}}
 
 	function to_be_author($user_id){	//{{{

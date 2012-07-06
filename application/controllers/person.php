@@ -1,5 +1,8 @@
 <?php class Person extends MY_Controller {
 
+	var $start;
+	var $limit;
+
 	function Person(){
 		parent::__construct();
 		$this->load->model('mag_db');
@@ -13,6 +16,9 @@
 		$this->load->model('search_model');
 		$this->load->model('check_session_model');
 		$this->load->library('session');
+
+		$this->start = $this->input->get('start') ? $this->input->get('start') : 0;
+		$this->limit = $this->input->get('limit') ? $this->input->get('limit') : 10;
 	}
 
 	function user($user_id){
@@ -29,25 +35,18 @@
 	}
 
 	function users(){
-		$start = $this->input->get('start') ? $this->input->get('start') : 0;
-		$limit = $this->input->get('limit') ? $this->input->get('limit') : 10;
 		$keyword = $this->input->get('q') ? $this->input->get('q') : null;
-		$data = $this->User_Model->get_all_users($start,$limit, $keyword);
+		$data = $this->User_Model->get_all_users($this->start,$this->limit, $keyword);
 		$this->_json_output($data);
 	}
 
 	function followers ($userId) {	//{{{
-		$start = $this->_get_non_empty('start');
-		$limit = $this->_get_non_empty('limit');
-		$followers = $this->User_Model->get_followers($userId, $start, $limit);
+		$followers = $this->User_Model->user_loved($userId, 'followers', $this->start, $this->limit);
 		$this->_json_output($followers);
 	}	//}}}
 
 	function followees ($userId) {	//{{{
-		$start = $this->_get_non_empty('start');
-		$limit = $this->_get_non_empty('limit');
-		//$followees = $this->User_Model->get_followees($userId, $start, $limit);
-		$followees = $this->User_Model->get_followers($userId, $start, $limit);
+		$followees = $this->User_Model->user_loved($userId, 'followees', $this->start, $this->limit);
 		$this->_json_output($followees);
 	}	//}}}
 
