@@ -422,6 +422,7 @@ $config['versioncode'] = '1.0';
 
 $config['redis_server'] = "tcp://redishost:6379";
 $config['redis_expires'] = "300";	//redis过期时间
+$config['salt_expires'] = 300;	//redis salt 过期时间, in seconds
 $config['start'] = "0";	//默认查询start值
 $config['limit'] = "10";	//默认查询limit值
 

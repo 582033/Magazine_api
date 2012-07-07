@@ -107,19 +107,14 @@ class User_Model extends mag_db {
 		return $user;
 	} //}}}
 
-	function login ($username, $passwd, $key){ //{{{
-		if ($key == null)
-		{
-			return array(
-					'status' => 'INVALID_KEY',
-					);
-		}
+	function login($username, $passwd, $key){ //{{{
 		$user_is_exist = $this->_get_user_by_accountname($username);
 		if(!$user_is_exist){
-		return array(
-					'status' => 'AUTH_FAIL',
-					);
-		}else{
+			return array(
+						'status' => 'AUTH_FAIL',
+						);
+		}
+		else {
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
 				$user_info = $this->get_user_info($user_is_exist['account_id']);
 				$this->session->initSession();
@@ -140,7 +135,7 @@ class User_Model extends mag_db {
 					);
 			}
 		}
-	}       //}}}
+	} //}}}
 
 	function _get_user_by_accountname($username){       //检测用户名是否存在{{{
 		$where = array('account_name' => $username);

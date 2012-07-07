@@ -18,29 +18,38 @@
 	}	//}}}
 
 	function getKey (){	//{{{
-		$key = $this->_generate_key();
+		$salt = $this->_generate_key();
 		$redis = $this->get_redis();
-		$redis->setex('key', $this->config->item('redis_expires'), $key);
-		$return['key'] = $key;
-		$return['expires_in'] = '600';
+		$redis->setex("auth:salt:$salt", $this->config->item('salt_expires'), "1");
+		$return['key'] = $salt;
+		$return['expires_in'] = $this->config->item('salt_expires');
 		$this->_json_output($return);
 	}	//}}}
 
-	function signin (){ //{{{
-		$redis = $this->get_redis();
-		$key = $redis->get('key');
-		$redis->delete('key');
+	function signin() { //{{{
 		$username = $this->_get_non_empty('username');
 		$passwd = $this->_get_non_empty('passwd');
+		$salt = $this->_get_non_empty('key');
 		$rmsalt = $this->input->get('rmsalt');
+
+		$redis = $this->get_redis();
+		$r = $redis->get("auth:salt:$salt");
+		if (!$r) {
+			$result = array('status' => 'INVALID_KEY');
+			$this->_json_output($result);
+			return;
+		}
 		if ($username && ($rmsalt && $rmsalt != '')) {
 			$user_info = $this->User_Model->remember_signin($username, $rmsalt);//记住密码时登录
 		}
 		else {
-			$user_info = $this->User_Model->login($username, $passwd, $key);//正常登录
+			$user_info = $this->User_Model->login($username, $passwd, $salt);//正常登录
+		}
+		if ($user_info['status'] == 'OK') {
+			$redis->delete("auth:salt:$salt");
 		}
 		$this->_json_output($user_info);
-	}	//}}}
+	} //}}}
 
 	function signup () {	//{{{
 		$username = $this->input->post('username');
