@@ -187,12 +187,11 @@ class Mag_Model extends mag_db {
 
 
 	function _get_magazine_list($tag, $keyword, $limit, $start){		//获取杂志列表(new){{{
+		$num_rows = $this->_select_magazines($tag, $keyword, $limit, $start, 'num_rows');
 		$result = $this->_select_magazines($tag, $keyword, $limit, $start, 'result_array');
 		if ($result == array()){
 			$mag_list = null;
-			$num_rows = 0;
 		}else{
-			$num_rows = $this->_select_magazines($tag, $keyword, $limit, $start, 'num_rows');
 			for ($i = 0; $i < count($result); $i++){
 				if (strlen($result[$i]['magazine_id']) <= 3){
 					$read_mag_id[$i] = $result[$i]['magazine_id'];
