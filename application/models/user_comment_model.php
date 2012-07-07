@@ -20,6 +20,8 @@ class User_comment_Model extends mag_db {
 		$result_0 = $this->db->query($sql_0);
 		$result_0 = $result_0->row_array();
 		$totalResults = $result_0['count(*)'];
+		$CI = &get_instance();
+		$CI->load->model('user_model');
 		if ($totalResults > 0) {
 			foreach($result as $k){
 				if($k['parent_id'] != 0){
@@ -29,11 +31,7 @@ class User_comment_Model extends mag_db {
 					$parent_user = $parent_user->row_array();
 					$parent = array(
 						'id' => $k['parent_id'],
-						'author' => array(
-							'id' => $parent_user['user_id'],
-							'nickname' => $parent_user['nickname'],
-							'image' => $parent_user['avatar'],
-						),
+						'author' => $this->user_model->mapping_user_info($parent_user, 'short'),
 					);
 				}else{
 					$parent = array();
@@ -41,11 +39,7 @@ class User_comment_Model extends mag_db {
 				$res[] = array(
 					'id' => $k['user_comment_id'],
 					'content' => $k['comment'],
-					'author' => array(
-						'id' => $k['user_id'],
-						'nickname' => $k['nickname'],
-						'image' => $k['avatar'],
-					),
+					'author' => $this->user_model->mapping_user_info($k, 'short'),
 					'parent' => $parent,
 				);
 			}
