@@ -65,34 +65,47 @@ class User_Model extends mag_db {
 		}
 	}	//}}}
 
-	function mapping_user_info ($user_info, $projection='full') {	//数据库用户信息映射{{{
-		if ($projection == 'short') {
-			$user = array(
+	function mapping_user_info ($user_info, $projection='full') { //数据库用户信息映射{{{
+		$projection2parts = array(
+				'short' => array('short'),
+				'basic' => array('short', 'basic'),
+				'full' => array('short', 'basic', 'full'),
+				);
+		$parts = $projection2parts[$projection];
+
+		$user = array();
+		if (in_array('short', $parts)) {
+			$user_short = array(
 					'id' => $user_info['user_id'],
 					'nickname' => $user_info['nickname'],
-					//'image' => $this->config->item('api_host').$user_info['avatar'],
-					'image' => 'http://pic.baike.soso.com/p/20120222/bki-20120222155839-1825332713.jpg',
+					'image' => $user_info['avatar'],
 					'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
 					);
-			return $user;
+			$user = array_merge($user, $user_short);
 		}
-		$tags = explode(",", $user_info['tag']);
-		$user_info = array(
-				'id' => $user_info['user_id'],
-				'nickname' => $user_info['nickname'],
-				'birthday' => $user_info['birthday'],
-				'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
-				'gender' => $user_info['sex'],
-				'image' => $user_info['avatar'],
-				'intro' => $user_info['intro'],
-				'tags' => $tags,
-				'role' => $user_info['user_type'],
-				'followers' => '999',
-				'followees' => '999',
-				'magazines' => '999',
-				);
-		return $user_info;
-	}	//}}}
+		if (in_array('basic', $parts)) {
+			$tags = explode(",", $user_info['tag']);
+			$user_basic = array(
+					'birthday' => $user_info['birthday'],
+					'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
+					'gender' => $user_info['sex'],
+					'intro' => $user_info['intro'],
+					'tags' => $tags,
+					'role' => $user_info['user_type'],
+					);
+			$user = array_merge($user, $user_basic);
+		}
+		if (in_array('full', $parts)) {
+			$user_full = array(
+					'followers' => '999',
+					'followees' => '999',
+					'magazines' => '999',
+					);
+			$user = array_merge($user, $user_full);
+		}
+
+		return $user;
+	} //}}}
 
 	function login ($username, $passwd, $key){ //{{{
 		if ($key == null)
