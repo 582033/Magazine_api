@@ -155,12 +155,12 @@ class Mag_Model extends mag_db {
 	
 //新定义的API	
 	
-	function _select_magazines ($tag, $keyword, $limit, $start, $action) {
+	function _select_magazines ($tag, $keyword, $limit, $start, $action) { //{{{
 		$this->db
-						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
-						->from(MAGAZINE_TABLE . ' as mg')
-						->join('user as us', "mg.user_id = us.user_id")
-						->join('mag_file as mf', "mg.magazine_id = mf.magazine_id");
+			->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
+			->from(MAGAZINE_TABLE . ' as mg')
+			->join('user as us', "mg.user_id = us.user_id")
+			->join('mag_file as mf', "mg.magazine_id = mf.magazine_id");
 
 		$where = array('mg.status' => '4');
 		if ($tag) $this->db->where("mg.tag like '%$tag%'");
@@ -171,84 +171,25 @@ class Mag_Model extends mag_db {
 		switch ($action) {
 			case 'result_array':	
 				return $this->db
-						->limit($limit)
-						->offset($start)
-						->get()
-						->result_array();
+					->limit($limit)
+					->offset($start)
+					->get()
+					->result_array();
 				break;
 			case 'num_rows':	
 				return $this->db
-						->get()
-						->num_rows();
+					->get()
+					->num_rows();
 				break;
 		}
-		
-	}
 
+	} //}}}
 
-	function _get_magazine_list($tag, $keyword, $limit, $start){		//获取杂志列表(new){{{
+	function _get_magazine_list($tag, $keyword, $limit, $start) { // {{{
 		$num_rows = $this->_select_magazines($tag, $keyword, $limit, $start, 'num_rows');
 		$result = $this->_select_magazines($tag, $keyword, $limit, $start, 'result_array');
-		if ($result == array()){
-			$mag_list = null;
-		}else{
-			for ($i = 0; $i < count($result); $i++){
-				if (strlen($result[$i]['magazine_id']) <= 3){
-					$read_mag_id[$i] = $result[$i]['magazine_id'];
-				}else{
-					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
-				}
-				if (strpos($result[$i]['edit_index_img'], '，')){
-					str_replace('，', ',', $result[$i]['edit_index_img']);
-				}
-				if (strpos($result[$i]['tag'], '，')){
-					str_replace('，', ',', $result[$i]['tag']);
-				}
-				$tag = explode(',', trim($result[$i]['tag']));
-				for ($y = 0; $y < count($tag); $y++){
-					$tags[$y] = $tag[$y];
-				}
-				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
-				}
-				$pageThumbs = $edit_index_img;
-				$mag_list[$i] = array(
-									'id' => $result[$i]['magazine_id'],
-									'name' => $result[$i]['name'],
-									'cate' => $result[$i]['mag_category'],
-									'tag' => $tags,
-									'intro' => $result[$i]['description'],
-									'publishedAt' => $result[$i]['publish_time'],
-									'cover' => $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276') ,//$result[$i]['index_img'],
-									'pageThumbs' => $pageThumbs,
-									'likes' => $result[$i]['num_loved'],
-									'shares' => $result[$i]['shares'],
-									'downloads' => $result[$i]['downloads'],
-									'views' => $result[$i]['views'],
-									'status' => $result[$i]['status'],
-									'author' => array(
-													'id' => $result[$i]['user_id'],
-													'nickname' => $result[$i]['nickname'],
-													//'image' => $result[$i]['avatar'],
-													'image' => 'http://misc.360buyimg.com/lib/img/e/logo.png',
-													),
-									'file' => array(
-													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/dist/".$result[$i]['magazine_id'].".magz",
-													),
-								);
-			}
-		}
-		$item = array(
-					'kind' => 'magazine#magazines',
-					'totalResults' => "$num_rows",
-					'start' => "$start",
-					'items' => $mag_list,
-					);
-		return $item;
+		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
-	
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
 		$where = array('mg.magazine_id' => $magazine_id);
 		$result = $this->db
@@ -260,60 +201,10 @@ class Mag_Model extends mag_db {
 						->order_by('mg.weight desc')
 						->get()
 						->row_array();
-		if ($result == array()) {
-			$mag = null;
-		}
-		else {
-			if (strlen($result['magazine_id']) <= 3){
-				$read_mag_id = $result['magazine_id'];
-			}else{
-				$read_mag_id = substr($result['magazine_id'], 0, 3);
-			}
-			if (strpos($result['edit_index_img'], '，')){
-				str_replace('，', ',', $result['edit_index_img']);
-			}
-			if (strpos($result['tag'], '，')){
-				str_replace('，', ',', $result['tag']);
-			}
-			$tag = explode(',', trim($result['tag']));
-			for ($y = 0; $y < count($tag); $y++){
-				$tags[$y] = $tag[$y];
-			}
-			$edit_index_img = explode(',', trim($result['edit_index_img']));
-			for ($x = 0; $x < count($edit_index_img); $x++){
-				$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$read_mag_id."/".$result['magazine_id']."/web/".$edit_index_img[$x], '104x160');
-			}
-			$pageThumbs = $edit_index_img;
-			$mag = array(
-						'id' => $result['magazine_id'],
-						'name' => $result['name'],
-						'cate' => $result['mag_category'],
-						'tag' => $tags,
-						'intro' => $result['description'],
-						'publishedAt' => $result['publish_time'],
-						'cover' =>   $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$read_mag_id."/".$result['magazine_id']."/web/".$result['index_img'], '180x276'), //$result[$i]['index_img'],
-						'pageThumbs' => $pageThumbs,
-						'likes' => $result['num_loved'],
-						'shares' => $result['shares'],
-						'downloads' => $result['downloads'],
-						'views' => $result['views'],
-						'status' => $result['status'],
-						'author' => array(
-										'id' => $result['user_id'],
-										'nickname' => $result['nickname'],
-										//'image' => $this->config->item('api_host').$result['avatar'],
-										'image' => 'http://pic.baike.soso.com/p/20120222/bki-20120222155839-1825332713.jpg',
-										),
-						'file' => array(
-										'size' => $result['filesize'],
-										'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id."/".$result['magazine_id']."/dist/".$result['magazine_id'].".magz",
-										),
-					);
-		}
+		$mag = $result ? $this->magazine_row2resource($result) : NULL;
 		return $mag;
 	}//}}}
-	
-	function _get_user_magazines($userId, $limit, $start, $collection){		//获取用户杂志列表{{{
+	function _get_user_magazines($userId, $limit, $start, $collection) { //获取用户杂志列表{{{
 		if ($collection == 'published'){
 			$where = array('mg.user_id' => $userId, 'status' => '4');
 			$result = $this->db
@@ -383,68 +274,76 @@ class Mag_Model extends mag_db {
 					->get()
 					->num_rows();
 		}
-		if ($result == array()) {
-				$mag_list = null;
-		}
-		else {
-			for ($i = 0; $i < count($result); $i++){
-				if (strpos($result[$i]['edit_index_img'], '，')){
-					str_replace('，', ',', $result[$i]['edit_index_img']);
-				}
-				if (strpos($result[$i]['tag'], '，')){
-					str_replace('，', ',', $result[$i]['tag']);
-				}
-				$tag = explode(',', trim($result[$i]['tag']));
-				for ($y = 0; $y < count($tag); $y++){
-					$tags[$y] = $tag[$y];
-				}
-				$edit_index_img = explode(',', trim($result[$i]['edit_index_img']));
-				for ($x = 0; $x < count($edit_index_img); $x++){
-					$edit_index_img[$x] = $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$result[$i]['user_id']."/".$result[$i]['magazine_id']."/web/".$edit_index_img[$x], '104x160');
-				}
-				if (strlen($result[$i]['magazine_id']) <= 3){
-					$read_mag_id[$i] = $result[$i]['magazine_id'];
-				}else{
-					$read_mag_id[$i] = substr($result[$i]['magazine_id'], 0, 3);
-				}
-
-				$pageThumbs = $edit_index_img;
-				$mag_list[$i] = array(
-									'id' => $result[$i]['magazine_id'],
-									'name' => $result[$i]['name'],
-									'cate' => $result[$i]['mag_category'],
-									'tag' => $tags,
-									'intro' => $result[$i]['description'],
-									'publishedAt' => $result[$i]['publish_time'],
-									'cover' =>  $this->picthumb->pic_thumb($this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/web/".$result[$i]['index_img'], '180x276'),//$result[$i]['index_img'],
-									'pageThumbs' => $pageThumbs,
-									'likes' => $result[$i]['num_loved'],
-									'shares' => $result[$i]['shares'],
-									'downloads' => $result[$i]['downloads'],
-									'views' => $result[$i]['views'],
-									'status' => $result[$i]['status'],
-									'author' => array(
-													'id' => $result[$i]['user_id'],
-													'nickname' => $result[$i]['nickname'],
-													//'image' => $result[$i]['avatar'],
-													'image' => 'http://t2.baidu.com/it/u=3487571830,2553945247&fm=3&gp=0.jpg',
-													),
-									'file' => array(
-													'size' => $result[$i]['filesize'],
-													'downloadUrl' => $this->config->item('pub_host')."/".$read_mag_id[$i]."/".$result[$i]['magazine_id']."/dist/".$result[$i]['magazine_id'].".magz",
-													),
-								);
-			}
-		}
-		$item = array(
-					'kind' => 'magazine#magazines',
-					'totalResults' => "$num_rows",
-					'start' => "$start",
-					'items' => $mag_list,
-					);
-		return $item;
+		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
 
+	function get_magz_url($magazine_id) { //{{{
+		$read_mag_id = substr($magazine_id, 0, 3);
+		return $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/dist/$magazine_id.magz";
+	} //}}}
+	function get_mag_asset_url($magazine_id, $path) { //{{{
+		$read_mag_id = substr($magazine_id, 0, 3);
+		return $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/web/$path";
+	} //}}}
+	function magazine_row2resource($result) { //{{{
+		if (strpos($result['edit_index_img'], '，')){
+			str_replace('，', ',', $result['edit_index_img']);
+		}
+		if (strpos($result['tag'], '，')){
+			str_replace('，', ',', $result['tag']);
+		}
+		$tags = explode(',', trim($result['tag']));
+		$images = explode(',', trim($result['edit_index_img']));
+		$pageThumbs = array();
+		$magazine_id = $result['magazine_id'];
+		foreach ($images as $image) {
+			$pageThumbs[] = $this->picthumb->pic_thumb($this->get_mag_asset_url($magazine_id, $image), '104x160');
+		}
+		$CI = & get_instance();
+		$CI->load->model('user_model');
+		$mag = array(
+				'id' => $result['magazine_id'],
+				'name' => $result['name'],
+				'cate' => $result['mag_category'],
+				'tag' => $tags,
+				'intro' => $result['description'],
+				'publishedAt' => $result['publish_time'],
+				'cover' =>   $this->picthumb->pic_thumb($this->get_mag_asset_url($magazine_id, $result['index_img']), '180x276'),
+				'pageThumbs' => $pageThumbs,
+				'likes' => $result['num_loved'],
+				'shares' => $result['shares'],
+				'downloads' => $result['downloads'],
+				'views' => $result['views'],
+				'status' => $result['status'],
+				'author' => $this->user_model->mapping_user_info($result, 'short'),
+				'file' => array(
+					'size' => (int) $result['filesize'],
+					'downloadUrl' => $this->get_magz_url($result['magazine_id']),
+					),
+				);
+		return $mag;
+	} //}}}
+	function magazine_rows2resource($rows, $start, $num_rows) { //{{{
+		/**
+		  rows - from db
+		 */
+		if (!$rows) {
+			$magazine_list = array();
+		}
+		else {
+			foreach ($rows as $row) {
+				$magazine_list[] = $this->magazine_row2resource($row);
+			}
+		}
+
+		$item = array(
+					'kind' => 'magazine#magazines',
+					'totalResults' => $num_rows,
+					'start' => (int)$start,
+					'items' => $magazine_list,
+					);
+		return $item;
+	} //}}}
 	function element_row2resource($result) { // {{{ convert from db row to element resource
 		$element = array(
 				'id' => $result['mag_element_id'],

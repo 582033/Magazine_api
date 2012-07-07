@@ -65,12 +65,23 @@ class User_Model extends mag_db {
 		}
 	}	//}}}
 
-	function mapping_user_info ($user_info) {	//数据库用户信息映射{{{
+	function mapping_user_info ($user_info, $projection='full') {	//数据库用户信息映射{{{
+		if ($projection == 'short') {
+			$user = array(
+					'id' => $user_info['user_id'],
+					'nickname' => $user_info['nickname'],
+					//'image' => $this->config->item('api_host').$user_info['avatar'],
+					'image' => 'http://pic.baike.soso.com/p/20120222/bki-20120222155839-1825332713.jpg',
+					'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
+					);
+			return $user;
+		}
 		$tags = explode(",", $user_info['tag']);
 		$user_info = array(
 				'id' => $user_info['user_id'],
 				'nickname' => $user_info['nickname'],
 				'birthday' => $user_info['birthday'],
+				'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
 				'gender' => $user_info['sex'],
 				'image' => $user_info['avatar'],
 				'intro' => $user_info['intro'],

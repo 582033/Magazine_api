@@ -404,6 +404,7 @@ $config['mq_pass'] = 'guest';
 
 
 $config['api_version'] = "1";
+$config['www_host'] = "http://www.in1001.com";
 $config['api_host'] = "http://api.in1001.com";
 $config['ftp_host'] = "60.28.194.156";
 $config['ftp_port'] = "21";
