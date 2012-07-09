@@ -164,7 +164,7 @@ class Mag_Model extends mag_db {
 
 		$where = array('mg.status' => '4');
 		if ($tag) $this->db->where("mg.tag like '%$tag%'");
-		if ($cate) $this->db->where("mg.mag_category like '%$cate%'");
+		if ($cate) $this->db->where('mg.mag_category',  $cate);
 		if ($keyword) {
 			$this->db->where("(mg.name like '%$keyword%' OR mg.tag like '%$keyword%' OR mg.description like '%$keyword%')");
 		}
