@@ -71,6 +71,6 @@
 		$key = $getkey['key'];
 		$pwd = md5(md5($pwd).$key);
 		$url = $this->config->item('api_host')."/auth/signin?username=$usr&passwd=$pwd";
-		echo "<a href=$url>$url</a>";
+		echo "<a href=$url&key=$key>$url&key=$key</a>";
 	}	//}}}
 }
