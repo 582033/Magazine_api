@@ -421,6 +421,23 @@
 
 	function cates(){		//杂志类型{{{
 		$cates = $this->Mag_Model->_get_mag_cates();
+		$cates = array(
+				'totalResults' => 3,
+				'items' => array (
+					'0' => array(
+						'id' => '1',
+						'name' => '国内游',
+						),
+					'1' => array(
+						'id' => '2',
+						'name' => '出境游',
+						),
+					'2' => array(
+						'id' => '3',
+						'name' => '旅游攻略',
+						),
+					),
+				);
 		$this->_json_output($cates);
 	}//}}}
 
