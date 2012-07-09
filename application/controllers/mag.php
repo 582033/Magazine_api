@@ -364,11 +364,12 @@
 
 	function magazines(){		//获取杂志列表(new){{{
 		$tag = $this->input->get('tag');
+		$cate = $this->input->get('cate');
 		$keyword = $this->input->get('q');
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 
-		$mag_list = $this->Mag_Model->_get_magazine_list($tag, $keyword, $limit, $start);
+		$mag_list = $this->Mag_Model->_get_magazine_list($tag, $cate, $keyword, $limit, $start);
 		$this->_json_output($mag_list);
 	}//}}}
 

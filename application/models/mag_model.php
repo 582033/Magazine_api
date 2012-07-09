@@ -155,7 +155,7 @@ class Mag_Model extends mag_db {
 	
 //新定义的API	
 	
-	function _select_magazines ($tag, $keyword, $limit, $start, $action) { //{{{
+	function _select_magazines ($tag, $cate, $keyword, $limit, $start, $action) { //{{{
 		$this->db
 			->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 			->from(MAGAZINE_TABLE . ' as mg')
@@ -164,6 +164,7 @@ class Mag_Model extends mag_db {
 
 		$where = array('mg.status' => '4');
 		if ($tag) $this->db->where("mg.tag like '%$tag%'");
+		if ($cate) $this->db->where("mg.mag_category like '%$cate%'");
 		if ($keyword) {
 			$this->db->where("(mg.name like '%$keyword%' OR mg.tag like '%$keyword%' OR mg.description like '%$keyword%')");
 		}
@@ -185,9 +186,9 @@ class Mag_Model extends mag_db {
 
 	} //}}}
 
-	function _get_magazine_list($tag, $keyword, $limit, $start) { // {{{
-		$num_rows = $this->_select_magazines($tag, $keyword, $limit, $start, 'num_rows');
-		$result = $this->_select_magazines($tag, $keyword, $limit, $start, 'result_array');
+	function _get_magazine_list($tag, $cate, $keyword, $limit, $start) { // {{{
+		$num_rows = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, 'num_rows');
+		$result = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, 'result_array');
 		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
