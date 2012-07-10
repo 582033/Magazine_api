@@ -23,12 +23,13 @@
 
 	function user($user_id){
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
-		if($method == 'post'){
+		if($method == 'put'){
+			$user_id = $this->check_session_model->check_session();
 			$user_json = file_get_contents('php://input', 'r');
 			$user_info = json_decode($user_json, true);
-			$return = $this->User_Model->edit_user($user_id, $user_info);
-			return $return;
+			$this->User_Model->edit_user($user_id, $user_info);
 		}elseif($method == 'get'){
+			if ($user_id == 'me') $user_id = $this->check_session_model->check_session();
 			$user = $this->User_Model->get_user_info($user_id);
 			$this->_json_output($user);
 		}

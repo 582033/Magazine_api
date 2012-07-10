@@ -84,7 +84,7 @@ class User_Model extends mag_db {
 			$user = array_merge($user, $user_short);
 		}
 		if (in_array('basic', $parts)) {
-			$tags = explode(",", $user_info['tag']);
+			$tags = $user_info['tag'] ? explode(",", $user_info['tag']) : null;
 			$user_basic = array(
 					'birthday' => $user_info['birthday'],
 					'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
@@ -92,6 +92,8 @@ class User_Model extends mag_db {
 					'intro' => $user_info['intro'],
 					'tags' => $tags,
 					'role' => $user_info['user_type'],
+					'province' => $user_info['province'],
+					'city' => $user_info['city'],
 					);
 			$user = array_merge($user, $user_basic);
 		}
@@ -301,10 +303,24 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function edit_user($user_id, $user_info){	//{{{
+		$items = array(
+				'nickname' => $user_info['nickname'],
+				'birthday' => $user_info['birthday'],
+				'sex' => $user_info['gender'],
+				'province' => $user_info['province'],
+				'city' => $user_info['city'],
+				);
+		foreach ($items as $key => $item){
+			if ($item != '') {
+				$items[$key] = $item;
+			 }
+			else {
+				unset($items[$key]);			
+			}	
+		}
 		$where = array('user_id' => $user_id);
-		$this->db->update(USER_TABLE, $user_info, $where);
-		$new = $this->get_user_info($user_id);
-		return $new;
+		$this->db->update(USER_TABLE, $items, $where);
+		header("HTTP/1.1 202");
 	}	//}}}
 
 }
