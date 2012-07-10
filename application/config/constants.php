@@ -92,5 +92,6 @@ define('MAG_ELEMENT_TABLE', 'mag_element');
 define('MSG_TABLE', 'msg');
 define('USER_COMMENT_TABLE', 'user_comment');
 define('AD_TABLE', 'ad_ads');
+define('INVITATION_CODES_TABLE', 'invitation_codes');
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

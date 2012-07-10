@@ -73,10 +73,32 @@
 		}
 	}
 
-	function apply_author($user_id){
-		$user_id = $this->session->userdata('user_id');
-		$this->User_Model->to_be_author($user_id);
-	}
+	function apply_author($uid) { // {{{
+		$user_id = $this->check_session_model->check_session();
+		if ($uid == 'me') {
+			$uid = $user_id;
+		}
+		if ($user_id != $uid) {
+			show_error('', 401);
+		}
+
+		$code = $this->input->get('code');
+		if (!$code) {
+			show_error('', 400);
+		}
+		$result = array();
+		$this->load->model('invitation_model');
+		$status = $this->invitation_model->check_invitation_code($code);
+		if ($status != 'OK') {
+			$result = array('status' => $status);
+		}
+		else {
+			$this->User_Model->to_be_author($user_id);
+			$this->invitation_model->use_code($code);
+			$result = array('status' => 'OK');
+		}
+		$this->_json_output($result);
+	} //}}}
 
 	function user_avatar($user_id){
 
