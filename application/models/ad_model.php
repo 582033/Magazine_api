@@ -59,23 +59,21 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		
 
 		}
-
-		$result=$this->db
-			->select('*, mag.name as m_name')
-			->from('magazine as mag')
-			->join('user','mag.user_id = user.user_id','inner')
-			->where_in('mag.name',$arr_title)
+		$arr_id=$this->db
+			->select('magazine_id')
+			->from('magazine')
+			->where_in('magazine.name',$arr_title)
+			->limit($limit)
 			->get()
 			->result_array();
-		$ret=array();
-		foreach ($result as &$a){
-			$a['name'] = $a['m_name'];
-		}
-		foreach($result as $row){
-			$row['cover'] = $this->config->item('thumb_host').'/thumb?size=104x160&fit=c&src='.$this->config->item('pub_host').'/'.substr($row['magazine_id'],0,3).'/'.$row['magazine_id'].'/web/'.$row['index_img'];
-			array_push($ret,$row);
+		//format
+		$ret = array();
+		foreach($arr_id as $v){
+			array_push($ret,$this->mag_model->_get_magazine($v['magazine_id']));
+		
 		}
 		return $ret;
+
 
 	
 	
