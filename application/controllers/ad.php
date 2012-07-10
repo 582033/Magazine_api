@@ -21,5 +21,43 @@ class Ad extends MY_Controller {
 );
 	echo json_encode($ret);
 }
+	function ad_list_maga($slot,$limit){
+		$res=$this->ad_model->ad_list_indextopmaga('maga',$slot,$limit);
+		//限制9个，设为8，因为index从0开始
+		foreach($res as $k => $v){
+			$res[$k]['id'] = $v['magazine_id'];
+			$res[$k]['cate'] = $v['mag_category'];
+			$res[$k]['publishedAt'] = $v['publish_time'];
+			$res[$k]['likes'] = $v['num_loved'];
+			//$res[$k]['cover'] = $this->config->item('thumb_host').$v['index_img'];
+
+
+			$res[$k]['author'] = array(
+					'id' => $v['user_id'],
+					'nickname' => $v['nickname'],
+					);
+			if($k>$limit-1){
+				unset($res[$k]);
+			
+			}
+				
+
+			
+		
+		}
+
+		$ret=array(
+				'kind' => "magazine#magazine",
+				'totalResults' => '999',
+				'start'  => '0',
+				'items' => $res,
+				);
+
+
+		echo json_encode($ret);
+	
+	
+	
+	}
 
 }
