@@ -12,8 +12,7 @@ class check_session_model extends CI_Model{
 
 	function check_session () {	//{{{
 		if(!$this->session->checkAndRead()){
-			header("HTTP/1.1 401");
-			exit;
+			show_error_text(401, 'Unauthorized');
 		}
 		else {
 			$user_id = $this->session->userdata('user_id');

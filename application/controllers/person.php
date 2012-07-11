@@ -52,7 +52,6 @@
 	}	//}}}
 
 	function like($type, $id, $action){
-		//$user_id = 1;//$this->session->userdata('user_id');
 		$user_id = $this->check_session_model->check_session();
 		if ($action == 'like') {
 			$this->Love_Model->like($type, $id, $user_id);
@@ -66,7 +65,7 @@
 	}
 
 	function follow($id, $yes){
-		$user_id = $this->session->userdata('user_id');
+		$user_id = $this->check_session_model->check_session();
 		if($yes == 1){
 			$this->Love_Model->like('author', $id, $user_id);
 		}else{
