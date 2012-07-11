@@ -3,6 +3,7 @@ class Ad_Model extends mag_db {
 
 	function Ad_Model(){
 		parent::__construct();
+		$this->load->model('mag_model');
 	}
 
 	

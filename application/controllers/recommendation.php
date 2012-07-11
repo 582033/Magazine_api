@@ -8,6 +8,7 @@
 		$this->load->model('recommendation_model');
 		$this->load->model('User_Model');
 		$this->load->model('Ads_Model');
+		$this->load->model('ad_model');
 		$this->load->model('Mag_Model');
 		$this->load->model('Love_Model');
 		$this->load->model('mag_element_model');
@@ -24,13 +25,13 @@
 		}
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$id = $this->input->get('id');	
-		if ($id != ''){
-			$where = array('mg.status' => '4', 'mg.magazine_id <>' => $id);
-		}else{
-			$where = array('mg.status' => '4');
-		}
-		$mag_list = $this->recommendation_model->_get_by_category($where, $limit, $start);
+		//$id = $this->input->get('id');	
+//		if ($id != ''){
+//			$where = array('mg.status' => '4', 'mg.magazine_id <>' => $id);
+//		}else{
+//			$where = array('mg.status' => '4');
+//		}
+		$mag_list = $this->ad_model->ad_list_indextopmaga('maga', 'guessulove', $limit);
 		$this->_json_output($mag_list);
 	}//}}}
 	
