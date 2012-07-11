@@ -23,7 +23,7 @@ class User_Model extends mag_db {
 			$return = array(
 							'status' => 'OK',
 							'session_id' => $this->session->get_session_id(),
-							'expires_in' => 200,     //用户类型:0读者,1作者,2vip作者,3管理员
+							'expires_in' => 7200,
 							'nickname' => $nickname,
 							'id' => $user_id,
 							);
@@ -325,5 +325,26 @@ class User_Model extends mag_db {
 		$this->db->update(USER_TABLE, $items, $where);
 		header("HTTP/1.1 202");
 	}	//}}}
+	
+	function _change_password($user_id, $item){
+		$where = array('account_id' => $user_id);
+		$data = array('passwd' => md5($item['new_pwd']));
+		$user_info = $this->mag_db->row(ACCOUNT_TABLE, $where);
+//		$this->db->update(USER_TABLE, $item, $where);
+		if ($user_info['passwd'] == md5($item['old_pwd'])){
+			$this->db->update(ACCOUNT_TABLE, $data, $where);
+			$return = array(
+							'status' => 'OK',
+							'session_id' => $this->session->get_session_id(),
+							'expires_in' => 7200,
+							);
+		}else{
+			$return = array(
+							'status' => 'INVALID_PASSWD',
+							);
+		}
+		header("HTTP/1.1 200");
+		return $return;
+	}
 
 }

@@ -104,5 +104,14 @@
 	function user_avatar($user_id){
 
 	}
-
+	
+	function change_password(){
+		$user_id = $this->check_session_model->check_session();
+		$item = array(
+					'old_pwd' => $this->input->post('old_pwd'),
+					'new_pwd' => $this->input->post('new_pwd'),
+					);
+		$data = $this->User_Model->_change_password($user_id, $item);
+		$this->_json_output($data);
+	}
 }
