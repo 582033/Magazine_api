@@ -169,20 +169,25 @@ class Mag_Model extends mag_db {
 			$this->db->where("(mg.name like '%$keyword%' OR mg.tag like '%$keyword%' OR mg.description like '%$keyword%')");
 		}
 		$this->db->order_by('mg.weight desc');
+		$result = NULL;
 		switch ($action) {
 			case 'result_array':	
-				return $this->db
+				$result = $this->db
 					->limit($limit)
 					->offset($start)
 					->get()
 					->result_array();
 				break;
 			case 'num_rows':	
-				return $this->db
+				$result = $this->db
 					->get()
 					->num_rows();
 				break;
+			default:
+				show_error("Bug: bad action $action");
 		}
+
+		return $result;
 
 	} //}}}
 
