@@ -73,6 +73,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			$result[$k]['ret']['title']=$result[$k]['title'];
 			$result[$k]['ret']['text']=$result[$k]['text'];
 			$result[$k]['ret']['url']=$result[$k]['url'];
+			$result[$k]['ret']['mag_read_url']=$result[$k]['url'];
 			array_push($ret,$result[$k]['ret']);
 		
 		}
@@ -92,7 +93,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		$arr_title=array();
 		$arr_text=array();
 		foreach($query->result_array() as $row){
-			$arr_title[]=$row['title'];
+			$arr_title[]=$row['resource_id'];
 			$arr_text[]=$row['text'];
 		
 
@@ -100,7 +101,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		$arr_id=$this->db
 			->select('magazine_id')
 			->from('magazine')
-			->where_in('magazine.name',$arr_title)
+			->where_in('magazine.magazine_id',$arr_title)
 			->limit($limit)
 			->get()
 			->result_array();
