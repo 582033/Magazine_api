@@ -309,6 +309,7 @@ class User_Model extends mag_db {
 				'sex' => $user_info['gender'],
 				'province' => $user_info['province'],
 				'city' => $user_info['city'],
+				'tag' => $user_info['tags'],
 				);
 		foreach ($items as $key => $item){
 			if ($item != '') {
