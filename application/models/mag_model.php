@@ -211,6 +211,7 @@ class Mag_Model extends mag_db {
 		return $mag;
 	}//}}}
 	function _get_user_magazines($userId, $limit, $start, $collection) { //获取用户杂志列表{{{
+		if ($userId == 'me') $userId = $this->check_session_model->check_session();
 		if ($collection == 'published'){
 			$where = array('mg.user_id' => $userId, 'status' => '4');
 			$result = $this->db
