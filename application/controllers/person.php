@@ -102,7 +102,7 @@
 	} //}}}
 
 	function user_avatar($user_id){
-
+		
 	}
 	
 	function change_password(){
