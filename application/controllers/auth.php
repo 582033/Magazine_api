@@ -56,6 +56,16 @@
 		$passwd = $this->input->post('passwd');
 		$nickname = $this->input->post('nickname');
 		$nickname = $nickname ? $nickname : null;
+		$this->load->helper('email');
+		if (!$username) {
+			show_error_text(400, 'Empty username');
+		}
+		if (!$passwd) {
+			show_error_text(400, 'Empty passwd');
+		}
+		if (!valid_email($username)) {
+			show_error_text(400, 'username must be email');
+		}
 		$return = $this->User_Model->regasReader($username, $passwd, $nickname);
 		$this->_json_output($return);
 	}	//}}}

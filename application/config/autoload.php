@@ -91,7 +91,7 @@ $autoload['libraries'] = array('smarty');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('string');
+$autoload['helper'] = array('string', 'error');
 
 
 /*
