@@ -425,19 +425,16 @@
 		$cates = array(
 				'totalResults' => 3,
 				'items' => array (
-					'0' => array(
-						'id' => '1',
-						'name' => '国内游',
-						),
-					'1' => array(
-						'id' => '2',
-						'name' => '出境游',
-						),
-					'2' => array(
-						'id' => '3',
-						'name' => '旅游攻略',
+					array(
+						'name' => '目的地推荐',
 						),
 					),
+					array(
+						'name' => '异域风情',
+						),
+					array(
+						'name' => '狂野中国',
+						),
 				);
 		$this->_json_output($cates);
 	}//}}}
