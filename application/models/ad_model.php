@@ -8,6 +8,10 @@ class Ad_Model extends mag_db {
 	
 	//function to list activity of special user
 	function ad_list($type,$slot){
+		if($type == 'elem'){
+			return $this->ad_list_elem($slot);
+		
+		}
 		$arr_filter=array();
 		foreach(array('limit') as $v){
 			if(isset($_GET[$v])){
@@ -48,14 +52,47 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 	return $arr_all;
 	
 	}
+	//list elements
+	function ad_list_elem($slot){
+		if(isset($_GET['limit'])){
+			$limit=(int)$_GET['limit'];
+		}
+		else{
+			$limit=5;	
+		}
 
+		$result=$this->db->query('select * from `ad_ads` where `type` = \'elem\' and `slot`=\''.$slot.'\' limit '.$limit)->result_array();
+		//echo "<pre>";print_r($result);exit;
+		$ret=array();
+		foreach($result as $k =>$v){
+
+			$elem_result=$this->db->query('select * from `mag_element` where `mag_element_id` = \''.$v['resource_id'].'\'')->row_array();
+
+			$result[$k]['ret'] = $this->mag_model->element_row2resource($elem_result);
+			$result[$k]['ret']['title']=$result[$k]['title'];
+			$result[$k]['ret']['text']=$result[$k]['text'];
+			$result[$k]['ret']['url']=$result[$k]['url'];
+			array_push($ret,$result[$k]['ret']);
+		
+		}
+
+
+
+
+	$arr_all=array();
+	$arr_all['num']=$limit;
+	$arr_all['items']=$ret;
+	return $arr_all;
+	}
 
 	//list  magazines
 	function  ad_list_indextopmaga($type,$slot,$limit){
 		$query=$this->db->query('select * from `ad_ads` where `type` = \''.$type.'\' and `slot`=\''.$slot.'\' limit '.$limit);
 		$arr_title=array();
+		$arr_text=array();
 		foreach($query->result_array() as $row){
 			$arr_title[]=$row['title'];
+			$arr_text[]=$row['text'];
 		
 
 		}
@@ -68,15 +105,15 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			->result_array();
 		//format
 		$ret = array();
-		foreach($arr_id as $v){
-			array_push($ret,$this->mag_model->_get_magazine($v['magazine_id']));
+
+		foreach($arr_id as $k => $v){
+			$arr_pu=$this->mag_model->_get_magazine($v['magazine_id']);
+			$arr_pu['intro'] = $arr_text[$k];
+
+			array_push($ret,$arr_pu);
 		
 		}
+		
 		return $ret;
-
-
-	
-	
-	
 	}
 }

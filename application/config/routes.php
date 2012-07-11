@@ -115,7 +115,5 @@ $route['v1/activity/(:num)'] = 'msg/msg_delput/$1';
 $route['v1/activity/add'] = 'msg/msg_add';
 
 $route['v1/ltapp/ads/(image|text|maga|elem)/(.*)']='ad/ad_list/$1/$2';
-$route['v1/ltapp/ads/(.*)/(.*)']='ad/ad_list_maga/$1/$2';
-$route['v1/elm']='elm/elm_list';
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

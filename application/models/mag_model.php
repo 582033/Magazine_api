@@ -355,7 +355,7 @@ class Mag_Model extends mag_db {
 				'id' => $result['mag_element_id'],
 				'type' => $result['element_type'],
 				'magId' => $result['magazine_id'],
-				'title' => $result['magazine_id'],
+				'title' => $result['title'],
 				'description' => '',
 				'page' => $result['parent'],
 				);
