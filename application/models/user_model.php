@@ -286,11 +286,34 @@ class User_Model extends mag_db {
 	}
 
 	function user_loved ($userId, $type, $start, $limit) {	//{{{
-		$where = $type == 'followers' ? "user_love.loved_type = 'author' and user_love.loved_id =" . $userId : "user_love.loved_type = 'author' and user_love.user_id =" . $userId;
-		$users = $this->get_user_love($where, $start, $limit, 'result_array');
-		$total = $this->get_user_love($where, $start, $limit, 'num_rows');
+		if ($type == 'followees') {
+			$join_user_id = 'loved_id';
+			$where_user_id = 'user_id';
+		}
+		else {
+			$join_user_id = 'user_id';
+			$where_user_id = 'loved_id';
+		}
+
+		$total = $this->db
+			->select ('u.*')
+			->from(USER_LOVE_TABLE . ' as ul')
+			->join(USER_TABLE . ' as u', "ul.$join_user_id = u.user_id")
+			->where("ul.$where_user_id", $userId)
+			->where('loved_type', 'author')
+			->count_all_results();
+		$result = $this->db
+			->select ('u.*')
+			->from(USER_LOVE_TABLE . ' as ul')
+			->join(USER_TABLE . ' as u', "ul.$join_user_id = u.user_id")
+			->where("ul.$where_user_id", $userId)
+			->where('loved_type', 'author')
+			->limit($limit)
+			->offset($start)
+			->get()
+			->result_array();
 		$user_infos = array();
-		foreach ($users as $user_info) {
+		foreach ($result as $user_info) {
 			$user_infos[] = $this->mapping_user_info($user_info);
 		}
 		return $this->_get_response("magazine#persons", $total, $start, $user_infos);
