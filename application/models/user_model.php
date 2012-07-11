@@ -303,17 +303,19 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function edit_user($user_id, $user_info){	//{{{
+		$tags = trim(implode(",", array_unique(array_filter(explode(",", $user_info['tags'])))));
+		$tags = trim(preg_replace('/[\s,]+/', ',', $tags), ",");
 		$items = array(
 				'nickname' => $user_info['nickname'],
 				'birthday' => $user_info['birthday'],
 				'sex' => $user_info['gender'],
 				'province' => $user_info['province'],
 				'city' => $user_info['city'],
-				'tag' => $user_info['tags'],
+				'tag' => $tags,
 				);
 		foreach ($items as $key => $item){
 			if ($item != '') {
-				$items[$key] = $item;
+				$items[$key] = trim($item);
 			 }
 			else {
 				unset($items[$key]);			
