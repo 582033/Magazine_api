@@ -47,6 +47,7 @@ class User_comment_Model extends mag_db {
 					'id' => $k['user_comment_id'],
 					'content' => $k['comment'],
 					'author' => $this->user_model->mapping_user_info($k, 'short'),
+					'createdAt' => $k['send_time'],
 				);
 				if ($parent) {
 					$comment['parent'] = $parent;
