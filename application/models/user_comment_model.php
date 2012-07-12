@@ -11,6 +11,9 @@ class User_comment_Model extends mag_db {
 		return $item;
 	}//}}}
 
+	function get_comment_by_id($id) {
+		return $this->row(USER_COMMENT_TABLE, array('user_comment_id', $id));
+	}
 	function comments($user_id, $type, $object_id, $limit=10, $start=0){		//取得评论{{{
 		$where = array('type' => $type, 'object_id' => $object_id);
 		$sql = "select * from user_comment as C,user as U where C.user_id=U.user_id and C.type='$type' and C.object_id=$object_id order by send_time desc limit $start,$limit";
@@ -24,24 +27,31 @@ class User_comment_Model extends mag_db {
 		$CI->load->model('user_model');
 		if ($totalResults > 0) {
 			foreach($result as $k){
-				if($k['parent_id'] != 0){
-					$parent_id = $k['parent_id'];
-					$sql_1 = "select * from user where user_id='$parent_id'";
-					$parent_user = $this->db->query($sql_1);
-					$parent_user = $parent_user->row_array();
-					$parent = array(
-						'id' => $k['parent_id'],
-						'author' => $this->user_model->mapping_user_info($parent_user, 'short'),
-					);
-				}else{
-					$parent = array();
+				$parent = NULL;
+				$parent_id = $k['parent_id'];
+				if ($parent_id) {
+					$parent_user = $this->db->select('u.*')
+						->from(USER_COMMENT_TABLE . ' as uc')
+						->join(USER_TABLE . ' as u', 'uc.user_id = u.user_id')
+						->where('uc.user_comment_id', $parent_id)
+						->get()
+						->row_array();
+					if ($parent_user) {
+						$parent = array(
+							'id' => $k['parent_id'],
+							'author' => $this->user_model->mapping_user_info($parent_user, 'short'),
+						);
+					}
 				}
-				$res[] = array(
+				$comment = array(
 					'id' => $k['user_comment_id'],
 					'content' => $k['comment'],
 					'author' => $this->user_model->mapping_user_info($k, 'short'),
-					'parent' => $parent,
 				);
+				if ($parent) {
+					$comment['parent'] = $parent;
+				}
+				$res[] = $comment;
 			}
 		}
 		else {
