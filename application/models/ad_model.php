@@ -70,8 +70,12 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			$elem_result=$this->db->query('select * from `mag_element` where `mag_element_id` = \''.$v['resource_id'].'\'')->row_array();
 
 			$result[$k]['ret'] = $this->mag_model->element_row2resource($elem_result);
+			if(strlen($result[$k]['title'])){
 			$result[$k]['ret']['title']=$result[$k]['title'];
+			}
+			if(strlen($result[$k]['text'])){
 			$result[$k]['ret']['text']=$result[$k]['text'];
+			}
 			$result[$k]['ret']['url']=$result[$k]['url'];
 			$result[$k]['ret']['mag_read_url']=$result[$k]['url'];
 			array_push($ret,$result[$k]['ret']);
@@ -110,7 +114,10 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 
 		foreach($arr_id as $k => $v){
 			$arr_pu=$this->mag_model->_get_magazine($v['magazine_id']);
+			if(strlen($arr_text[$k])){
 			$arr_pu['intro'] = $arr_text[$k];
+			}
+			
 
 			array_push($ret,$arr_pu);
 		
