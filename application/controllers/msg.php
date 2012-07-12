@@ -12,42 +12,43 @@ class Msg extends MY_Controller {
 		$this->apiver = $this->config->item('api_version');
 	}	
 	function msg_add(){
-	$data=file_get_contents("php://input");
-	$arr_data=json_decode($data,TRUE);
-	if(is_null($arr_data) || is_null(json_decode($arr_data['actor'])) || is_null(json_decode($arr_data['object']))){
-	//return 400 if bad json data posted
-		header('HTTP/1.1 400');
-		exit();
-	}
-	if((!isset($arr_data['ownerId'])) || (!isset($arr_data['occuredAt'])) || (!isset($arr_data['actor'])) || (!isset($arr_data['verb'])) || (!isset($arr_data['object'])))
-{
-//a part data is missing
-header('HTTP/1.1 400');
-exit();
+		$arr_ins=json_decode($_POST['content'],TRUE);
+		$act_type = $arr_ins['verb'];
+
+		if($act_type =='signup'){
+			//check column
+			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
+			{
+				echo "column missing";
+				header('HTTP/1.1 400');exit;
+
+			}
+		}
+		elseif($act_type == 'typeb')
+		{
+			//typeb process	
+
+		}
+		else{
+			// unknown  type	
+			echo "unknown activity type";
+			header('HTTP/1.1 400');exit;
+
+		}
 
 
-}
-	$arr_ins=array();
-	$arr_ins['user_Id']=$arr_data['ownerId'];
-	$arr_ins['occur_time']=$arr_data['occuredAt'];
-	$arr_ins['actor']=$arr_data['actor'];
-	$arr_ins['verb']=$arr_data['verb'];
-	$arr_ins['object']=$arr_data['object'];
-	if(isset($arr_ins['message']))
-{
 
-	$arr_ins['message']=$arr_data['message'];
-}
-	$res_add=$this->msg_model->msg_add($arr_ins);
-	if($res_add===TRUE)
-{
-	//add sucess
-		header('HTTP/1.1 200');
-		exit();
+		$res_add=$this->msg_model->msg_add($arr_ins);
+		if($res_add===TRUE)
+		{
+			//add sucess
+			echo "add ok !";
+			header('HTTP/1.1 200');
+			exit();
 
-	}
-else{
-	//add falture
+		}
+		else{
+			//add falture
 		header('HTTP/1.1 500');
 		exit();
 
@@ -73,29 +74,13 @@ else{
 			//check user end
 
 
-//check cache start
 $key_unread='keys_unread'.$u_id;
-$num_unread=$this->get_redis()->get($key_unread);
-//check cache end
-//if($num_unread===FALSE){
-if(TRUE){
 //get from db
 $num_unread=$this->msg_model->get_unread($u_id);
-//set into redis
-$this->get_redis()->set($key_unread,$num_unread);
-}
 
-//check cache start
 $key_all='keys_all'.$u_id;
-$num_all=$this->get_redis()->get($key_all);
-//check cache end
-//if($num_all===FALSE){
-if(TRUE){
 //get from db
 $num_all=$this->msg_model->get_msgnum($u_id);
-//set into redis
-$this->get_redis()->set($key_all,$num_all);
-}
 
 
 		$filter=array();
@@ -122,10 +107,7 @@ $this->get_redis()->set($key_all,$num_all);
 		//add u_id into filter array	
 		$filter['uid']=$u_id;
 	$key_req='list_'.implode('__',$filter);
-	$res=$this->get_redis()->get($key_req);
 
-	if(TRUE){
-	//if(TRUE){
 	//query from db and set into redis
 	$arr_list=$this->msg_model->msg_list($filter);
 	$res_arr=array();
@@ -139,33 +121,16 @@ $this->get_redis()->set($key_all,$num_all);
 	$res=$this->msg_model->msg_up((int)$v->msg_id,$u_id);
 }
 	$json_res=json_encode($res_arr);
-	$this->get_redis()->set($key_req,$json_res);
 	header('Content-type: application/json');
 	echo $json_res;
 	exit();
 
-}
-else{
-	//get from cache
-	header('Content-type: application/json');
-
-	echo $res;
-	exit();
-
-
-}
 		
 	
 	}	
 	/*
 	 *Get a redis connection
 	 */
-	function get_redis(){
-		$redis=new redis();
-		$redis->connect($this->config->item('redis_server'));
-		return $redis;
-
-	}
 	function check_signin(){
 		$userid=$this->check_session_model->check_session();
 		if(!$userid===FALSE){
@@ -206,7 +171,6 @@ else{
 {
 //update ok ,return 202
 $key_unread='key_unread'.$user_id;
-$num_unread=$this->get_redis()->delete($key_unread);
 		header('HTTP/1.1 202');
 		exit();
 
@@ -231,7 +195,6 @@ else{
 {
 //delete ok
 $key_unread='key_unread'.$user_id;
-$num_unread=$this->get_redis()->delete($key_unread);
 header('HTTP/1.1 200');
 exit();
 
