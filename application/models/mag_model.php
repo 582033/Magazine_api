@@ -602,4 +602,17 @@ class Mag_Model extends mag_db {
 		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET views = views + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
 		$this->db->query($sql);
 	}
+	
+	function edit_mag_info ($user_id, $mag_info) {	//编辑并发布杂志{{{
+		$where = array('user_id' => $user_id, 'magazine_id' => $mag_info['magazine_id']);
+		$update_data = array(
+				'name' => isset($mag_info['name']) ? $mag_info['name'] : null,
+				'tag' => isset($mag_info['tag']) ? $mag_info['tag'] : null,
+				'mag_category' => isset($mag_info['mag_category']) ? $mag_info['mag_category'] : null,
+				'description' => isset($mag_info['description']) ? $mag_info['description'] : null,
+				'status' => '4',
+				);
+		$this->db->update(MAGAZINE_TABLE, $update_data, $where);	
+		header("HTTP/1.1 202");
+	}	//}}}
 }
