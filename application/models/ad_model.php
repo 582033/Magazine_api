@@ -62,7 +62,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			$limit=5;	
 		}
 
-		$result=$this->db->query('select * from `ad_ads` where `type` = \'elem\' and `slot`=\''.$slot.'\' limit '.$limit)->result_array();
+		$result=$this->db->query('select * from `ad_ads` where `type` = \'elem\' and `slot`=\''.$slot.'\' order by `weight` limit '.$limit)->result_array();
 		//echo "<pre>";print_r($result);exit;
 		$ret=array();
 		foreach($result as $k =>$v){
@@ -93,19 +93,20 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 
 	//list  magazines
 	function  ad_list_indextopmaga($type,$slot,$limit){
-		$query=$this->db->query('select * from `ad_ads` where `type` = \''.$type.'\' and `slot`=\''.$slot.'\' limit '.$limit);
+		$query=$this->db->query('select * from `ad_ads` where `type` = \''.$type.'\' and `slot`=\''.$slot.'\' order by `weight` limit '.$limit);
 		$arr_title=array();
 		$arr_text=array();
 		foreach($query->result_array() as $row){
-			$arr_title[]=$row['resource_id'];
+			$arr_id[]=$row['resource_id'];
 			$arr_text[]=$row['text'];
+			$arr_title[]=$row['title'];
 		
 
 		}
 		$arr_id=$this->db
 			->select('magazine_id')
 			->from('magazine')
-			->where_in('magazine.magazine_id',$arr_title)
+			->where_in('magazine.magazine_id',$arr_id)
 			->limit($limit)
 			->get()
 			->result_array();
@@ -114,6 +115,9 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 
 		foreach($arr_id as $k => $v){
 			$arr_pu=$this->mag_model->_get_magazine($v['magazine_id']);
+			if(strlen($arr_title[$k])){
+			$arr_pu['name'] = $arr_title[$k];
+			}
 			if(strlen($arr_text[$k])){
 			$arr_pu['intro'] = $arr_text[$k];
 			}
