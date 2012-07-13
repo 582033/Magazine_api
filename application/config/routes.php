@@ -117,5 +117,7 @@ $route['v1/activity/add'] = 'msg/msg_add';
 $route['v1/ltapp/ads/(image|text|maga|elem)/(.*)']='ad/ad_list/$1/$2';
 
 $route['v1/user/changepwd'] = 'person/change_password';
+
+$route['v1/stat/magread/(:any)'] = 'stats/magread/$1';
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

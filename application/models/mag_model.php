@@ -597,4 +597,9 @@ class Mag_Model extends mag_db {
 					);
 		return $items;
 	}//}}}
+
+	function incr_magazine_views($magazineId) {
+		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET views = views + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
+		$this->db->query($sql);
+	}
 }
