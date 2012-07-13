@@ -65,6 +65,11 @@ class User_Model extends mag_db {
 		}
 	}	//}}}
 
+	function get_avatar_url($user_id, $avatar_id) {
+		if (!$avatar_id) $avatar = '0/default.jpg';
+		else $avatar = "$user_id/$avatar_id.jpg";
+		return $this->config->item('img_host') . "/avatar/$avatar";
+	}
 	function mapping_user_info ($user_info, $projection='full') { //数据库用户信息映射{{{
 		$projection2parts = array(
 				'short' => array('short'),
@@ -78,7 +83,7 @@ class User_Model extends mag_db {
 			$user_short = array(
 					'id' => $user_info['user_id'],
 					'nickname' => $user_info['nickname'],
-					'image' => $user_info['avatar'],
+					'image' => $this->get_avatar_url($user_info['user_id'], $user_info['avatar']),
 					'url' => $this->config->item('www_host') . "/user/$user_info[user_id]",
 					);
 			$user = array_merge($user, $user_short);
