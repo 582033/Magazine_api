@@ -117,9 +117,9 @@ $num_all=$this->msg_model->get_msgnum($u_id);
 	$res_arr['totalResults']=$num_all;
 	$res_arr['start']=$filter['start'];
 	$res_arr['items']=$arr_list['content'];
-	foreach($arr_list['content'] as $k => $v){
-	$res=$this->msg_model->msg_up((int)$v->msg_id,$u_id);
-}
+//	foreach($arr_list['content'] as $k => $v){
+//	$res=$this->msg_model->msg_up((int)$v->msg_id,$u_id);
+//}
 	$json_res=json_encode($res_arr);
 	header('Content-type: application/json');
 	echo $json_res;
@@ -178,7 +178,7 @@ $key_unread='key_unread'.$user_id;
 else{
 //update readed activity or other people's activity',return which http status
 		echo str_repeat('tt',50);
-		header('HTTP/1.1 400');
+		header('HTTP/1.1 406');
 		exit();
 
 
