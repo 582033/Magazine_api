@@ -30,7 +30,8 @@
 			$this->User_Model->edit_user($user_id, $user_info);
 		}elseif($method == 'get'){
 			if ($user_id == 'me') $user_id = $this->check_session_model->check_session();
-			$user = $this->User_Model->get_user_info($user_id);
+			$projection = $this->_get('projection', 'full');
+			$user = $this->User_Model->get_user_info($user_id, $projection);
 			$this->_json_output($user);
 		}
 	}
