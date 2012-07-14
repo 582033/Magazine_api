@@ -266,6 +266,7 @@ class Mag_Model extends mag_db {
 				'description' => '',
 				'page' => $result['parent'],
 				);
+		$url ='';
 		if (strlen($result['magazine_id']) <= 3){
 			$read_mag_id = $result['magazine_id'];
 		}else{
