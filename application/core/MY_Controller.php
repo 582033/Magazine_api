@@ -59,14 +59,25 @@ class MY_Controller extends CI_Controller {
 			'pad' => 'text/html',
 			'wml' => 'text/vnd.wap.wml',
 			'json' => 'application/json',
+			'javascript' => 'application/javascript',
 		);
 
 		$content_type = $format_content_type[$output_format];
 		$this->output->set_header("Content-type: $content_type;charset=utf-8");
 	} //}}}
 
-	function _json_output($data) {
-		$this->_set_content_type('json');
-		$this->output->set_output(json_encode($data));
-	}
+	/**
+	  json or jsonp outptu
+	  */
+	function _json_output($data) { // {{{
+		$callback = $this->_get('callback');
+		$output = json_encode($data);
+		$format = 'json';
+		if ($callback) {
+			$format = 'javascript';
+			$output = "$callback($output);";
+		}
+		$this->_set_content_type($format);
+		$this->output->set_output($output);
+	} //}}}
 }

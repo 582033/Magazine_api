@@ -9,16 +9,8 @@
 
 	function magread($magazineId) {
 		$this->load->model('mag_model');
-		$callback = $this->_get('callback');
 		$this->mag_model->incr_magazine_views($magazineId);
 		$result = array('status' => 'OK');
-		if ($callback) {
-			header('Content-Type: application/javascript');
-			echo $callback . '(' . json_encode($result) . ');';
-			exit;
-		}
-		else {
-			$this->_json_output($result);
-		}
+		$this->_json_output($result);
 	}
 }
