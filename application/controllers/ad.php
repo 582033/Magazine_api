@@ -30,12 +30,12 @@ class Ad extends MY_Controller {
 	'items'=>$res['content'],
 
 );
-	echo json_encode($ret);
+	$this->_json_output($ret);
 }
 	//for elem only
 	function ad_list_elem($slot){
 		$arr_data=$this->ad_model->ad_list_elem($slot);
-		echo json_encode($arr_data);
+	$this->_json_output($arr_data);
 	
 	
 	
@@ -58,7 +58,7 @@ class Ad extends MY_Controller {
 				'start'  => '0',
 				'items' => $res,
 				);
-		echo json_encode($ret);
+		$this->_json_output($ret);
 	
 	}
 
