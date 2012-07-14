@@ -75,6 +75,7 @@ class User_Model extends mag_db {
 				'short' => array('short'),
 				'basic' => array('short', 'basic'),
 				'full' => array('short', 'basic', 'full'),
+				'fuller' => array('short', 'basic', 'full'),
 				);
 		$parts = $projection2parts[$projection];
 
@@ -195,9 +196,28 @@ class User_Model extends mag_db {
 		return $ftpinfo;
 	}	//}}}
 
-	function get_user_info ($user_id) {	//{{{
+	function get_user_info ($user_id, $projection='full') {	//{{{
+		$love_types = array(
+			'element' => 'elements',
+			'magazine' => 'magazines',
+			'author' => 'users',
+			);
 		$where = array('user_id' => $user_id);
-		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where));
+		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where), $projection);
+		if ($projection == 'fuller') {
+			$loves = $this->db
+				->select('loved_type, loved_id')
+				->from(USER_LOVE_TABLE)
+				->where('user_id', $user_id)
+				->get()
+				->result_array();
+			$fav = array('elements' => array(), 'magazines' => array(), 'users' => array());
+			foreach ($loves as $love) {
+				$lt = $love_types[$love['loved_type']];
+				$fav[$lt][] = $love['loved_id'];
+			}
+			$user_info['fav'] = $fav;
+		}
 		return $user_info;
 	}	//}}}
 
