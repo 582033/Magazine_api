@@ -243,19 +243,6 @@ class User_Model extends mag_db {
 		return $users;
 	}	//}}}
 
-	function set_user_info ($user_id, $user_info){	//{{{
-		$where = array('user_id' => $user_id);
-		$user_is_exists = $this->get_user_info($user_id);
-		$return = array('apiver' => $this->config->item('api_version'));
-		if($user_is_exists != array()){
-			$data = json_decode($user_info, TRUE);
-			$this->update_row(USER_TABLE, $data, $where);
-			$return['errcode'] = '0';
-			$return['data'] = $this->get_user_info($user_id);
-		}
-		return $return;
-	}	//}}}
-
 	function _get_user_mag($user_id){	//{{{
 		$sql = "select * from magazine where user_id='$user_id'";
 		$result = $this->db->query($sql);
