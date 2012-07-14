@@ -5,8 +5,35 @@ class Msg_Model extends mag_db {
 		parent::__construct();
 	}
 	//function to add activity 
-	function msg_add($arr_act){
-	$res=$this->db->insert(MSG_TABLE,$arr_act);
+	function msg_add($json_ctt){
+		$arr_ins=json_decode($json_ctt,TRUE);
+file_get_contents('http://localhost/'.$json_ctt);
+		$act_type = $arr_ins['verb'];
+
+		if($act_type =='signup'){
+			//check column
+			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
+			{
+				echo "column missing";
+				header('HTTP/1.1 400');exit;
+
+			}
+		}
+		elseif($act_type == 'typeb')
+		{
+			//typeb process	
+
+		}
+		else{
+			// unknown  type	
+			echo "unknown activity type";
+			header('HTTP/1.1 400');exit;
+
+		}
+
+
+
+	$res=$this->db->insert(MSG_TABLE,$arr_ins);
 	return $res;
 
 }

@@ -3,6 +3,7 @@
 	function __construct () {
 		parent::__construct();
 		$this->load->model('mag_db');
+		$this->load->model('Msg_Model');
 		$this->load->model('User_Model');
 		$this->load->library('session');
 	}
@@ -67,6 +68,24 @@
 			show_error_text(400, 'username must be email');
 		}
 		$return = $this->User_Model->regasReader($username, $passwd, $nickname);
+ $arr_signok=    array(
+                 //用户id
+                 'user_id' =>$return['id'],
+                 //当前时间
+                 'occur_time' => date("Y-m-d H:i:s"),
+                 // 发起者
+                 'actor'  => '0',
+                 //signup
+                 'verb'    => 'signup',
+                 //message
+                 'msg_content'  =>'恭喜您！已经成功注册1001夜的账号！',
+                 );
+		$json_sign=json_encode($arr_signok);
+
+
+		$this->Msg_Model->msg_add($json_sign);
+
+
 		$this->_json_output($return);
 	}	//}}}
 

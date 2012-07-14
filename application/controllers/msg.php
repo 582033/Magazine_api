@@ -11,34 +11,8 @@ class Msg extends MY_Controller {
 		$this->load->library('session');
 		$this->apiver = $this->config->item('api_version');
 	}	
-	function msg_add(){
-		$arr_ins=json_decode($_POST['content'],TRUE);
-		$act_type = $arr_ins['verb'];
-
-		if($act_type =='signup'){
-			//check column
-			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
-			{
-				echo "column missing";
-				header('HTTP/1.1 400');exit;
-
-			}
-		}
-		elseif($act_type == 'typeb')
-		{
-			//typeb process	
-
-		}
-		else{
-			// unknown  type	
-			echo "unknown activity type";
-			header('HTTP/1.1 400');exit;
-
-		}
-
-
-
-		$res_add=$this->msg_model->msg_add($arr_ins);
+	function msg_add($json_msg_ctt){
+		$res_add=$this->msg_model->msg_add($json_msg_ctt);
 		if($res_add===TRUE)
 		{
 			//add sucess
