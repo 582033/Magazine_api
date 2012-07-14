@@ -75,7 +75,6 @@ class User_Model extends mag_db {
 				'short' => array('short'),
 				'basic' => array('short', 'basic'),
 				'full' => array('short', 'basic', 'full'),
-				'fuller' => array('short', 'basic', 'full'),
 				);
 		$parts = $projection2parts[$projection];
 
@@ -196,28 +195,9 @@ class User_Model extends mag_db {
 		return $ftpinfo;
 	}	//}}}
 
-	function get_user_info ($user_id, $projection='full') {	//{{{
-		$love_types = array(
-			'element' => 'elements',
-			'magazine' => 'magazines',
-			'author' => 'persons',
-			);
+	function get_user_info ($user_id) {	//{{{
 		$where = array('user_id' => $user_id);
-		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where), $projection);
-		if ($projection == 'fuller') {
-			$loves = $this->db
-				->select('loved_type, loved_id')
-				->from(USER_LOVE_TABLE)
-				->where('user_id', $user_id)
-				->get()
-				->result_array();
-			$fav = array('elements' => array(), 'magazines' => array(), 'persons' => array());
-			foreach ($loves as $love) {
-				$lt = $love_types[$love['loved_type']];
-				$fav[$lt][] = $love['loved_id'];
-			}
-			$user_info['fav'] = $fav;
-		}
+		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where));
 		return $user_info;
 	}	//}}}
 
@@ -351,23 +331,26 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function edit_user($user_id, $user_info){	//{{{
-		$tags = trim(implode(",", array_unique(array_filter(explode(",", $user_info['tags'])))));
-		$tags = trim(preg_replace('/[\s,]+/', ',', $tags), ",");
-		$items = array(
-				'nickname' => $user_info['nickname'],
-				'birthday' => $user_info['birthday'],
-				'sex' => $user_info['gender'],
-				'province' => $user_info['province'],
-				'city' => $user_info['city'],
-				'tag' => $tags,
+		$mapping = array(
+				'nickname' => 'nickname',
+				'birthday' => 'birthday',
+				'sex' => 'gender',
+				'province' => 'province',
+				'city' => 'city',
 				);
-		foreach ($items as $key => $item){
-			if ($item != '') {
-				$items[$key] = trim($item);
-			 }
+		$items = array();
+		foreach ($mapping as $k => $v) {
+			if (!empty($user_info[$v]) && isset($user_info[$v])) $items[$k] = $user_info[$v];
+		}
+		if (isset($user_info['tags'])) {
+			if (is_array($user_info['tags'])) {
+				$tags = trim(implode(",", array_unique(array_filter(explode(",", $user_info['tags'])))));
+				$tags = trim(preg_replace('/[\s,]+/', ',', $tags), ",");
+				$items['tag'] = $tags;
+			}
 			else {
-				unset($items[$key]);			
-			}	
+				$items['tag'] = $user_info['tags'];
+			}
 		}
 		$where = array('user_id' => $user_id);
 		$this->db->update(USER_TABLE, $items, $where);
