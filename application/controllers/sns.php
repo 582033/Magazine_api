@@ -17,18 +17,17 @@ class Sns extends MY_Controller {
 	 * 获取认证url;请求方式GET,参数:平台类型 snsids:是sina/qq（同时申请多个，用逗号隔开）,append:是callback赋加返回值
 	 * @return @todo
 	 */
-	public function oauthzieurl() {
+	public function oauthzieurl() { // {{{
 		$snsid = $this->input->get('snsid');
 		$cbQuery = $this->input->get('state');
 		$return = array();
 		$oauth = SnsOAuth::factory($snsid);
 		if(null === $oauth) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(400);
 		}
 		$return[$snsid] = $oauth->getOAuthorizeURL($cbQuery);
 		$this->_json_output($return);
-	}
+	} //}}}
 	/**
 	 *  接口说明：验证第三方授权有效性
         请求方式：get
@@ -50,29 +49,21 @@ class Sns extends MY_Controller {
 		$snsid = $this->input->get('snsid');
 		$oauth = SnsOAuth::factory($snsid);
 		if(null === $oauth) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(400, 'Bad Request');
 		}
 		$query = $this->input->get('query');
 		if(!$query) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(400, 'Bad Request');
 		}
 		parse_str($query,$params);
 		$oauthResult = $oauth->getAccessToken($params,'code');
 		if(isset($params['state'])) $oauthResult['state'] = $params['state'];
 		if(!$oauthResult) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(403);
 		}
 		$sessionid = $this->input->get('session_id');
 		if($sessionid) { //绑定操作
-			$this->session->initSession();
-			$userId = $this->session->userdata('user_id');
-			if(!$userId) {
-				header('HTTP/1.1 403');
-				return $this->_json_output($return);
-			}
+			$userId = $this->_auth_check();
 			$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
 			return $this->_json_output($result);
 		}
@@ -116,16 +107,13 @@ class Sns extends MY_Controller {
 	public function unbind() {
 		$return = array();
 		$snsid = $this->input->get('snsid');
-		$this->session->initSession();
-		$userId = $this->session->userdata('user_id');
-		if(!$userId || !$snsid) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+		if (!$snsid) {
+			show_error_text(400);
 		}
+		$userId = $this->_auth_check();
 		$result = $this->sns_model->unbind($userId,$snsid);
 		if(!$result) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(403);
 		}
 		$this->_json_output($result);
 	}
@@ -140,14 +128,9 @@ class Sns extends MY_Controller {
                 {bindresult}
 	 *@return @todo
 	 */
-	public function bind() {
+	public function bind() { // {{{
+		$userId = $this->_auth_check();
 		$return = array();
-		$this->session->initSession();
-		$userId = $this->session->userdata('user_id');
-		if(!$userId) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
-		}
 		$snsid = $this->input->get('snsid');
 		$authstring = $this->input->get('authstring');
 		$oauthResult = @json_decode(base64_decode($authstring),true);
@@ -160,7 +143,7 @@ class Sns extends MY_Controller {
 		$oauth->setOAuthResult($oauthResult);
 		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
 		return $this->_json_output($result);
-	}
+	} //}}}
 	/**
 	 * 接口说明：获取用户绑定信息
 	 请求方式：get
@@ -169,14 +152,9 @@ class Sns extends MY_Controller {
 	 {"account_id":"26","snsid":"sina","uid":"1792549643","updated_at":"1340161889","created_at":"1340161889","expired_in":1340171976}
 	 *@return @todo
 	 */
-	public function bindinfo() {
+	public function bindinfo() { // {{{
 		$return = array();
-		$this->session->initSession();
-		$userId = $this->session->userdata('user_id');
-		if(!$userId) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
-		}
+		$userId = $this->_auth_check();
 		$return = $this->sns_model->getBindByUser($userId);
 		foreach ($return AS $k=>$v) {
 			$temp = json_decode($v['access_auth'],true);
@@ -186,11 +164,11 @@ class Sns extends MY_Controller {
 			$return[$k]['expired_in'] = $auth->getExpiredTime();
 		}
 		return $this->_json_output($return);
-	}
+	} // }}}
 	/**
 	 * 分享接口
 	 */
-	public function share() {
+	public function share() { // {{{
 		require_once APPPATH.'libraries/SnsApi.php';
 		$return = array();
 		$types = array('text','picture','vedio');
@@ -199,15 +177,9 @@ class Sns extends MY_Controller {
 		$url = $this->input->get('url');
 		$content = $this->input->get('content');
 		if(!in_array($type,$types) || !$content) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
+			show_error_text(400, 'Bad Request');
 		}
-		$this->session->initSession();
-		$userId = $this->session->userdata('user_id');
-		if(!$userId) {
-			header('HTTP/1.1 403');
-			return $this->_json_output($return);
-		}
+		$userId = $this->_auth_check();
 		$result = $this->sns_model->getBindByUser($userId);
 		$expired = array();//过期授权平台
 		$now = time();
@@ -235,6 +207,17 @@ class Sns extends MY_Controller {
 				print_r($share);
 			}
 		}
-	}
+	} //}}}
+
+	function _auth_check() { // {{{
+		if (!$this->session->checkAndRead()) {
+			show_error_text(401, 'Unauthorized');
+		}
+		$userId = $this->session->userdata('user_id');
+		if (!$userId) {
+			show_error_text(401, 'Unauthorized');
+		}
+		return $userId;
+	} //}}}
 }
 
