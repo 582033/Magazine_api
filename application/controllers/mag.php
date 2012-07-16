@@ -80,8 +80,9 @@
 	function elements(){		//获取杂志元素列表{{{
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
+		$type = $this->input->get('type');
 		$order_by = 'me.weight desc';
-		$element_list = $this->Mag_Model->_get_element_list($limit, $start, $order_by);
+		$element_list = $this->Mag_Model->_get_element_list($limit, $start, $order_by, $type);
 		$this->_json_output($element_list);
 	}//}}}
 

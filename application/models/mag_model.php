@@ -349,9 +349,9 @@ class Mag_Model extends mag_db {
 		return $element;
 	}//}}}
 	
-	function _get_element_list($limit, $start, $order_by) {		//获取杂志元素列表{{{
+	function _get_element_list($limit, $start, $order_by, $type=null) {		//获取杂志元素列表{{{
 		$where = array();
-		$type = array('image', 'video');
+		$type = !$type ? array('image', 'video') : $type;
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id')
 						->from(MAG_ELEMENT_TABLE . ' as me')
