@@ -11,18 +11,18 @@ class Love_Model extends mag_db {
 			'user_id' => $user_id,
 			'loved_type' => $loved_type,
 		);
+		$row = $this->row(USER_LOVE_TABLE, $where);
+		$row_user = $this->db->from(USER_TABLE)->where(array('user_id' =>$user_id))->get()->row_array();
+		$this->load->model('Msg_Model');
 		$arr_love_author = array(
 				'user_id' => $loved_id,
-				'occur_tim' => date("Y-m-d H:i:s");
+				'occur_time' => date("Y-m-d H:i:s"),
 				'actor' => '0',
-				'verb' => 'love_author',
-				'msg_content' => '用户某某某关注了您';
+				'verb' => 'loveauth',
+				'msg_content' => $user_id.'||||'.$row_user['nickname'],
 				);
 		$json_love_author = json_encode($arr_love_author);
-		$row = $this->row(USER_LOVE_TABLE, $where);
-		$row_user = $this->db->get_where(USER_TABLE,array('user_id' =>$user_id));
-		//print_r($row_user);exit;
-		$this->Msg_model->msg_add($json_love_author);
+		$this->Msg_Model->msg_add($json_love_author);
 		if ($row == array()){
 			$data = $where;
 			$this->mag_db->insert_row(USER_LOVE_TABLE, $data);

@@ -18,7 +18,7 @@ class Msg_Model extends mag_db {
 
 			}
 		}
-		elseif($act_type == 'love_author')
+		elseif($act_type == 'loveauth')
 		{
 			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
 			{
