@@ -75,10 +75,11 @@ class User_Model extends mag_db {
 				'short' => array('short'),
 				'basic' => array('short', 'basic'),
 				'full' => array('short', 'basic', 'full'),
-				'fuller' => array('short', 'basic', 'full'),
+				'fuller' => array('short', 'basic', 'full', 'fuller'),
 				);
 		$parts = $projection2parts[$projection];
 
+		$user_id = $user_info['user_id'];
 		$user = array();
 		if (in_array('short', $parts)) {
 			$user_short = array(
@@ -104,12 +105,45 @@ class User_Model extends mag_db {
 			$user = array_merge($user, $user_basic);
 		}
 		if (in_array('full', $parts)) {
+			$followees = $this->db
+				->from(USER_LOVE_TABLE)
+				->where('loved_type', 'author')
+				->where('user_id', $user_id)
+				->count_all_results();
+			$followers = $this->db
+				->from(USER_LOVE_TABLE)
+				->where('loved_type', 'author')
+				->where('loved_id', $user_id)
+				->count_all_results();
+			$magazines = $this->db
+				->from(MAGAZINE_TABLE)
+				->where('user_id', $user_id)
+				->count_all_results();
 			$user_full = array(
-					'followers' => '999',
-					'followees' => '999',
-					'magazines' => '999',
+					'followers' => $followers,
+					'followees' => $followees,
+					'magazines' => $magazines,
 					);
 			$user = array_merge($user, $user_full);
+		}
+		if (in_array('fuller', $parts)) {
+			$love_types = array(
+				'element' => 'elements',
+				'magazine' => 'magazines',
+				'author' => 'users',
+				);
+			$loves = $this->db
+				->select('loved_type, loved_id')
+				->from(USER_LOVE_TABLE)
+				->where('user_id', $user_id)
+				->get()
+				->result_array();
+			$fav = array('elements' => array(), 'magazines' => array(), 'users' => array());
+			foreach ($loves as $love) {
+				$lt = $love_types[$love['loved_type']];
+				$fav[$lt][] = $love['loved_id'];
+			}
+			$user['fav'] = $fav;
 		}
 
 		return $user;
@@ -197,31 +231,12 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function get_user_info ($user_id, $projection='full') {	//{{{
-		$love_types = array(
-			'element' => 'elements',
-			'magazine' => 'magazines',
-			'author' => 'users',
-			);
 		$where = array('user_id' => $user_id);
 		$user_info = $this->mapping_user_info($this->row(USER_TABLE, $where), $projection);
-		if ($projection == 'fuller') {
-			$loves = $this->db
-				->select('loved_type, loved_id')
-				->from(USER_LOVE_TABLE)
-				->where('user_id', $user_id)
-				->get()
-				->result_array();
-			$fav = array('elements' => array(), 'magazines' => array(), 'users' => array());
-			foreach ($loves as $love) {
-				$lt = $love_types[$love['loved_type']];
-				$fav[$lt][] = $love['loved_id'];
-			}
-			$user_info['fav'] = $fav;
-		}
 		return $user_info;
 	}	//}}}
 
-	function get_all_users ($start, $limit, $keyword=null) {	//{{{
+	function get_all_users ($start, $limit, $keyword=null, $projection='basic') {	//{{{
 		$where = $keyword ? "where nickname like'%$keyword%'" : null;
 		$items = $this->db->query("select * from user $where limit $start,$limit;")->result('array');
 		if ($items == array()) {
@@ -230,7 +245,7 @@ class User_Model extends mag_db {
 		else {
 			$return = array();
 			foreach ($items as $item) {
-				$return[] = $this->mapping_user_info($item);
+				$return[] = $this->mapping_user_info($item, $projection);
 			}
 		}
 		$total = $this->db->query("select * from user $where;")->num_rows();
