@@ -7,7 +7,6 @@ class Msg_Model extends mag_db {
 	//function to add activity 
 	function msg_add($json_ctt){
 		$arr_ins=json_decode($json_ctt,TRUE);
-file_get_contents('http://localhost/'.$json_ctt);
 		$act_type = $arr_ins['verb'];
 
 		if($act_type =='signup'){
