@@ -18,9 +18,14 @@ class Msg_Model extends mag_db {
 
 			}
 		}
-		elseif($act_type == 'typeb')
+		elseif($act_type == 'love_author')
 		{
-			//typeb process	
+			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
+			{
+				echo "column missing";
+				header('HTTP/1.1 400');exit;
+
+			}
 
 		}
 		else{
