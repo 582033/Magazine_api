@@ -359,6 +359,7 @@ class User_Model extends mag_db {
 				'sex' => 'gender',
 				'province' => 'province',
 				'city' => 'city',
+				'avatar' => 'avatar',
 				);
 		$items = array();
 		foreach ($mapping as $k => $v) {
