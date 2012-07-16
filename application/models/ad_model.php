@@ -78,7 +78,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			}
 			$result[$k]['ret']['url']=$result[$k]['url'];
 			$result[$k]['ret']['mag_read_url']=$result[$k]['url'];
-			$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=180x180&fit=c&src=".$result[$k]['ret']['url'];
+			$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=180x180&fit=c&src=".$result[$k]['ret']['image']['original']['url'];
 			array_push($ret,$result[$k]['ret']);
 		
 		}
