@@ -15,7 +15,15 @@ class SinaApi extends SnsApi {
 		}
 		return $this->client;
 	}
-
+	public function getUserInfo($uid) {
+		$data = $this->getClient()->show_user_by_id($uid);
+		$return = array(
+			'nickname' => $data['name'],
+			'avatar'=>$data['avatar_large'],
+			'ext'=>'jpg'
+				);
+		return $return;
+	}
 	public function shareText($content,$annotations=null) {
 		$response = $this->getClient()->update($content,$annotations);
 		if(isset($response['error_code'])) {

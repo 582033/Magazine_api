@@ -141,9 +141,46 @@ class Sns extends MY_Controller {
 			return $this->_json_output($return);
 		}
 		$oauth->setOAuthResult($oauthResult);
-		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
+		$data = $oauth->getOAuthToSave();
+		if ($this->input->get('do') === 'FETCH' && $snsid=='qq') {
+			require_once APPPATH.'libraries/SnsApi.php';
+			$api = SnsApi::factory($oauth);
+			if ($info = $api->getUserInfo($oauth->getUid())) {
+				$nickname = $info['nickname'];
+				$avatar180 = $info['avatar'];
+				$avatarId = $this->__saveAvatar($avatar180, $userId,$info['ext']);
+				if($avatarId) {
+					$this->mag_db->update_row('user',array('nickname'=>$nickname,'avatar'=>$avatarId),array('user_id'=>$userId));
+				}
+			}
+		}
+		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$data,false);
 		return $this->_json_output($result);
 	} //}}}
+	private function __saveAvatar($httpImg180,$userId,$ext='jpg') {
+		$dir = '/mnt/img/avatar/'.$userId;
+		if(!is_dir($dir)) {
+			mkdir($dir,0777);
+		}
+		$avatarId = uniqid().mt_rand(1000000, 9999999);
+		$img180 = $dir.'/'.$avatarId.'_180.'.$ext;
+		set_time_limit(100);
+		try {
+			file_put_contents($img180, file_get_contents($httpImg180));
+			$this->load->helper('thumb');
+			$img80 = $dir.'/'.$avatarId.'_80.'.$ext;
+			$img50 = $dir.'/'.$avatarId.'_50.'.$ext;
+			image_thumb($img180, $img80, 80, 80, false);//生成80x80
+			image_thumb($img180, $img50, 50, 50, false);//生成50x50
+			@chmod($img180,0777);
+			@chmod($img80,0777);
+			@chmod($img50,0777);
+		}
+		catch (Exception $e) {
+			return false;
+		}
+		return $avatarId;
+	}
 	/**
 	 * 接口说明：获取用户绑定信息
 	 请求方式：get

@@ -27,6 +27,7 @@ abstract class SnsApi {
 		require_once 'sns/'.$class.'.php';
 		return new $class($oauth);
 	}
+	abstract public function getUserInfo($uid);
 	/**
 	 * 发送文字微博
 	 * @param $content

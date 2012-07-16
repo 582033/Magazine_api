@@ -7,6 +7,7 @@
 
 abstract class SnsOAuth {
 	const CALLBACK = 'http://www.in1001.com/sns/callback';
+	//const CALLBACK = 'http://starzhe.com/sns/callback';
 	
 	protected $type = null;
 	protected $authResult = array();
