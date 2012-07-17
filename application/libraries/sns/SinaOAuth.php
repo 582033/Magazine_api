@@ -22,7 +22,7 @@ class SinaOAuth extends SnsOAuth {
 	 * 获取认证URL
 	 */
 	public function getOAuthorizeURL($appendUrl = '') {
-		return $this->getOAuth()->getAuthorizeURL( self::CALLBACK ).'&state='.$appendUrl;
+		return $this->getOAuth()->getAuthorizeURL( self::CALLBACK ).'&state='.$appendUrl.'&forcelogin=true';
 	}
 	/**
 	 * 获取access token

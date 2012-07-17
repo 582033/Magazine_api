@@ -141,7 +141,9 @@ class Sns extends MY_Controller {
 			return $this->_json_output($return);
 		}
 		$oauth->setOAuthResult($oauthResult);
-		$data = $oauth->getOAuthToSave();
+		
+		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
+		
 		if ($this->input->get('do') === 'FETCH' && $snsid=='qq') {
 			require_once APPPATH.'libraries/SnsApi.php';
 			$api = SnsApi::factory($oauth);
@@ -154,7 +156,6 @@ class Sns extends MY_Controller {
 				}
 			}
 		}
-		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$data,false);
 		return $this->_json_output($result);
 	} //}}}
 	private function __saveAvatar($httpImg180,$userId,$ext='jpg') {
