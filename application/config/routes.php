@@ -114,7 +114,7 @@ $route['v1/user/(:num)/activities'] = 'msg/msg_list/$1';
 $route['v1/activity/(:num)'] = 'msg/msg_delput/$1';
 $route['v1/activity/add'] = 'msg/msg_add';
 
-$route['v1/ltapp/ads/(image|text|maga|elem)/(.*)']='ad/ad_list/$1/$2';
+$route['v1/ltapp/ads/(image|text|magazine|element)/(.*)']='ad/ad_list/$1/$2';
 
 $route['v1/user/changepwd'] = 'person/change_password';
 

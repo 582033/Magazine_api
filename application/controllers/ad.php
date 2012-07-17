@@ -12,6 +12,8 @@ class Ad extends MY_Controller {
 	}	
 	//list ads if special type and slot
 	function ad_list($type,$slot){
+		$type == 'magazine' ? $type = 'maga':null;
+		$type == 'element' ? $type = 'elem':null;
 		if($type=='maga'){
 			return $this->ad_list_maga($slot);
 		
