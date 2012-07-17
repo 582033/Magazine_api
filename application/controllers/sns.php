@@ -158,7 +158,7 @@ class Sns extends MY_Controller {
 		return $this->_json_output($result);
 	} //}}}
 	private function __saveAvatar($httpImg180,$userId,$ext='jpg') {
-		$dir = '/mnt/img/avatar/'.$userId;
+		$dir = '/mnt/mag/img/avatar/'.$userId;
 		if(!is_dir($dir)) {
 			mkdir($dir,0777);
 		}
