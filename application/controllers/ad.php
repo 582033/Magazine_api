@@ -29,6 +29,7 @@ class Ad extends MY_Controller {
 	$ret=array(
 	'kind'=>"magazine#ads",
 	'totalResults'=>$res['num'],
+	'start' =>'0',
 	'items'=>$res['content'],
 
 );

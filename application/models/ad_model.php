@@ -50,6 +50,18 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 	$arr_all=array();
 	$arr_all['num']=mysql_affected_rows();
 	$arr_all['content']=$arr_ret;
+	//image url process
+	if($type == 'image'){
+		$res_slot = $this->db->get_where('ad_slots',array('type'=>$type,'intro'=>$slot))->row_array();
+		$image_size=$res_slot['size'];
+		foreach($arr_all['content'] as $k => $v ){
+			$preurl = $arr_all['content'][$k]['image'];
+			$arr_all['content'][$k]['image'] = array(
+					'size' => $image_size,
+					'url'  => $preurl,
+					);
+		}
+	}
 	return $arr_all;
 	
 	}
@@ -87,8 +99,10 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 
 
 	$arr_all=array();
-	$arr_all['num']=$limit;
+	$arr_all['kind']='magazine#elements';
+	$arr_all['totalResults']=count($ret);
 	$arr_all['items']=$ret;
+	$arr_all['start']='0';
 	return $arr_all;
 	}
 
