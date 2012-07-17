@@ -144,7 +144,8 @@ class Sns extends MY_Controller {
 		
 		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
 		
-		if ($this->input->get('do') === 'FETCH' && $snsid=='qq') {
+		//if ($this->input->get('do') === 'FETCH' && $snsid=='qq') {
+		if ($this->input->get('do') === 'FETCH') {
 			require_once APPPATH.'libraries/SnsApi.php';
 			$api = SnsApi::factory($oauth);
 			if ($info = $api->getUserInfo($oauth->getUid())) {
