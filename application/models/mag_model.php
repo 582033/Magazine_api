@@ -299,10 +299,18 @@ class Mag_Model extends mag_db {
 		}
 
 		if ($result['element_type'] == 'video') {
-			$element['video'] = array(
-					'format' => 'mp4',
-					'fileurl' => $url_prefix . $result['url'],
-					);
+			if (strpos($result['url'], ".mp4")) {
+				$element['video'] = array(
+						'format' => 'mp4',
+						'fileurl' => $url_prefix . $result['url'],
+						);
+			}
+			else {
+				$element['video'] = array(
+						'format' => 'web',
+						'fileurl' => $result['url'],
+						);
+			}
 		}
 		$element['likes'] = (int)$result['num_loved'];
 		$element['shares'] = (int)$result['shares'];
