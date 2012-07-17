@@ -104,18 +104,11 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		
 
 		}
-		$arr_id=$this->db
-			->select('magazine_id')
-			->from('magazine')
-			->where_in('magazine.magazine_id',$arr_id)
-			->limit($limit)
-			->get()
-			->result_array();
 		//format
 		$ret = array();
 
 		foreach($arr_id as $k => $v){
-			$arr_pu=$this->mag_model->_get_magazine($v['magazine_id']);
+			$arr_pu=$this->mag_model->_get_magazine($v);
 			if(strlen($arr_title[$k])){
 			$arr_pu['name'] = $arr_title[$k];
 			}
