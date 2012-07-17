@@ -57,7 +57,7 @@ class Ad extends MY_Controller {
 
 		$ret=array(
 				'kind' => "magazine#magazine",
-				'totalResults' => $limit,
+				'totalResults' => count($res),
 				'start'  => '0',
 				'items' => $res,
 				);
