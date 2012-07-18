@@ -78,8 +78,6 @@
 					'actor'  => '0',
 					//signup
 					'verb'    => 'signup',
-					//message
-					'msg_content'  =>'恭喜您！已经成功注册1001夜的账号！',
 					);
 			$json_sign=json_encode($arr_signok);
 			$this->Msg_Model->msg_add($json_sign);
