@@ -11,7 +11,7 @@ class Msg_Model extends mag_db {
 
 		if($act_type =='signup'){
 			//check column
-			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
+			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ))
 			{
 				echo "column missing";
 				header('HTTP/1.1 400');exit;
@@ -20,7 +20,7 @@ class Msg_Model extends mag_db {
 		}
 		elseif($act_type == 'follow')
 		{
-			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor'])) ||(!isset($arr_ins['msg_content']))))
+			if((!isset($arr_ins['user_id']) ||(!isset($arr_ins['actor']))))
 			{
 				echo "column missing";
 				header('HTTP/1.1 400');exit;
