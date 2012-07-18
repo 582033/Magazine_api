@@ -20,13 +20,13 @@ class Love_Model extends mag_db {
 					     'id' => $user_id,
 					     'nickname' => $row_user['nickname'],
 					)
-					),
+					);
 		$arr_love_author = array(
 				'user_id' => $loved_id,
 				'occur_time' => date("Y-m-d H:i:s"),
 				'actor' => '0',
 				'verb' => 'follow',
-				'object' =>json_encode($msg_obj);
+				'object' =>json_encode($msg_obj),
 				);
 		$json_love_author = json_encode($arr_love_author);
 		$this->Msg_Model->msg_add($json_love_author);
