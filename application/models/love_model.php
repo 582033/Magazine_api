@@ -21,10 +21,21 @@ class Love_Model extends mag_db {
 					     'nickname' => $row_user['nickname'],
 					)
 					);
+		$msg_actor = array(
+					'id'=> $user_id,
+					'nickname' =>$row_user['nickname'],
+					'url'  =>$this->config->('web_host').'/user/'.$user_id,
+				);
+			if(strlen($row['avatar'])){
+				$msg_actor['image'] =$this->config->item('img_host').'/avatar/'.$user_id.'/'.$row['avatar'];
+			}
+			else{
+				$msg_actor['image'] =$this->config->item('img_host').'/avatar/0/default.jpg';
+			}
 		$arr_love_author = array(
 				'user_id' => $loved_id,
 				'occur_time' => date("Y-m-d H:i:s"),
-				'actor' => '0',
+				'actor' => json_encode($msg_actor),
 				'verb' => 'follow',
 				'object' =>json_encode($msg_obj),
 				);
