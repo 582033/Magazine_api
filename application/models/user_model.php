@@ -70,6 +70,7 @@ class User_Model extends mag_db {
 		return $this->config->item('img_host') . "/avatar/$avatar";
 	}
 	function mapping_user_info ($user_info, $projection='full') { //数据库用户信息映射{{{
+		if (!$user_info) return array();
 		$projection2parts = array(
 				'short' => array('short'),
 				'basic' => array('short', 'basic'),
