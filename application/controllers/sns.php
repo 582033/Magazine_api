@@ -221,6 +221,7 @@ class Sns extends MY_Controller {
 		$result = $this->sns_model->getBindByUser($userId);
 		$expired = array();//过期授权平台
 		$now = time();
+		print_r($result);
 		foreach ($result AS $k=>$v) {
 			$temp = json_decode($v['access_auth'],true);
 			$auth = SnsOAuth::factory($v['snsid']);
