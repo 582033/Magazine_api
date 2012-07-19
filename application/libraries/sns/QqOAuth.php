@@ -4,8 +4,8 @@ require_once 'qq/Tencent.php';
 class QqOAuth extends SnsOAuth {
 	const APP_KEY = '801189893';
 	const APP_SECRET = 'c93c5a86a90592b5a25841f46cfc39ad';
-	/* const APP_KEY = '801170937';测试用
-	const APP_SECRET = '1273085f1573db1cc2cf8eaa47a885b3'; */
+	/*const APP_KEY = '801170937';//测试用
+	const APP_SECRET = '1273085f1573db1cc2cf8eaa47a885b3';*/
 	
 	public function __construct($type) {
 		parent::__construct($type);

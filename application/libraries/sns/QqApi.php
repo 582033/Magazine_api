@@ -23,7 +23,6 @@ class QqApi extends SnsApi {
 	public function shareText($content,$annotations=null) {
 		$params = array('content'=>$content);
 		$response = Tencent::api('t/add',$params,'POST');
-		print_r($response);
 		if($response['ret'] == 0) {
 			return true;
 		}

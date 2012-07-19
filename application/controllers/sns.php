@@ -83,11 +83,18 @@ class Sns extends MY_Controller {
 				$return = array_merge($return, $user_short);
 			}
 			else {//未绑定
+				require_once APPPATH.'libraries/SnsApi.php';
+				$api = SnsApi::factory($oauth);
+				$info = $api->getUserInfo($snsuid);
 				$return = array(
 						'unbind'=>true,
 						'snsid'=>$snsid,
 						'oauthstring'=>base64_encode(json_encode($oauthResult))
 						);
+				if ($info) {
+					$return['nickname'] = $info['nickname'];
+					$return['avatar'] = $info['avatar'];
+				}
 			}
 		}
 		return $this->_json_output($return);
@@ -143,7 +150,7 @@ class Sns extends MY_Controller {
 		
 		$result = $this->sns_model->bind($userId,$snsid,$oauth->getUid(),$oauth->getOAuthToSave(),false);
 		
-		if ($this->input->get('do') === 'FETCH' && $snsid=='qq') {
+		if ($this->input->get('do') === 'FETCH') {
 			require_once APPPATH.'libraries/SnsApi.php';
 			$api = SnsApi::factory($oauth);
 			if ($info = $api->getUserInfo($oauth->getUid())) {

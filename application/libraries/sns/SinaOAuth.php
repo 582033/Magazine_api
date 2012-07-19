@@ -2,11 +2,9 @@
 require_once 'sina/saetv2.ex.class.php';
 
 class SinaOAuth extends SnsOAuth {
-	/* const APP_KEY = '2457468674';
-	const APP_SECRET = '2cc41dd67675e95e1c33e7820aba6a5c'; */
 	const APP_KEY = '264646415';
 	const APP_SECRET = '2dc868bf00ef506a3954a28bc0479d77';
-	/* const APP_KEY = '1545000644';测试用
+	/* const APP_KEY = '1545000644';//测试用
 	const APP_SECRET = 'ed426dc7240e2483cf6e84aee9b78c47'; */
 	
 	protected $oAuth = null;
