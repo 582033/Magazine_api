@@ -44,7 +44,7 @@ class Sns extends MY_Controller {
 	 *
 	 *@return @todo
 	 */
-	public function callback() {
+	public function callback() { // {{{
 		$return = array();
 		$snsid = $this->input->get('snsid');
 		$oauth = SnsOAuth::factory($snsid);
@@ -77,11 +77,10 @@ class Sns extends MY_Controller {
 				$this->session->initSession();
 				$this->session->set_userdata('user_id',$bind['account_id']);
 				$this->load->model('user_model');
-				$user = $this->user_model->get_user_info($bind['account_id']);
+				$user_short = $this->user_model->get_user_info($bind['account_id'], 'short');
 				$return['session_id'] = $this->session->get_session_id();
 				$return['oauthstring'] = base64_encode(json_encode($oauthResult));
-				$return['id'] = $bind['account_id'];
-				$return['nickname'] = $user['nickname'];
+				$return = array_merge($return, $user_short);
 			}
 			else {//未绑定
 				$return = array(
@@ -92,7 +91,7 @@ class Sns extends MY_Controller {
 			}
 		}
 		return $this->_json_output($return);
-	}
+	} // }}}
 
 	/**
 	 * 接口说明：取消绑定用户账号
@@ -104,7 +103,7 @@ class Sns extends MY_Controller {
                 {true}
 	 *@return @todo
 	 */
-	public function unbind() {
+	public function unbind() { // {{{
 		$return = array();
 		$snsid = $this->input->get('snsid');
 		if (!$snsid) {
@@ -116,7 +115,7 @@ class Sns extends MY_Controller {
 			show_error_text(403);
 		}
 		$this->_json_output($result);
-	}
+	} // }}}
 	/**
 	 * 接口说明：绑定用户账号
         请求方式：get
@@ -158,7 +157,7 @@ class Sns extends MY_Controller {
 		}
 		return $this->_json_output($result);
 	} //}}}
-	private function __saveAvatar($httpImg180,$userId,$ext='jpg') {
+	private function __saveAvatar($httpImg180,$userId,$ext='jpg') { // {{{
 		$dir = '/mnt/mag/img/avatar/'.$userId;
 		if(!is_dir($dir)) {
 			mkdir($dir,0777);
@@ -181,7 +180,7 @@ class Sns extends MY_Controller {
 			return false;
 		}
 		return $avatarId;
-	}
+	} // }}}
 	/**
 	 * 接口说明：获取用户绑定信息
 	 请求方式：get

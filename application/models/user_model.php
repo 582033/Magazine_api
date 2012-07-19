@@ -18,15 +18,14 @@ class User_Model extends mag_db {
 			$user_id = $this->insert_row(ACCOUNT_TABLE, $account_info);
 			if (!$nickname) $nickname = preg_replace('/@.+/', '', $username);
 			$this->insert_row(USER_TABLE, array('user_id' => $user_id, 'nickname' => $nickname));
+			$user_info = $this->get_user_info($user_id, 'short');
 			$this->session->initSession();
 			$this->session->set_userdata('user_id', $user_id);
-			$return = array(
+			$return = array_merge(array(
 							'status' => 'OK',
 							'session_id' => $this->session->get_session_id(),
 							'expires_in' => 7200,
-							'nickname' => $nickname,
-							'id' => $user_id,
-							);
+							), $user_info);
 		}
 		else {
 			$return = array(
@@ -158,17 +157,15 @@ class User_Model extends mag_db {
 		}
 		else {
 			if ($passwd == $this->_passwd_encryption($user_is_exist['passwd'].$key)){
-				$user_info = $this->get_user_info($user_is_exist['account_id']);
+				$user_info = $this->get_user_info($user_is_exist['account_id'], 'short');
 				$this->session->initSession();
 				$this->session->set_userdata('user_id', $user_info['id']);
 				$session_id = $this->session->get_session_id();
-				$return = array(
+				$return = array_merge(array(
 						'status' => 'OK',
 						'session_id' => $session_id,
-						'expires_in' => '200',
-						'nickname' => $user_info['nickname'],
-						'id' => $user_info['id'],
-						);
+						'expires_in' => $this->config->item('sess_expiration'),
+						), $user_info);
 				return $return;
 			 }
 			 else {
@@ -390,7 +387,7 @@ class User_Model extends mag_db {
 			$return = array(
 							'status' => 'OK',
 							'session_id' => $this->session->get_session_id(),
-							'expires_in' => 7200,
+							'expires_in' => $this->config->item('sess_expiration'),
 							);
 		}else{
 			$return = array(

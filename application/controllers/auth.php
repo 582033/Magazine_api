@@ -18,7 +18,7 @@
 		return $redis;
 	}	//}}}
 
-	function getKey (){	//{{{
+	function getkey (){	//{{{
 		$salt = $this->_generate_key();
 		$redis = $this->get_redis();
 		$redis->setex("auth:salt:$salt", $this->config->item('salt_expires'), "1");
