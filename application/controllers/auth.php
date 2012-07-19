@@ -68,6 +68,12 @@
 			show_error_text(400, 'username must be email');
 		}
 		$return = $this->User_Model->regasReader($username, $passwd, $nickname);
+		$arr_acot = array(
+				'id' =>'0',
+				'nickname' =>'系统',
+				'image'	=> "http://img.in1001.com/avatar/0/default.jpg",
+				'url' => "http://www.in1001.com",
+				);
 		if ($return['status'] == 'OK') {
 			$arr_signok = array(
 					//用户id
@@ -75,7 +81,7 @@
 					//当前时间
 					'occur_time' => date("Y-m-d H:i:s"),
 					// 发起者
-					'actor'  => '0',
+					'actor'  => json_encode($arr_acot),
 					//signup
 					'verb'    => 'signup',
 					);
