@@ -230,7 +230,9 @@ class Sns extends MY_Controller {
 				$expired[] = $v['snsid'];
 			}
 			else {
+				echo 'xxx';
 				if($v['snsid']!='qq') continue;
+				echo 'YYY';
 				$api = SnsApi::factory($auth);
 				switch ($type) {
 					case 'text':
