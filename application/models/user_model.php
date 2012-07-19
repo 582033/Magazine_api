@@ -143,6 +143,9 @@ class User_Model extends mag_db {
 				$fav[$lt][] = $love['loved_id'];
 			}
 			$user['fav'] = $fav;
+			$CI = & get_instance();
+			$CI->load->model('msg_model');
+			$user['unreads'] = $CI->msg_model->get_unread($user_id);
 		}
 
 		return $user;
