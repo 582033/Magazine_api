@@ -245,7 +245,7 @@ class Sns extends MY_Controller {
 						$share = $api->shareVedio($content,$url);
 						break;
 				}
-				print_r($share);
+				var_dump($share);
 			}
 		}
 	} //}}}
