@@ -14,7 +14,7 @@ class QqApi extends SnsApi {
 		$return = array();
 		if($data['ret'] == 0) {
 			$return['nickname'] = $data['data']['nick'];
-			$return['avatar'] = $data['data']['head'].'/180';
+			$return['avatar'] = $data['data']['head']?$data['data']['head'].'/180':'';
 			$return['ext'] = 'jpg';
 		}
 		return $return;

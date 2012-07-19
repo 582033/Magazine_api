@@ -41,7 +41,7 @@ class SinaApi extends SnsApi {
 		else {
 			$return = array(
 				'nickname'=>$data['name'],
-				'avatar'=>$data['avatar_large'],
+				'avatar'=>$data['avatar_large']?$data['avatar_large']:'',
 				'ext'=>'jpg'
 					);
 		}

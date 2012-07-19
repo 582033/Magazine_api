@@ -156,7 +156,12 @@ class Sns extends MY_Controller {
 			if ($info = $api->getUserInfo($oauth->getUid())) {
 				$nickname = $info['nickname'];
 				$avatar180 = $info['avatar'];
-				$avatarId = $this->__saveAvatar($avatar180, $userId,$info['ext']);
+				if ($avatar180) {
+					$avatarId = $this->__saveAvatar($avatar180, $userId,$info['ext']);
+				}
+				else {
+					$avatarId=null;
+				}
 				if($avatarId) {
 					$this->mag_db->update_row('user',array('nickname'=>$nickname,'avatar'=>$avatarId),array('user_id'=>$userId));
 				}
