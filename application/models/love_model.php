@@ -24,7 +24,7 @@ class Love_Model extends mag_db {
 		$msg_actor = array(
 					'id'=> $user_id,
 					'nickname' =>$row_user['nickname'],
-					'url'  =>$this->config->('web_host').'/user/'.$user_id,
+					'url'  =>$this->config->item('web_host').'/user/'.$user_id,
 				);
 			if(strlen($row['avatar'])){
 				$msg_actor['image'] =$this->config->item('img_host').'/avatar/'.$user_id.'/'.$row['avatar'];
