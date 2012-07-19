@@ -171,9 +171,9 @@ class Mag_Model extends mag_db {
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->join('user_love as ul', "mg.magazine_id = ul.loved_id")
 					->where($where)
-					->order_by('mg.weight desc')
 					->limit($limit)
 					->offset($start)
+					->order_by('ul.user_love_id desc')
 					->get()
 					->result_array();
 			$num_rows = $this->db
@@ -183,7 +183,7 @@ class Mag_Model extends mag_db {
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->join('user_love as ul', "mg.magazine_id = ul.loved_id")
 					->where($where)
-					->order_by('mg.weight desc')
+					->order_by('ul.user_love_id desc')
 					->get()
 					->num_rows();
 		}
