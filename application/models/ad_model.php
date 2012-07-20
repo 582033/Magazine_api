@@ -75,13 +75,9 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		}
 
 		$result=$this->db->query('select * from `ad_ads` where `type` = \'elem\' and `slot`=\''.$slot.'\' order by `weight` limit '.$limit)->result_array();
-		//echo "<pre>";print_r($result);exit;
 		$ret=array();
 		foreach($result as $k =>$v){
-
-			$elem_result=$this->db->query('select * from `mag_element` where `mag_element_id` = \''.$v['resource_id'].'\'')->row_array();
-
-			$result[$k]['ret'] = $this->mag_model->element_row2resource($elem_result);
+			$result[$k]['ret'] = $this->mag_model->_get_element($v['resource_id']);
 			if(strlen($result[$k]['title'])){
 			$result[$k]['ret']['title']=$result[$k]['title'];
 			}

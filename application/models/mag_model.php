@@ -262,6 +262,7 @@ class Mag_Model extends mag_db {
 				'id' => $result['mag_element_id'],
 				'type' => $result['element_type'],
 				'magId' => $result['magazine_id'],
+				'magName' => $result['magazine_name'],
 				'title' => $result['title'],
 				'description' => '',
 				'page' => $result['parent'],
@@ -342,7 +343,7 @@ class Mag_Model extends mag_db {
 		$where = array('me.mag_element_id' => $elementId);
 		$type = array('image', 'video');
 		$result = $this->db
-						->select ('me.*,mz.magazine_id,mz.user_id')
+						->select ('me.*,mz.magazine_id,mz.user_id, mz.name as magazine_name')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
@@ -361,7 +362,7 @@ class Mag_Model extends mag_db {
 		$where = array();
 		$type = !$type ? array('image', 'video') : $type;
 		$result = $this->db
-						->select ('me.*,mz.magazine_id,mz.user_id')
+						->select ('me.*,mz.magazine_id,mz.user_id, mz.name as magazine_name')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->where($where)
@@ -386,7 +387,7 @@ class Mag_Model extends mag_db {
 		$where = array('ul.user_id' => $userId);
 		$type = array('image', 'video');
 		$result = $this->db
-						->select ('me.*,mz.magazine_id,mz.user_id')
+						->select ('me.*,mz.magazine_id,mz.user_id,mz.name as magazine_name')
 						->from(MAG_ELEMENT_TABLE . ' as me')
 						->join('magazine as mz', "mz.magazine_id = me.magazine_id")
 						->join('user_love as ul', "ul.loved_id = me.mag_element_id")
