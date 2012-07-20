@@ -308,7 +308,7 @@ class Mag_Model extends mag_db {
 			else {
 				$element['video'] = array(
 						'format' => 'web',
-						'fileurl' => $result['url'],
+						'weburl' => $result['url'],
 						);
 			}
 		}
