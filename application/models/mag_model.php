@@ -447,9 +447,14 @@ class Mag_Model extends mag_db {
 							->num_rows();
 			$result_item[$j] = array('name' => "$tags[$j]", 'count' => "$rows");
 		}
-		$num_rows = count($tags);
+		$total = $this->db
+						->select ('tag')
+						->from(MAGAZINE_TABLE)
+						->group_by('tag')
+						->get()
+						->num_rows();
 		$item = array(
-					'totalResults' => "$num_rows",
+					'totalResults' => "$total",
 					'start' => "$start",
 					'items' => $result_item
 					);
