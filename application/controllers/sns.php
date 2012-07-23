@@ -232,7 +232,6 @@ class Sns extends MY_Controller {
 		$result = $this->sns_model->getBindByUser($userId);
 		$expired = array();//过期授权平台
 		$now = time();
-		print_r($result);
 		foreach ($result AS $k=>$v) {
 			$temp = json_decode($v['access_auth'],true);
 			$auth = SnsOAuth::factory($v['snsid']);
@@ -241,9 +240,6 @@ class Sns extends MY_Controller {
 				$expired[] = $v['snsid'];
 			}
 			else {
-				echo 'xxx';
-				if($v['snsid']!='qq') continue;
-				echo 'YYY';
 				$api = SnsApi::factory($auth);
 				switch ($type) {
 					case 'text':
@@ -256,9 +252,10 @@ class Sns extends MY_Controller {
 						$share = $api->shareVedio($content,$url);
 						break;
 				}
-				var_dump($share);
+				$return = $share;
 			}
 		}
+		$this->_json_output($return);
 	} //}}}
 
 	function _auth_check() { // {{{
