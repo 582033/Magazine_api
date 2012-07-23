@@ -92,6 +92,7 @@ $num_all=$this->msg_model->get_msgnum($u_id);
 	$res_arr['start']=$filter['start'];
 	foreach($arr_list['content'] as $k => $v){
 		$arr_list['content'][$k]->actor = json_decode($v->actor);
+		$arr_list['content'][$k]->object = json_decode($v->object);
 	}
 	$res_arr['items']=$arr_list['content'];
 //	foreach($arr_list['content'] as $k => $v){
