@@ -90,6 +90,9 @@ $num_all=$this->msg_model->get_msgnum($u_id);
 	$res_arr['unreadmsgnum']=$num_unread;
 	$res_arr['totalResults']=$num_all;
 	$res_arr['start']=$filter['start'];
+	foreach($arr_list['content'] as $k => $v){
+		$arr_list['content'][$k]->actor = json_decode($v->actor);
+	}
 	$res_arr['items']=$arr_list['content'];
 //	foreach($arr_list['content'] as $k => $v){
 //	$res=$this->msg_model->msg_up((int)$v->msg_id,$u_id);
