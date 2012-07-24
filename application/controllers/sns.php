@@ -221,10 +221,10 @@ class Sns extends MY_Controller {
 		require_once APPPATH.'libraries/SnsApi.php';
 		$return = array();
 		$types = array('text','picture','vedio');
-		$type = $this->input->get('type');
+		$type = $this->input->post('type');
 		$type = $type?$type:'text';
-		$url = $this->input->get('url');
-		$content = $this->input->get('content');
+		$url = $this->input->post('url');
+		$content = $this->input->post('content');
 		if(!in_array($type,$types) || !$content) {
 			show_error_text(400, 'Bad Request');
 		}
