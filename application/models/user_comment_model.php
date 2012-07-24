@@ -3,11 +3,64 @@ class User_comment_Model extends mag_db {
 
 	function __construct(){
 		parent::__construct();
+		$this->load->model('Msg_Model');
 	}
 
 	function add_comment($data){		//用户评论{{{
 		$user_comment_id = $this->mag_db->insert_row(USER_COMMENT_TABLE, $data);
 		$item = $this->mag_db->row(USER_COMMENT_TABLE, array('user_comment_id' => $user_comment_id));
+		$actor = array(
+			'id' => $data['user_id'],
+			);
+		$res_actor = $this->db->get_where('user',array('user_id' =>$data['user_id']))->row_array();
+		$actor['nickname'] = $res_actor['nickname'];
+		$actor['url'] = $this->config->item('web_host').'/user/'.$data['user_id'];
+		if(strlen($actor['avatar'])){
+		$actor['image']	 = $this->config->item('img_host').'/avatar/'.$data['user_id'];
+		}
+		else{
+		$actor['image'] = $this->config->item('img_host').'/avatar/0/default.jpg';
+		}
+		$mag_info = $this->db->get_where('magazine',array('magazine_id' =>$data['object_id']))->row_array();
+		$obj = array(
+			'type' => 'comment',
+			'data' => array(
+				'id' => $user_comment_id,
+				'content' => $data['comment'],
+				'on' =>array(
+					'type' => 'magazine',
+					'id' => $data['object_id'],
+					'name' => $mag_info['name'],
+					),
+				),
+			);
+		if($data['parent_id'] >0){
+			$obj['data']['parent'] = array(
+				'id' => $data['parent_id'],
+				);
+			$par_user = $this->db->get_where('user_comment',array('user_comment_id'=>$data['parent_id']))->row_array();
+			$par_user_info = $this->db->get_where('user',array('user_id'=>$par_user['user_id']))->row_array();
+			$obj['data']['parent']['author']['nickname'] = $par_user_info['nickname'];
+			$obj['data']['parent']['author']['id'] = $par_user_info['user_id'];
+			$obj['data']['parent']['author']['url'] = $this->config->item('web_host').'/user/'.$obj['data']['parent']['author']['id'];
+			if(strlen($par_user_info['avatar'])){
+				$obj['data']['parent']['author']['image'] = $this->config->item('img_host').'/avatar/'.$par_user_info['user_id'];
+			}
+			else{
+				$obj['data']['parent']['author']['image'] = $this->config->item('img_host').'/avatar/0/default.jpg';
+			}
+		
+		}
+		$st_user = $this->db->get_where('magazine',array('magazine_id' =>$data['object_id']))->row_array();
+		$arr_msg = array(
+		     'user_id' => $st_user['user_id'],
+			 'occur_time' => date("Y-m-d H:i:s"),
+			 'verb' =>'comment',
+			 'actor' =>json_encode($actor),
+			 'object' =>json_encode($obj),
+			);
+		$this->Msg_Model->msg_add(json_encode($arr_msg));
+
 		return $item;
 	}//}}}
 

@@ -91,6 +91,14 @@ $num_all=$this->msg_model->get_msgnum($u_id);
 	$res_arr['totalResults']=$num_all;
 	$res_arr['start']=$filter['start'];
 	foreach($arr_list['content'] as $k => $v){
+		$arr_list['content'][$k]->id = $v->msg_id;
+		$arr_list['content'][$k]->OwnerId = $v->user_id;
+		$arr_list['content'][$k]->occurredAt = $v->occur_time;
+		$arr_list['content'][$k]->createdAt = $v->create_time;
+		unset($arr_list['content'][$k]->msg_id);
+		unset($arr_list['content'][$k]->user_id);
+		unset($arr_list['content'][$k]->occur_time);
+		unset($arr_list['content'][$k]->create_time);
 		$arr_list['content'][$k]->actor = json_decode($v->actor);
 		$arr_list['content'][$k]->object = json_decode($v->object);
 	}

@@ -9,32 +9,6 @@ class Msg_Model extends mag_db {
 		$arr_ins=json_decode($json_ctt,TRUE);
 		$act_type = $arr_ins['verb'];
 
-		if($act_type =='signup'){
-			//check column
-			if((!isset($arr_ins['user_id'])||(!isset($arr_ins['actor'])) ))
-			{
-				echo "column missing";
-				header('HTTP/1.1 400');exit;
-
-			}
-		}
-		elseif($act_type == 'follow')
-		{
-			if((!isset($arr_ins['user_id'])||(!isset($arr_ins['actor']))))
-			{
-				echo "column missing";
-				header('HTTP/1.1 400');exit;
-
-			}
-
-		}
-		else{
-			// unknown  type	
-			echo "unknown activity type";
-			header('HTTP/1.1 400');exit;
-
-		}
-
 
 
 	$res=$this->db->insert(MSG_TABLE,$arr_ins);
