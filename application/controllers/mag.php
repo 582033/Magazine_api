@@ -38,14 +38,19 @@
 		$this->_json_output($mag_list);
 	}//}}}
 
-	function magazine($magazine_id){ // {{{
+	function magazine($magazine_id, $action=null){ // {{{
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
 		if ($method == 'put'){
 			$this->load->model('check_session_model');
 			$user_id = $this->check_session_model->check_session();
-			$mag_json = file_get_contents('php://input', 'r');
-			$mag_info = array_merge(json_decode($mag_json, true), array('magazine_id' => $magazine_id));
-			$this->Mag_Model->edit_mag_info($user_id, $mag_info);
+			if($action){
+				$this->Mag_Model->pub_mag($user_id, $magazine_id);
+			}
+			else{
+				$mag_json = file_get_contents('php://input', 'r');
+				$mag_info = array_merge(json_decode($mag_json, true), array('magazine_id' => $magazine_id));
+				$this->Mag_Model->edit_mag_info($user_id, $mag_info);
+			}
 		}
 		else {
 			if ($magazine_id == NULL){

@@ -531,9 +531,16 @@ class Mag_Model extends mag_db {
 				'tag' => isset($mag_info['tag']) ? $mag_info['tag'] : null,
 				'mag_category' => isset($mag_info['mag_category']) ? $mag_info['mag_category'] : null,
 				'description' => isset($mag_info['description']) ? $mag_info['description'] : null,
-				'status' => '4',
+				'status' => '1',
 				);
 		$this->db->update(MAGAZINE_TABLE, $update_data, $where);	
+		header("HTTP/1.1 202");
+	}	//}}}
+	
+	function pub_mag ($user_id, $magazine_id) {	//发布杂志{{{
+		$where = array('user_id' => $user_id, 'magazine_id' => $magazine_id, 'status' => '2');
+		$update_data = array('status' => '4');
+		$this->db->update(MAGAZINE_TABLE, $update_data, $where);
 		header("HTTP/1.1 202");
 	}	//}}}
 }
