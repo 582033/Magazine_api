@@ -102,7 +102,7 @@ $num_all=$this->msg_model->get_msgnum($u_id);
 		$arr_list['content'][$k]->actor = json_decode($v->actor);
 		$arr_list['content'][$k]->object = json_decode($v->object);
 		$arr_list['content'][$k]->message = json_decode($v->msg_content);
-		unset($arr_list['content'][$k]->msg_content);
+		 unset($arr_list['content'][$k]->msg_content);
 	}
 	$res_arr['items']=$arr_list['content'];
 //	foreach($arr_list['content'] as $k => $v){
