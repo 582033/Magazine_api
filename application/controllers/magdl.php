@@ -10,6 +10,7 @@
 			show_error_text(404);
 		}else{
 			$read_mag_id = substr($magazine_id, 0, 3);
+			$filename = preg_replace('/^(mag)/', $magazine_id, $filename);
 	    	$url = $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/dist/$filename";
 			redirect($url);
 		}
