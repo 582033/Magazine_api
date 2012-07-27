@@ -125,5 +125,8 @@ $route['v1/magclient/verinfo/(android|ios|pctool)'] = 'magclient/get_ver_info/$1
 
 $route['v1/magdl/(:num)/dist/(.*)'] = 'magdl/dist/$1/$2';
 $route['v1/magdl/(:num)/resources'] = 'magdl/resources/$1/$2';
+
+$route['v1/search/suggest'] = 'search/suggestion';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
