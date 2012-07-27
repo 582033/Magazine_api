@@ -1,5 +1,5 @@
 <?php
-class Recommendation_Model extends mag_db {
+class Recommendation_Model extends CI_Model {
 	
 	function Recommendation_model(){
 		parent::__construct();

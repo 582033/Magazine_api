@@ -1,6 +1,5 @@
 <?php
-include "mag_db.php";
-class search_model extends mag_db{
+class search_model extends CI_Model{
 
 	function search($items, $type){	//{{{
 		$keywords = $items['keywords'];
