@@ -58,7 +58,7 @@ $req_where.=' and '.'`'.$k.'`'.'='."'".$v."'";
 }
 $req_where=substr($req_where,4,strlen($req_where)-1);
 $req_sql=$req_sql.$req_where;
-$req_sql.=' limit '.$filter['start'].','.$filter['limit'];
+$req_sql.=' order by `create_time` desc limit '.$filter['start'].','.$filter['limit'];
 	$res_list=$this->db->query($req_sql);
 	$arr_ret=array();
 	foreach($res_list->result() as $row){
