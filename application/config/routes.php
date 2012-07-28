@@ -128,5 +128,7 @@ $route['v1/magdl/(:num)/resources'] = 'magdl/resources/$1/$2';
 
 $route['v1/search/suggest'] = 'search/suggestion';
 
+$route['v1/user/checkexists'] = 'person/checkexists';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

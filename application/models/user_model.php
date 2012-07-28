@@ -1,4 +1,7 @@
 <?php
+if(!class_exists('mag_db')){
+	require_once 'mag_db.php';
+}
 class User_Model extends mag_db {
 
 	function  __construct(){
@@ -64,11 +67,12 @@ class User_Model extends mag_db {
 		}
 	}	//}}}
 
-	function get_avatar_url($user_id, $avatar_id) {
+	function get_avatar_url($user_id, $avatar_id) {	//{{{
 		if (!$avatar_id) $avatar = '0/default.jpg';
 		else $avatar = "$user_id/$avatar_id.jpg";
 		return $this->config->item('img_host') . "/avatar/$avatar";
-	}
+	}	//}}}
+
 	function mapping_user_info ($user_info, $projection='full') { //数据库用户信息映射{{{
 		if (!$user_info) return array();
 		$projection2parts = array(
@@ -151,6 +155,23 @@ class User_Model extends mag_db {
 
 		return $user;
 	} //}}}
+
+	function checkexists($username) {	//检测用户名是否存在{{{
+		$user_is_exist = $this->_get_user_by_accountname($username);
+		$return = array();
+		header('HTTP/1.1 200');
+		if(!$user_is_exist) {
+			$return = array(
+							'status' => 'OK',
+							);
+		} 
+		else { 
+			$return = array(
+							'status' => 'USER_EXISTS',
+							);
+		}
+		return $return;
+	}	//}}}
 
 	function login($username, $passwd, $key){ //{{{
 		$user_is_exist = $this->_get_user_by_accountname($username);

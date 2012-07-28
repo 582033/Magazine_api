@@ -5,24 +5,15 @@
 
 	function Person(){
 		parent::__construct();
-		$this->load->model('mag_db');
-		$this->load->model('User_Model');
-		$this->load->model('Ads_Model');
-		$this->load->model('Mag_Model');
-		$this->load->model('Love_Model');
-		$this->load->model('mag_element_model');
-		$this->load->model('mag_file_model');
-		$this->load->model('User_comment_Model');
-		$this->load->model('search_model');
-		$this->load->model('check_session_model');
 		$this->load->library('session');
-
 		$this->start = $this->input->get('start') ? $this->input->get('start') : 0;
 		$this->limit = $this->input->get('limit') ? $this->input->get('limit') : 10;
 	}
 
 	function user($user_id){
 		$method = strtolower($_SERVER['REQUEST_METHOD']);
+		$this->load->model('User_Model');
+		$this->load->model('check_session_model');
 		if($method == 'put'){
 			$user_id = $this->check_session_model->check_session();
 			$user_json = file_get_contents('php://input', 'r');
@@ -38,22 +29,27 @@
 
 	function users(){
 		$keyword = $this->input->get('q') ? $this->input->get('q') : null;
+		$this->load->model('User_Model');
 		$data = $this->User_Model->get_all_users($this->start,$this->limit, $keyword);
 		$this->_json_output($data);
 	}
 
 	function followers ($userId) {	//{{{
+		$this->load->model('User_Model');
 		$followers = $this->User_Model->user_loved($userId, 'followers', $this->start, $this->limit);
 		$this->_json_output($followers);
 	}	//}}}
 
 	function followees ($userId) {	//{{{
+		$this->load->model('User_Model');
 		$followees = $this->User_Model->user_loved($userId, 'followees', $this->start, $this->limit);
 		$this->_json_output($followees);
 	}	//}}}
 
 	function like($type, $id, $action){
+		$this->load->model('check_session_model');
 		$user_id = $this->check_session_model->check_session();
+		$this->load->model('Love_Model');
 		if ($action == 'like') {
 			$this->Love_Model->like($type, $id, $user_id);
 		}
@@ -66,7 +62,9 @@
 	}
 
 	function follow($id, $yes){
+		$this->load->model('check_session_model');
 		$user_id = $this->check_session_model->check_session();
+		$this->load->model('Love_Model');
 		if($yes == 1){
 			$this->Love_Model->like('author', $id, $user_id);
 		}else{
@@ -75,6 +73,7 @@
 	}
 
 	function apply_author($uid) { // {{{
+		$this->load->model('check_session_model');
 		$user_id = $this->check_session_model->check_session();
 		if ($uid == 'me') {
 			$uid = $user_id;
@@ -94,6 +93,7 @@
 			$result = array('status' => $status);
 		}
 		else {
+			$this->load->model('User_Model');
 			$this->User_Model->to_be_author($user_id);
 			$this->invitation_model->use_code($code);
 			$result = array('status' => 'OK');
@@ -101,17 +101,27 @@
 		$this->_json_output($result);
 	} //}}}
 
-	function user_avatar($user_id){
-		
-	}
-	
 	function change_password(){
+		$this->load->model('check_session_model');
 		$user_id = $this->check_session_model->check_session();
 		$item = array(
 					'old_pwd' => $this->input->post('old_pwd'),
 					'new_pwd' => $this->input->post('new_pwd'),
 					);
+		$this->load->model('User_Model');
 		$data = $this->User_Model->_change_password($user_id, $item);
 		$this->_json_output($data);
+	}
+	
+	function checkexists() {
+		$username = $this->input->get('username');
+		$this->load->model('User_Model');
+		if($username && $username != '') {
+			$result = $this->User_Model->checkexists($username);
+			$this->_json_output($result);
+		}
+		else {
+			show_error('Bad Request', 400);
+		}
 	}
 }
