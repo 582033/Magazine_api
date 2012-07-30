@@ -12,8 +12,8 @@ class pctool extends MY_Controller {
 	function config(){ //{{{
         $config = array(
                 'webLinks' => array(
-                    'signup' => $this->config->item('signup'),
-                    'management' => $this->config->item('management'),
+                    'signup' => $this->config->item('www_host') . $this->config->item('signup'),
+                    'management' => $this->config->item('www_host') . $this->config->item('management'),
                     ),
                 'apiLinks' => array(
                     'getkey' => $this->config->item('getkey'),
