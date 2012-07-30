@@ -412,7 +412,7 @@ $config['pub_host'] = "http://pub.in1001.com";
 $config['thumb_host'] = "http://thumb.wowpad.cn";
 $config['img_host'] = "http://img.in1001.com";
 
-$config['signup'] = '/user/signup';
+$config['signup'] = 'http://www.in1001.com/user/signup';
 $config['management'] = '/magazine/management';
 $config['getkey'] = '/v1/auth/getkey';
 $config['signin'] = '/v1/auth/signin';
