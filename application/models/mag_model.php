@@ -181,6 +181,11 @@ class Mag_Model extends mag_db {
 					'downloadUrl' => $this->get_magz_url($result['magazine_id']),
 					),
 				);
+		switch ($this->input->get('projection')){
+			case 'fuller':
+				$mag['promotionImages'] = json_decode($result['promotion_images']);		
+				break;
+		}
 		return $mag;
 	} //}}}
 	function magazine_rows2resource($rows, $start, $num_rows) { //{{{
