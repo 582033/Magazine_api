@@ -127,6 +127,7 @@ $route['v1/magdl/(:num)/dist/(.*)'] = 'magdl/dist/$1/$2';
 $route['v1/magdl/(:num)/resources'] = 'magdl/resources/$1/$2';
 
 $route['v1/search/suggest'] = 'search/suggestion';
+$route['v1/search/hotquery'] = 'search/hotquery';
 
 $route['v1/user/checkexists'] = 'person/checkexists';
 
