@@ -239,12 +239,20 @@ class User_Model extends mag_db {
 
 	function get_ftp_info ($user_id) {	//{{{
 		$user_info = $this->get_user_info($user_id);
+		$this->vsftp_db = $this->load->database('vsftpd', true);
+		$where = "WHERE name = $user_id";
+		$passwd = $this->vsftp_db->query("SELECT passwd from users $where")->result_array();	
+		if (!$passwd) {
+			show_error('', 401);
+		}
+
+		$passwd =  $passwd[0]['passwd'];
 		$ftpinfo = array(
-				'user' => 'internet', // ftp用户名
-				'passwd' => 'ltinternet', // ftp密码
+				'user' => $user_id, // ftp用户名
+				'passwd' => $passwd, // ftp密码
 				'host' => $this->config->item('ftp_host'), // ftp host, 如 ftp.1001s.cn
 				'port' => $this->config->item('ftp_port'), // ftp端口
-				'path' => '/', // 上传的路径, 如 "/users/{userId$user_info['']"
+				'path' => $this->config->item('ftp_dir').$user_id, // 上传的路径,
 				'spaceQuota' => '99999999', // 用户空间配额 (Bytes)
 				'spaceLeft' => '99999999', // 剩余空间, (Byt
 
