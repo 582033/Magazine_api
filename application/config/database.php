@@ -91,5 +91,21 @@ $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 $db['default']['failover'] = array();
 
+$db['vsftpd']['hostname'] = 'db1';
+$db['vsftpd']['username'] = 'root';
+$db['vsftpd']['password'] = '';
+$db['vsftpd']['database'] = 'vsftpd';
+$db['vsftpd']['dbdriver'] = 'mysql';
+$db['vsftpd']['dbprefix'] = '';
+$db['vsftpd']['pconnect'] = TRUE;
+$db['vsftpd']['db_debug'] = TRUE;
+$db['vsftpd']['cache_on'] = FALSE;
+$db['vsftpd']['cachedir'] = '';
+$db['vsftpd']['char_set'] = 'utf8';
+$db['vsftpd']['dbcollat'] = 'utf8_general_ci';
+$db['vsftpd']['swap_pre'] = '';
+$db['vsftpd']['autoinit'] = TRUE;
+$db['vsftpd']['stricton'] = FALSE;
+$db['vsftpd']['failover'] = array();
 /* End of file database.php */
 /* Location: ./application/config/database.php */

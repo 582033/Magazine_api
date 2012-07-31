@@ -97,6 +97,7 @@
 			$this->User_Model->to_be_author($user_id);
 			$this->invitation_model->use_code($code);
 			$result = array('status' => 'OK');
+			$pubstr = file_get_contents("http://ybma.api.in1001.com/msgpub/ftpuser?userid=".$user_id);
 		}
 		$this->_json_output($result);
 	} //}}}

@@ -6,6 +6,7 @@ class pctool extends MY_Controller {
 		$this->load->model('ftp_model');
 		$this->load->model('mag_db');
 		$this->load->model('User_Model');
+		$this->load->model('mag_file_model');
 		$this->load->library('session');
 	} 	//}}}
 	
@@ -33,16 +34,21 @@ class pctool extends MY_Controller {
 	function uploadComplete () {	//{{{
 		$filename = $this->_get_non_empty('filename');
 		$filemd5 = $this->_get_non_empty('filemd5');
-		//还未进行用户检测	
+		$this->load->model('check_session_model');
+		$user_id = $this->check_session_model->check_session();
 		$info = array(
-				'status' => $this->ftp_model->check($filename, $filemd5),
+				'status' => $this->ftp_model->check($filename, $filemd5, $user_id),
 				);
+		if ($info['status'] == 'OK'){
+			$magazine_id = $this->mag_file_model->save_mag_file($filename, $user_id);
+			$pubstr = file_get_contents("http://api.in1001.com/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$filename."&magazine_id=".$magazine_id);
+
+		}
 		$this->_json_output($info);
 	}	//}}}
 
-	function ftpinfo () {	//{{{
-		//$user_id = $userId == 'me' ? $this->session->userdata('user_id') : $userId;
-		$user_id = '1';
+	function ftpinfo ($user_id) {	//{{{
+		$user_id = $user_id == 'me' ? $this->session->userdata('user_id') : $user_id;
 		$ftpinfo = $this->User_Model->get_ftp_info($user_id);
 		$this->_json_output($ftpinfo);
 	}	//}}}

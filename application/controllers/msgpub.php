@@ -18,6 +18,11 @@ class Msgpub extends MY_Controller {
 
 		$this->load->model('msgbroker');
 		$res = $this->msgbroker->mgtransform($userid, $filename_ftp);
-		//$this->_json_output($res);
+	} //}}}
+
+	function ftpuser() { // {{{
+		$userid = $this->_get_non_empty('userid');
+		$this->load->model('msgbroker');
+		$res = $this->msgbroker->ftpuser($userid);
 	} //}}}
 }

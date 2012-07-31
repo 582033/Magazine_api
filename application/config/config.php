@@ -420,6 +420,7 @@ $config['ftpinfo'] = '/v1/user/me/ftpinfo';
 $config['uploadcomplete'] = '/v1/pctool/uploadComplete';
 $config['versionname'] = 'pctool_api';
 $config['versioncode'] = '1.0'; 
+$config['ftp_dir'] = '/mnt/mag/ftp/'; 
 
 $config['redis_server'] = "tcp://redishost:6379";
 $config['redis_expires'] = "300";	//redis过期时间

@@ -1,8 +1,16 @@
 <?php
 class ftp_model extends CI_Model {
 
-	function check ($filename, $filemd5) {	//}}}
-		return	'OK';
-		//status: {OK|INVALID_FILE|MD5_UNMATCH}, // OK - 成功, INVALID_FILE - 文件不存在, MD5_UNMATCH - md5验证失败
+	function check ($filename, $filemd5, $userid) {	//{{{
+		$mag_path = $this->config->item('ftp_dir').$userid.'/'.$filename;
+		if (!file_exists($mag_path)) {
+			return 'INVALID_FILE';
+		}
+		else if (md5_file($mag_path) != $filemd5) {
+			return 'MD5_UNMATCH';
+		}
+		else {
+			return	'OK';
+		}
 	}	//}}}
 }
