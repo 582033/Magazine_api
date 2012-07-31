@@ -1,4 +1,7 @@
 <?php
+
+require_once (APPPATH."models/mag_db.php");
+
 class Love_Model extends mag_db {
 
 	function Love_Model (){
@@ -26,7 +29,7 @@ class Love_Model extends mag_db {
 					'nickname' =>$row_user['nickname'],
 					'url'  =>$this->config->item('web_host').'/user/'.$user_id,
 				);
-			if(strlen($row['avatar'])){
+			if(isset($row['avatar']) && strlen($row['avatar'])){
 				$msg_actor['image'] =$this->config->item('img_host').'/avatar/'.$user_id.'/'.$row['avatar'];
 			}
 			else{
@@ -43,6 +46,7 @@ class Love_Model extends mag_db {
 		$this->Msg_Model->msg_add($json_love_author);
 		if ($row == array()){
 			$data = $where;
+			$this->load->model('mag_db');
 			$this->mag_db->insert_row(USER_LOVE_TABLE, $data);
 		}
 		switch ($loved_type) {
