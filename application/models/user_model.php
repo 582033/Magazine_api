@@ -303,16 +303,7 @@ class User_Model extends mag_db {
 		return $result;
 	}	//}}}
 
-	/*
-	function _get_user_loved_user($user_id){	//{{{
-		$sql = "select * from user_love as L,user as U where L.user_id='$user_id' and L.loved_type='author' and U.user_id=L.loved_id";
-		$result = $this->db->query($sql);
-		$result = $result->result_array();
-		return $result;
-	}	//}}}
-	*/
-
-	function _get_response ($kind, $total, $start, $items) {
+	function _get_response ($kind, $total, $start, $items) {	//{{{
 		$response = array(
 				'kind' => $kind,
 				'totalResults' => $total,
@@ -320,9 +311,9 @@ class User_Model extends mag_db {
 				'items' => $items,
 				);
 		return $response;	
-	}
+	}	//}}}
 
-	function get_user_love($where, $start, $limit, $return_type) {
+	function get_user_love($where, $start, $limit, $return_type) {	//{{{
 		$this->db
 						->from ("user_love")	
 						->join("user", "user.user_id = user_love.user_id")
@@ -340,7 +331,7 @@ class User_Model extends mag_db {
 				break;	
 		}
 		return $result;
-	}
+	}	//}}}
 
 	function user_loved ($userId, $type, $start, $limit) {	//{{{
 		if ($type == 'followees') {
@@ -396,8 +387,8 @@ class User_Model extends mag_db {
 			if (!empty($user_info[$v]) && isset($user_info[$v])) $items[$k] = $user_info[$v];
 		}
 		if (isset($user_info['tags'])) {
-			if (is_array($user_info['tags'])) {
-				$tags = trim(implode(",", array_unique(array_filter(explode(",", $user_info['tags'])))));
+			if (is_string($user_info['tags']) && !empty($user_info['tags'])) {
+				$tags = trim(implode(",", array_unique(explode(",", $user_info['tags']))));
 				$tags = trim(preg_replace('/[\s,]+/', ',', $tags), ",");
 				$items['tag'] = $tags;
 			}
