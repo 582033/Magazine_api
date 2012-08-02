@@ -242,7 +242,7 @@ class User_Model extends mag_db {
 		$user_info = $this->db->query("SELECT account_name from account where account_id = '$user_id'")->row_array();	
 		$username = $user_info['account_name'];
 		$this->vsftp_db = $this->load->database('vsftpd', true);
-		$where = "WHERE name = $user_id";
+		$where = "WHERE name = '$username'";
 		$passwd = $this->vsftp_db->query("SELECT passwd from users $where")->row_array();	
 		$passwd =  $passwd['passwd'];
 		$ftpinfo = array(
