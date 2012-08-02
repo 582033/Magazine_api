@@ -238,17 +238,15 @@ class User_Model extends mag_db {
 	}	//}}}
 
 	function get_ftp_info ($user_id) {	//{{{
-		$user_info = $this->get_user_info($user_id);
+		$this->load->database();
+		$user_info = $this->db->query("SELECT account_name from account where account_id = '$user_id'")->row_array();	
+		$username = $user_info['account_name'];
 		$this->vsftp_db = $this->load->database('vsftpd', true);
 		$where = "WHERE name = $user_id";
-		$passwd = $this->vsftp_db->query("SELECT passwd from users $where")->result_array();	
-		if (!$passwd) {
-			show_error('', 401);
-		}
-
-		$passwd =  $passwd[0]['passwd'];
+		$passwd = $this->vsftp_db->query("SELECT passwd from users $where")->row_array();	
+		$passwd =  $passwd['passwd'];
 		$ftpinfo = array(
-				'user' => $user_id, // ftp用户名
+				'user' => $username, // ftp用户名
 				'passwd' => $passwd, // ftp密码
 				'host' => $this->config->item('ftp_host'), // ftp host, 如 ftp.1001s.cn
 				'port' => $this->config->item('ftp_port'), // ftp端口

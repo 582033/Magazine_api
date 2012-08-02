@@ -48,7 +48,8 @@ class pctool extends MY_Controller {
 	}	//}}}
 
 	function ftpinfo ($user_id) {	//{{{
-		$user_id = $user_id == 'me' ? $this->session->userdata('user_id') : $user_id;
+		$this->load->model('check_session_model');
+		$user_id = $this->check_session_model->check_session();
 		$ftpinfo = $this->User_Model->get_ftp_info($user_id);
 		$this->_json_output($ftpinfo);
 	}	//}}}
