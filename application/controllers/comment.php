@@ -41,8 +41,4 @@ class Comment extends MY_Controller {
 			$this->_json_output($result);
 		}
 	}	//}}}
-
-	function user_comments(){
-	}
-
 }

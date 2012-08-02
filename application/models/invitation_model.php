@@ -1,4 +1,5 @@
 <?php
+require_once APPPATH . '/models/mag_db.php';
 class Invitation_Model extends mag_db {
 
 	function  __construct(){
