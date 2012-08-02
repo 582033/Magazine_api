@@ -14,19 +14,6 @@
 			);
 	}	//}}}
 
-	function uploadfile(){
-		if(!$this->session->checkAndRead()){
-			return $this->_no_session_result();
-		}
-		$user_id = $this->session->userdata('user_id');
-		$data = $this->input->post('data');
-		$file_data = json_decode($data, true);
-
-		$res = $this->mag_file_model->save_mag_file($file_data, $user_id);
-//		$pubstr = file_get_contents("http://api.in1001.com/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$file_data['filename_ftp']);
-		$this->_json_output($res);
-	}
-
 	function magazines(){		//获取杂志列表(new){{{
 		$tag = $this->input->get('tag');
 		$cate = $this->input->get('cate');

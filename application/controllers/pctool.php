@@ -41,7 +41,7 @@ class pctool extends MY_Controller {
 				);
 		if ($info['status'] == 'OK'){
 			$magazine_id = $this->mag_file_model->save_mag_file($filename, $user_id);
-			$pubstr = file_get_contents("http://api.in1001.com/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$filename."&magazine_id=".$magazine_id);
+			$pubstr = file_get_contents($this->config->item('api_host') . "/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$filename."&magazine_id=".$magazine_id);
 
 		}
 		$this->_json_output($info);
