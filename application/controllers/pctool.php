@@ -15,6 +15,7 @@ class pctool extends MY_Controller {
                 'webLinks' => array(
                     'signup' => $this->config->item('www_host') . $this->config->item('signup'),
                     'management' => $this->config->item('www_host') . $this->config->item('management'),
+                    'forgot_password' => $this->config->item('www_host') . $this->config->item('forgot_password'),
                     ),
                 'apiLinks' => array(
                     'getkey' => $this->config->item('getkey'),

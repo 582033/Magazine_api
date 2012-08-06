@@ -414,6 +414,7 @@ $config['img_host'] = "http://img.in1001.com";
 
 $config['signup'] = '/user/signup';
 $config['management'] = '/user/me/unpublished';
+$config['forgot_password'] = '/user/forget_password';
 $config['getkey'] = '/v1/auth/getkey';
 $config['signin'] = '/v1/auth/signin';
 $config['ftpinfo'] = '/v1/user/me/ftpinfo';
