@@ -25,9 +25,12 @@ class Ad_Model extends mag_db {
 
 		
 		}
+		$ad_mode = $this->db->query("select * from `ad_slots` where type = '$type' and `intro` = '$slot'")->row_array();
+		$ad_mode = $ad_mode['mode'];
 	$arr_where=array(
 	'type'=>$type,
 	'slot'=>$slot,
+	'mode' =>$ad_mode,
 	);
 
 $req_sql='select * from `'.AD_TABLE.'` where';
@@ -73,8 +76,10 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		else{
 			$limit=5;	
 		}
+		$ad_mode = $this->db->query("select * from `ad_slots` where type = 'elem' and `intro` = '$slot'")->row_array();
+		$ad_mode = $ad_mode['mode'];
 
-		$result=$this->db->query('select * from `ad_ads` where `type` = \'elem\' and `slot`=\''.$slot.'\' order by `weight` limit '.$limit)->result_array();
+		$result=$this->db->query("select * from `ad_ads` where `type` = 'elem' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` limit $limit")->result_array();
 		$ret=array();
 		foreach($result as $k =>$v){
 			$result[$k]['ret'] = $this->mag_model->_get_element($v['resource_id']);
@@ -86,7 +91,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			}
 			$result[$k]['ret']['url']=$result[$k]['url'];
 			$result[$k]['ret']['mag_read_url']=$result[$k]['url'];
-			$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=180x180&fit=c&src=".$result[$k]['ret']['image']['original']['url'];
+			@$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=180x180&fit=c&src=".$result[$k]['ret']['image']['original']['url'];
 			array_push($ret,$result[$k]['ret']);
 		
 		}
@@ -104,7 +109,9 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 
 	//list  magazines
 	function  ad_list_indextopmaga($type,$slot,$limit){
-		$query=$this->db->query('select * from `ad_ads` where `type` = \''.$type.'\' and `slot`=\''.$slot.'\' order by `weight` limit '.$limit);
+		$ad_mode = $this->db->query("select * from `ad_slots` where type = '$type' and `intro` = '$slot'")->row_array();
+		$ad_mode = $ad_mode['mode'];
+		$query=$this->db->query("select * from `ad_ads` where `type` = '$type' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` limit $limit");
 		$arr_title=array();
 		$arr_text=array();
 		foreach($query->result_array() as $row){
@@ -116,7 +123,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		}
 		//format
 		$ret = array();
-
+if(count($query->result_array)){
 		foreach($arr_id as $k => $v){
 			$arr_pu=$this->mag_model->_get_magazine($v);
 			if(strlen($arr_title[$k])){
@@ -132,5 +139,6 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		}
 		
 		return $ret;
+	}
 	}
 }
