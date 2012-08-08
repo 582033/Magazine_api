@@ -16,13 +16,19 @@ class SinaApi extends SnsApi {
 		return $this->client;
 	}
 	public function getUserInfo($uid) {
-		/* $data = $this->getClient()->show_user_by_id($uid);
-		$return = array(
-			'nickname' => $data['name'],
-			'avatar'=>$data['avatar_large'],
-			'ext'=>'jpg'
-				); */
-		/**临时用**/
+		$return = array();
+		$data = @$this->getClient()->show_user_by_id($uid);
+		if(isset($data['error']) && $data['error']) {
+			return $return;
+		}
+		else {
+			$return = array(
+					'nickname' => $data['name'],
+					'avatar'=>$data['avatar_large']?$data['avatar_large']:'',
+					'ext'=>'jpg'
+			);
+		}
+		/**临时用
 		//return;
 		$return = array();
 		$appinfo = $this->oauth->getAppInfo();
@@ -45,7 +51,7 @@ class SinaApi extends SnsApi {
 				'ext'=>'jpg'
 					);
 		}
-		/**end 临时用**/
+		end 临时用**/
 		return $return;
 	}
 	public function shareText($content,$annotations=null) {
