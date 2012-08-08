@@ -1,7 +1,5 @@
 <?php
-if(!class_exists('mag_db')){
-	require_once 'mag_db.php';
-}
+require_once 'mag_db.php';
 class User_Model extends mag_db {
 
 	function  __construct(){
@@ -402,6 +400,7 @@ class User_Model extends mag_db {
 	function _change_password($user_id, $item){
 		$where = array('account_id' => $user_id);
 		$data = array('passwd' => md5($item['new_pwd']));
+		$this->load->model('mag_db');
 		$user_info = $this->mag_db->row(ACCOUNT_TABLE, $where);
 //		$this->db->update(USER_TABLE, $item, $where);
 		if ($user_info['passwd'] == md5($item['old_pwd'])){

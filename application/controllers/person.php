@@ -106,8 +106,8 @@
 		$this->load->model('check_session_model');
 		$user_id = $this->check_session_model->check_session();
 		$item = array(
-					'old_pwd' => $this->input->post('old_pwd'),
-					'new_pwd' => $this->input->post('new_pwd'),
+					'old_pwd' => $this->input->post('passwd'),
+					'new_pwd' => $this->input->post('newpasswd'),
 					);
 		$this->load->model('User_Model');
 		$data = $this->User_Model->_change_password($user_id, $item);
