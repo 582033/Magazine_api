@@ -31,6 +31,7 @@ class Mag_Model extends mag_db {
 					->get()
 					->result_array();
 				break;
+				$result['tag'] = str_replace("，", ",", $result['tag']);
 			case 'num_rows':	
 				$result = $this->db
 					->get()
@@ -146,12 +147,8 @@ class Mag_Model extends mag_db {
 		return $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/web/$path";
 	} //}}}
 	function magazine_row2resource($result) { //{{{
-		if (strpos($result['edit_index_img'], '，')){
-			str_replace('，', ',', $result['edit_index_img']);
-		}
-		if (strpos($result['tag'], '，')){
-			str_replace('，', ',', $result['tag']);
-		}
+		$result['edit_index_img'] = str_replace('，', ',', $result['edit_index_img']);
+		$result['tag'] = str_replace('，', ',', $result['tag']);
 		$tags = explode(',', trim($result['tag']));
 		$images = explode(',', trim($result['edit_index_img']));
 		$pageThumbs = array();
