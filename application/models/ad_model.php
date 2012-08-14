@@ -79,7 +79,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 		$ad_mode = $this->db->query("select * from `ad_slots` where type = 'elem' and `intro` = '$slot'")->row_array();
 		$ad_mode = $ad_mode['mode'];
 
-		$result=$this->db->query("select * from `ad_ads` where `type` = 'elem' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` limit $limit")->result_array();
+		$result=$this->db->query("select * from `ad_ads` where `type` = 'elem' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` desc limit $limit")->result_array();
 		$ret=array();
 		foreach($result as $k =>$v){
 			$result[$k]['ret'] = $this->mag_model->_get_element($v['resource_id']);
@@ -111,7 +111,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 	function  ad_list_indextopmaga($type,$slot,$limit){
 		$ad_mode = $this->db->query("select * from `ad_slots` where type = '$type' and `intro` = '$slot'")->row_array();
 		$ad_mode = $ad_mode['mode'];
-		$query=$this->db->query("select * from `ad_ads` where `type` = '$type' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` limit $limit");
+		$query=$this->db->query("select * from `ad_ads` where `type` = '$type' and `slot`= '$slot' and `mode` = '$ad_mode' order by `weight` desc limit $limit");
 		$arr_title=array();
 		$arr_text=array();
 		foreach($query->result_array() as $row){
