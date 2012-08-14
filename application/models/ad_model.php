@@ -74,7 +74,7 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			$limit=(int)$_GET['limit'];
 		}
 		else{
-			$limit=5;	
+			$limit=999;	
 		}
 		$ad_mode = $this->db->query("select * from `ad_slots` where type = 'elem' and `intro` = '$slot'")->row_array();
 		$ad_mode = $ad_mode['mode'];
