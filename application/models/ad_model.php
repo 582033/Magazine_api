@@ -11,7 +11,7 @@ class Ad_Model extends mag_db {
 	function ad_list($type,$slot){
 		if($type == 'elem'){
 			return $this->ad_list_elem($slot);
-		
+
 		}
 		$arr_filter=array();
 		foreach(array('limit') as $v){
@@ -20,52 +20,52 @@ class Ad_Model extends mag_db {
 			}
 			else{
 				$arr_filter[$v]='999';
-			
+
 			}
 
-		
+
 		}
 		$ad_mode = $this->db->query("select * from `ad_slots` where type = '$type' and `intro` = '$slot'")->row_array();
 		$ad_mode = $ad_mode['mode'];
-	$arr_where=array(
-	'type'=>$type,
-	'slot'=>$slot,
-	'mode' =>$ad_mode,
-	);
+		$arr_where=array(
+				'type'=>$type,
+				'slot'=>$slot,
+				'mode' =>$ad_mode,
+				);
 
-$req_sql='select * from `'.AD_TABLE.'` where';
-$req_where='';
-if(count($arr_where)>0)
-{
-	foreach($arr_where as $k => $v){
-$req_where.=' and '.'`'.$k.'`'.'='."'".$v."'";
+		$req_sql='select * from `'.AD_TABLE.'` where';
+		$req_where='';
+		if(count($arr_where)>0)
+		{
+			foreach($arr_where as $k => $v){
+				$req_where.=' and '.'`'.$k.'`'.'='."'".$v."'";
 
-}
-}
-$req_where=substr($req_where,4,strlen($req_where)-1);
-$req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limit'];
-	$res_list=$this->db->query($req_sql)->result_array();
-	$arr_ret=array();
-	foreach($res_list as $row){
-	$arr_ret[]=$row;
-
-}
-	$arr_all=array();
-	$arr_all['num']=mysql_affected_rows();
-	$arr_all['content']=$arr_ret;
-	//image url process
-	if($type == 'image'){
-		$res_slot = $this->db->get_where('ad_slots',array('type'=>$type,'intro'=>$slot))->row_array();
-		$image_size=$res_slot['size'];
-		foreach($arr_all['content'] as $k => $v ){
-			$preurl = $arr_all['content'][$k]['image'];
-			$arr_all['content'][$k]['image'] = array(
-					'size' => $image_size,
-					'url'  => $preurl,
-					);
+			}
 		}
-	}
-	return $arr_all;
+		$req_where=substr($req_where,4,strlen($req_where)-1);
+		$req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limit'];
+		$res_list=$this->db->query($req_sql)->result_array();
+		$arr_ret=array();
+		foreach($res_list as $row){
+			$arr_ret[]=$row;
+
+		}
+		$arr_all=array();
+		$arr_all['num']=mysql_affected_rows();
+		$arr_all['content']=$arr_ret;
+		//image url process
+		if($type == 'image'){
+			$res_slot = $this->db->get_where('ad_slots',array('type'=>$type,'intro'=>$slot))->row_array();
+			$image_size=$res_slot['size'];
+			foreach($arr_all['content'] as $k => $v ){
+				$preurl = $arr_all['content'][$k]['image'];
+				$arr_all['content'][$k]['image'] = array(
+						'size' => $image_size,
+						'url'  => $preurl,
+						);
+			}
+		}
+		return $arr_all;
 	
 	}
 	//list elements
