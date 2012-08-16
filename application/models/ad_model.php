@@ -91,20 +91,29 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			}
 			$result[$k]['ret']['url']=$result[$k]['url'];
 			$result[$k]['ret']['mag_read_url']=$result[$k]['url'];
-			@$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=".$result[$k]['ret']['image']['original']['width'].'x'.$result[$k]['ret']['image']['original']['height']."&fit=c&src=".$result[$k]['ret']['image']['original']['url'];
+  if(isset($v['ret']['image']['original'])){
+            
+            @$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=".$result[$k]['ret']['image']['original']['width'].'x'.$result[$k]['ret']['image']['original']['height']."&fit=c&src=".$result[$k]['ret']['image']['original']['url'];
+  }
+  else{
+	  @$result[$k]['ret']['image']['180']['url']=$this->config->item('thumb_host')."/thumb?size=180x180&fit=c&src=".$result[$k]['image'];
+
+  }
+		@$result[$k]['ret']['128']['url'] = $result[$k]['ret']['180']['url'];
+
 			array_push($ret,$result[$k]['ret']);
-		
+
 		}
 
 
 
 
-	$arr_all=array();
-	$arr_all['kind']='magazine#elements';
-	$arr_all['totalResults']=count($ret);
-	$arr_all['items']=$ret;
-	$arr_all['start']='0';
-	return $arr_all;
+		$arr_all=array();
+		$arr_all['kind']='magazine#elements';
+		$arr_all['totalResults']=count($ret);
+		$arr_all['items']=$ret;
+		$arr_all['start']='0';
+		return $arr_all;
 	}
 
 	//list  magazines
@@ -118,27 +127,27 @@ $req_sql=$req_sql.$req_where.' order by `weight` desc  limit '.$arr_filter['limi
 			$arr_id[]=$row['resource_id'];
 			$arr_text[]=$row['text'];
 			$arr_title[]=$row['title'];
-		
 
-		}
-		//format
-		$ret = array();
-if(count($query->result_array)){
+
+	}
+	//format
+	$ret = array();
+	if(count($query->result_array)){
 		foreach($arr_id as $k => $v){
 			$arr_pu=$this->mag_model->_get_magazine($v);
 			if(strlen($arr_title[$k])){
-			$arr_pu['name'] = $arr_title[$k];
+				$arr_pu['name'] = $arr_title[$k];
 			}
 			if(strlen($arr_text[$k])){
-			$arr_pu['intro'] = $arr_text[$k];
+				$arr_pu['intro'] = $arr_text[$k];
 			}
-			
+
 
 			array_push($ret,$arr_pu);
-		
+
 		}
-		
+
 		return $ret;
 	}
-	}
+}
 }
