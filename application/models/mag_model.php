@@ -289,7 +289,7 @@ class Mag_Model extends mag_db {
 		return $item;
 	} //}}}
 	function _get_element($elementId) {		//获取单个杂志元素{{{
-		$where = array('me.mag_element_id' => $elementId);
+		$where = array('me.mag_element_id' => $elementId, 'me.onoffdel' => '0');
 		$type = array('image', 'video');
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id, mz.name as magazine_name')
@@ -308,7 +308,7 @@ class Mag_Model extends mag_db {
 	}//}}}
 	
 	function _get_element_list($limit, $start, $order_by, $type=null) {		//获取杂志元素列表{{{
-		$where = array();
+		$where = array('me.onoffdel' => '0');
 		$type = !$type ? array('image', 'video') : $type;
 		$result = $this->db
 						->select ('me.*,mz.magazine_id,mz.user_id, mz.name as magazine_name')
