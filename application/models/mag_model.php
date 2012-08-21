@@ -15,7 +15,7 @@ class Mag_Model extends mag_db {
 			->join('user as us', "mg.user_id = us.user_id")
 			->join('mag_file as mf', "mg.magazine_id = mf.magazine_id");
 
-		$where = array('mg.status' => '4');
+		$this->db->where(array('mg.status' => '4', 'mg.onoffdel' => '0'));
 		if ($tag) $this->db->where("mg.tag like '%$tag%'");
 		if ($cate) $this->db->where('mg.mag_category',  $cate);
 		if ($keyword) {
@@ -51,7 +51,7 @@ class Mag_Model extends mag_db {
 		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
-		$where = array('mg.magazine_id' => $magazine_id);
+		$where = array('mg.magazine_id' => $magazine_id, 'mg.onoffdel' => '0');
 		$result = $this->db
 						->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 						->from(MAGAZINE_TABLE . ' as mg')
@@ -67,7 +67,7 @@ class Mag_Model extends mag_db {
 	function _get_user_magazines($userId, $limit, $start, $collection) { //获取用户杂志列表{{{
 		if ($userId == 'me') $userId = $this->check_session_model->check_session();
 		if ($collection == 'published'){
-			$where = array('mg.user_id' => $userId, 'status' => '4');
+			$where = array('mg.user_id' => $userId, 'mg.status' => '4', 'mg.onoffdel' => '0');
 			$result = $this->db
 					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 					->from(MAGAZINE_TABLE . ' as mg')
@@ -89,7 +89,7 @@ class Mag_Model extends mag_db {
 					->get()
 					->num_rows();
 		}else if ($collection == 'unpublished'){
-			$where = array('mg.user_id' => $userId, 'mg.status <>' => '4');
+			$where = array('mg.user_id' => $userId, 'mg.status <>' => '4', 'mg.onoffdel' => '0');
 			$result = $this->db
 					->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 					->from(MAGAZINE_TABLE . ' as mg')
