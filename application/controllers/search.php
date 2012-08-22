@@ -21,19 +21,19 @@
 		$result = array();
 		switch ($type) {
 			case 'magazine':
-				$result['item'] = array('旅游','美食');
+				$result['items'] = array('旅游','美食');
 			break;
 
 			case 'user':
-				$result['item'] = array('ycwang','雨溪');
+				$result['items'] = array('ycwang','雨溪');
 			break;
 
 			case 'all':
-				$result['item'] = array('雨溪','美食');
+				$result['items'] = array('雨溪','美食');
 			break;
 
 			case '':
-				$result['item'] = array('雨溪','美食');
+				$result['items'] = array('雨溪','美食');
 			break;
 		}
 		return $this->_json_output($result);
