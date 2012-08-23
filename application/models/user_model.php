@@ -284,21 +284,6 @@ class User_Model extends mag_db {
 		return $users;
 	}	//}}}
 
-	function _get_user_mag($user_id){	//{{{
-		$sql = "select * from magazine where user_id='$user_id'";
-		$result = $this->db->query($sql);
-		$result = $result->result_array();
-		foreach($result as $k => $v){
-			$result[$k]['index_img'] = $this->picthumb->pic_thumb($this->config->item('pub_host').'/'.$user_id.'/'.$result[$k]['magazine_id'].'/web/'.$result[$k]['index_img'], '180x276');
-			$edit_index_img = explode(',', $result[$k]['edit_index_img']);
-			foreach($edit_index_img as $key => $val){
-				$edit_index_img[$key] = $this->picthumb->pic_thumb($this->config->item('pub_host').'/'.$user_id.'/'.$result[$k]['magazine_id'].'/web/'.$edit_index_img[$key], '180x276');
-			}
-			$result[$k]['edit_index_img'] = $edit_index_img;
-		}
-		return $result;
-	}	//}}}
-
 	function _get_response ($kind, $total, $start, $items) {	//{{{
 		$response = array(
 				'kind' => $kind,

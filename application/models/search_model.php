@@ -28,7 +28,7 @@ class search_model extends CI_Model{
 				'total' => $this->search($items, 'extra'),
 				);
 		return $return;
-	}	//}}
+	}	//}}}
 
 	function suggest ($keyword, $limit, $type) {	//{{{
 		switch ($type) {
@@ -53,7 +53,7 @@ class search_model extends CI_Model{
 	
 	function suggest_magazine ($keyword, $limit) {	//{{{
 		$this->load->model('mag_model');
-		$magazine_item = $this->mag_model->_get_magazine_list(null, null, $keyword, $limit, '0');
+		$magazine_item = $this->mag_model->_get_magazine_list(null, null, $keyword, $limit, '0', 'relevance');
 		$result_magazine = array();
 		foreach ($magazine_item['items'] as $item) {
 			$result_magazine[] = $item['name'];
@@ -78,11 +78,12 @@ class search_model extends CI_Model{
 		$result['suggestions'] = array_unique($result_user);
 		return $result;
 	}	//}}}
+
 	function suggest_all ($keyword, $limit) {	//{{{
 		$this->load->model('User_Model');
 		$this->load->model('mag_model');
 		$user_item = $this->User_Model->get_all_users('0', $limit, $keyword);
-		$magazine_item = $this->mag_model->_get_magazine_list(null, null, $keyword, $limit, '0');
+		$magazine_item = $this->mag_model->_get_magazine_list(null, null, $keyword, $limit, '0', 'relevance');
 		$result_user = array();
 		$result_magazine = array();
 		if(is_array($user_item['items'])) {

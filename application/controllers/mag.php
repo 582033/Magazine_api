@@ -20,8 +20,9 @@
 		$keyword = $this->input->get('q');
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
+		$orderby = $this->_get('orderby', 'relevance');
 
-		$mag_list = $this->Mag_Model->_get_magazine_list($tag, $cate, $keyword, $limit, $start);
+		$mag_list = $this->Mag_Model->_get_magazine_list($tag, $cate, $keyword, $limit, $start, $orderby);
 		$this->_json_output($mag_list);
 	}//}}}
 
@@ -52,7 +53,8 @@
 		}
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
-		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start, $collection);
+		$orderby = $this->_get('orderby', 'relevance');
+		$mag_list = $this->Mag_Model->_get_user_magazines($userId, $limit, $start, $collection, $orderby);
 		$this->_json_output($mag_list);
 	}//}}}
 

@@ -7,8 +7,29 @@ class Mag_Model extends mag_db {
 		parent::__construct();
 		$this->load->library('PicThumb');
 	}
+
+	function _get_magazines_orderby ($orderby) {	//{{{
+		switch ($orderby) {
+			case 'newest':
+				$order_by_field = 'publish_time';
+				break;
+			case 'likes':
+				$order_by_field = 'num_loved';
+				break;
+			case 'views':
+				$order_by_field = 'views';
+				break;
+			case 'downloads':
+				$order_by_field = 'downloads';
+				break;
+			case 'relevance':
+				$order_by_field = 'publish_time';
+				break;
+		}
+		return $order_by_field;
+	}	//}}}
 	
-	function _select_magazines ($tag, $cate, $keyword, $limit, $start, $action) { //{{{
+	function _select_magazines ($tag, $cate, $keyword, $limit, $start, $orderby, $action) { //{{{
 		$this->db
 			->select('mg.*,us.nickname,us.avatar,mf.filesize,mf.filepath,mf.filename_ftp')
 			->from(MAGAZINE_TABLE . ' as mg')
@@ -21,7 +42,7 @@ class Mag_Model extends mag_db {
 		if ($keyword) {
 			$this->db->where("(mg.name like '%$keyword%' OR mg.tag like '%$keyword%' OR mg.description like '%$keyword%')");
 		}
-		$this->db->order_by('mg.weight desc');
+		$this->db->order_by('mg.' . $this->_get_magazines_orderby($orderby) . ' desc');
 		$result = NULL;
 		switch ($action) {
 			case 'result_array':	
@@ -45,9 +66,9 @@ class Mag_Model extends mag_db {
 
 	} //}}}
 
-	function _get_magazine_list($tag, $cate, $keyword, $limit, $start) { // {{{
-		$num_rows = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, 'num_rows');
-		$result = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, 'result_array');
+	function _get_magazine_list($tag, $cate, $keyword, $limit, $start, $orderby) { // {{{
+		$num_rows = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, $orderby, 'num_rows');
+		$result = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, $orderby, 'result_array');
 		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
@@ -64,7 +85,8 @@ class Mag_Model extends mag_db {
 		$mag = $result ? $this->magazine_row2resource($result) : NULL;
 		return $mag;
 	}//}}}
-	function _get_user_magazines($userId, $limit, $start, $collection) { //获取用户杂志列表{{{
+	function _get_user_magazines($userId, $limit, $start, $collection, $orderby) { //获取用户杂志列表{{{
+		$order_by = "mg." . $this->_get_magazines_orderby($orderby) . " desc";
 		if ($userId == 'me') $userId = $this->check_session_model->check_session();
 		if ($collection == 'published'){
 			$where = array('mg.user_id' => $userId, 'mg.status' => '4', 'mg.onoffdel' => '0');
@@ -74,7 +96,7 @@ class Mag_Model extends mag_db {
 					->join('user as us', "mg.user_id = us.user_id")
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->where($where)
-					->order_by('mg.weight desc')
+					->order_by($order_by)
 					->limit($limit)
 					->offset($start)
 					->get()
@@ -85,7 +107,7 @@ class Mag_Model extends mag_db {
 					->join('user as us', "mg.user_id = us.user_id")
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->where($where)
-					->order_by('mg.weight desc')
+					->order_by($order_by)
 					->get()
 					->num_rows();
 		}else if ($collection == 'unpublished'){
@@ -96,7 +118,7 @@ class Mag_Model extends mag_db {
 					->join('user as us', "mg.user_id = us.user_id")
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->where($where)
-					->order_by('mg.weight desc')
+					->order_by($order_by)
 					->limit($limit)
 					->offset($start)
 					->get()
@@ -107,7 +129,7 @@ class Mag_Model extends mag_db {
 					->join('user as us', "mg.user_id = us.user_id")
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->where($where)
-					->order_by('mg.weight desc')
+					->order_by($order_by)
 					->get()
 					->num_rows();
 		}else if ($collection == 'like'){
@@ -121,7 +143,7 @@ class Mag_Model extends mag_db {
 					->where($where)
 					->limit($limit)
 					->offset($start)
-					->order_by('ul.user_love_id desc')
+					->order_by($order_by)
 					->get()
 					->result_array();
 			$num_rows = $this->db
@@ -131,7 +153,7 @@ class Mag_Model extends mag_db {
 					->join('mag_file as mf', "mg.magazine_id = mf.magazine_id")
 					->join('user_love as ul', "mg.magazine_id = ul.loved_id")
 					->where($where)
-					->order_by('ul.user_love_id desc')
+					->order_by($order_by)
 					->get()
 					->num_rows();
 		}
@@ -468,10 +490,10 @@ class Mag_Model extends mag_db {
 		return $items;
 	}//}}}
 
-	function incr_magazine_views($magazineId) {
+	function incr_magazine_views($magazineId) {	//{{{
 		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET views = views + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
 		$this->db->query($sql);
-	}
+	}	//}}}
 	
 	function edit_mag_info ($user_id, $mag_info) {	//编辑并发布杂志{{{
 		$where = array('user_id' => $user_id, 'magazine_id' => $mag_info['magazine_id']);
