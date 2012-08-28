@@ -16,34 +16,34 @@ class Ad extends MY_Controller {
 		$type == 'element' ? $type = 'elem':null;
 		if($type=='maga'){
 			return $this->ad_list_maga($slot);
-		
+
 		}
 		elseif($type == 'elem')
 		{
-		
+
 			return $this->ad_list_elem($slot);
-		
+
 		}
-	$res=$this->ad_model->ad_list($type,$slot);
+		$res=$this->ad_model->ad_list($type,$slot);
 
-	$ret=array(
-	'kind'=>"magazine#ads",
-	'totalResults'=>$res['num'],
-	'start' =>'0',
-	'items'=>$res['content'],
+		$ret=array(
+				'kind'=>"magazine#ads",
+				'totalResults'=>$res['num'],
+				'start' =>'0',
+				'items'=>$res['content'],
 
-);
-	$this->_json_output($ret);
-}
+				);
+		$this->_json_output($ret);
+	}
 	//for elem only
 	function ad_list_elem($slot){
 		$arr_data=$this->ad_model->ad_list_elem($slot);
-	$this->_json_output($arr_data);
-	
-	
-	
+		$this->_json_output($arr_data);
+
+
+
 	}
-	
+
 	//for maga only	
 	function ad_list_maga($slot){
 		if(isset($_GET['limit'])){
@@ -51,7 +51,7 @@ class Ad extends MY_Controller {
 		}
 		else{
 			$limit=5;
-		
+
 		}
 		$res=$this->ad_model->ad_list_indextopmaga('maga',$slot,$limit);
 
@@ -62,7 +62,7 @@ class Ad extends MY_Controller {
 				'items' => $res,
 				);
 		$this->_json_output($ret);
-	
+
 	}
 
 }

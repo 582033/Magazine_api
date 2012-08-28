@@ -8,7 +8,7 @@ class pctool extends MY_Controller {
 		$this->load->model('User_Model');
 		$this->load->model('mag_file_model');
 		$this->load->library('session');
-	} 	//}}}
+	} 			//}}}
 	
 	function config(){ //{{{
         $config = array(
@@ -53,5 +53,13 @@ class pctool extends MY_Controller {
 		$user_id = $this->check_session_model->check_session();
 		$ftpinfo = $this->User_Model->get_ftp_info($user_id);
 		$this->_json_output($ftpinfo);
+	}	//}}}
+
+	function verinfo () {	//pctool组件升级接口{{{
+		$vcode = $this->_get_non_empty('vcode');
+		$ver_code = $this->config->item('versioncode');
+		$this->load->model('pctool_vcode_model');
+		$config = $this->pctool_vcode_model->verinfo($vcode, $ver_code);
+		$this->_json_output($config);
 	}	//}}}
 }
