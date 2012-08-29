@@ -30,9 +30,9 @@
 		$start = $this->_get('start', 0);
 		$id = $this->input->get('id');
 		if ($id != ''){
-			$where = array('mg.status' => '4', 'mg.magazine_id <>' => $id);
+			$where = array('mg.status' => '4', 'mg.magazine_id <>' => $id, 'mg.onoffdel' => '0');
 		}else{
-			$where = array('mg.status' => '4');
+			$where = array('mg.status' => '4', 'mg.onoffdel' => '0');
 		}
 		$this->load->model('recommendation_model');
 		$mag_list = $this->recommendation_model->_get_maylike($where, $limit, $start);
