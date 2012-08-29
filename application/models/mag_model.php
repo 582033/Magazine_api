@@ -490,11 +490,10 @@ class Mag_Model extends mag_db {
 		return $items;
 	}//}}}
 
-	function incr_magazine_views($magazineId) {	//{{{
-		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET views = views + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
+	function incr_magazine($magazineId, $type) {	//杂志次数加1{{{
+		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET ' . $type . ' = ' . $type .' + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
 		$this->db->query($sql);
 	}	//}}}
-	
 	function edit_mag_info ($user_id, $mag_info) {	//编辑并发布杂志{{{
 		$where = array('user_id' => $user_id, 'magazine_id' => $mag_info['magazine_id']);
 		$update_data = array(

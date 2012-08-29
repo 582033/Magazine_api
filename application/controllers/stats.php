@@ -7,9 +7,17 @@
 		$this->load->library('session');
 	}
 
-	function magread($magazineId) {
+	function action($type, $magazineId) {
+		switch($type) {
+			case 'magdl':
+				$field = 'downloads';
+				break;
+			case 'magread':
+				$field = 'views';
+				break;
+		}
 		$this->load->model('mag_model');
-		$this->mag_model->incr_magazine_views($magazineId);
+		$this->mag_model->incr_magazine($magazineId, $field);
 		$result = array('status' => 'OK');
 		$this->_json_output($result);
 	}
