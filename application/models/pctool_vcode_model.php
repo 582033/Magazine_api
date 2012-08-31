@@ -33,7 +33,7 @@ class pctool_vcode_model {
 
 	function aapt (){	//aapt_verinfo{{{
 		return array(
-				'vcode' => 0.2,
+				'vcode' => 2,
 				'vname' => 'aapt',
 				'size' => 204000,
 				'url' => null,

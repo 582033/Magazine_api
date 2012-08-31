@@ -23,10 +23,6 @@ class pctool extends MY_Controller {
                     'ftpinfo' => $this->config->item('ftpinfo'),
                     'uploadComplete' => $this->config->item('uploadcomplete'),
                     ),
-                'tool' => array(
-                    'versionName' => $this->config->item('versionname'),
-                    'versionCode' => $this->config->item('versioncode'),
-                    ),
 				'apiHost' => $this->config->item('api_host'),
                                 );
 		$this->_json_output($config);
@@ -43,7 +39,6 @@ class pctool extends MY_Controller {
 		if ($info['status'] == 'OK'){
 			$magazine_id = $this->mag_file_model->save_mag_file($filename, $user_id);
 			$pubstr = file_get_contents($this->config->item('api_host') . "/msgpub/mgtransform?userid=".$user_id."&filename_ftp=".$filename."&magazine_id=".$magazine_id);
-
 		}
 		$this->_json_output($info);
 	}	//}}}
