@@ -71,6 +71,7 @@ class Mag_Model extends mag_db {
 		$result = $this->_select_magazines($tag, $cate, $keyword, $limit, $start, $orderby, 'result_array');
 		return $this->magazine_rows2resource($result, $start, $num_rows);
 	}//}}}
+
 	function _get_magazine($magazine_id){		//获取单本杂志信息{{{
 		$where = array('mg.magazine_id' => $magazine_id, 'mg.onoffdel' => '0');
 		$result = $this->db
@@ -85,6 +86,7 @@ class Mag_Model extends mag_db {
 		$mag = $result ? $this->magazine_row2resource($result) : NULL;
 		return $mag;
 	}//}}}
+
 	function _get_user_magazines($userId, $limit, $start, $collection, $orderby) { //获取用户杂志列表{{{
 		$order_by = "mg." . $this->_get_magazines_orderby($orderby) . " desc";
 		if ($userId == 'me') $userId = $this->check_session_model->check_session();
@@ -162,12 +164,14 @@ class Mag_Model extends mag_db {
 
 	function get_magz_url($magazine_id) { //{{{
 		$read_mag_id = substr($magazine_id, 0, 3);
-		return $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/dist/$magazine_id.magz";
+		return $this->config->item('api_host') . "/v". $this->config->item('api_version') . "/magdl/$magazine_id/dist/mag.magz";
 	} //}}}
+
 	function get_mag_asset_url($magazine_id, $path) { //{{{
 		$read_mag_id = substr($magazine_id, 0, 3);
 		return $this->config->item('pub_host') . "/$read_mag_id/$magazine_id/web/$path";
 	} //}}}
+
 	function magazine_row2resource($result) { //{{{
 		$result['edit_index_img'] = str_replace('，', ',', $result['edit_index_img']);
 		$result['tag'] = str_replace('，', ',', $result['tag']);
@@ -207,6 +211,7 @@ class Mag_Model extends mag_db {
 		}
 		return $mag;
 	} //}}}
+
 	function magazine_rows2resource($rows, $start, $num_rows) { //{{{
 		/**
 		  rows - from db
@@ -228,6 +233,7 @@ class Mag_Model extends mag_db {
 					);
 		return $item;
 	} //}}}
+
 	function element_row2resource($result) { // {{{ convert from db row to element resource
 		$element = array(
 				'id' => $result['mag_element_id'],
@@ -289,6 +295,7 @@ class Mag_Model extends mag_db {
 
 		return $element;
 	} //}}}
+
 	function element_rows2resource($rows, $start, $num_rows) { //{{{
 		/**
 		  rows - from db
@@ -310,6 +317,7 @@ class Mag_Model extends mag_db {
 					);
 		return $item;
 	} //}}}
+
 	function _get_element($elementId) {		//获取单个杂志元素{{{
 		$where = array('me.mag_element_id' => $elementId, 'me.onoffdel' => '0');
 		$type = array('image', 'video');
@@ -354,6 +362,7 @@ class Mag_Model extends mag_db {
 
 		return $this->element_rows2resource($result, $start, $num_rows);
 	} //}}}
+
 	function _user_liked_elements($userId, $limit, $start){		//用户喜欢的元素{{{
 		$where = array('ul.user_id' => $userId);
 		$type = array('image', 'video');
@@ -494,6 +503,7 @@ class Mag_Model extends mag_db {
 		$sql = 'UPDATE ' . MAGAZINE_TABLE . ' SET ' . $type . ' = ' . $type .' + 1 WHERE magazine_id = ' . $this->db->escape($magazineId);
 		$this->db->query($sql);
 	}	//}}}
+
 	function edit_mag_info ($user_id, $mag_info) {	//编辑并发布杂志{{{
 		$where = array('user_id' => $user_id, 'magazine_id' => $mag_info['magazine_id']);
 		$update_data = array(
@@ -515,3 +525,4 @@ class Mag_Model extends mag_db {
 	}	//}}}
 */
 }
+
