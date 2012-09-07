@@ -13,11 +13,12 @@ class Msgpub extends MY_Controller {
 
 		$userid = $this->_get_non_empty('userid');
 		$filename_ftp = $this->_get_non_empty('filename_ftp');
+		$magazine_id = $this->_get_non_empty('magazine_id');
 		print_r($filename_ftp);
 		print_r($userid);
 
 		$this->load->model('msgbroker');
-		$res = $this->msgbroker->mgtransform($userid, $filename_ftp);
+		$res = $this->msgbroker->mgtransform($userid, $filename_ftp, $magazine_id);
 	} //}}}
 
 	function ftpuser() { // {{{

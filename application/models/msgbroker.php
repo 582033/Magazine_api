@@ -7,8 +7,8 @@ class Msgbroker extends CI_Model {
 		$this->load->helper('ltitem');
 	}
 
-	function mgtransform($userid, $filename_ftp) { //{{{
-		$req = array('type' => 'mg', 'userid' => $userid, 'filename_ftp' => $filename_ftp);
+	function mgtransform($userid, $filename_ftp, $magazine_id) { //{{{
+		$req = array('type' => 'mg', 'userid' => $userid, 'filename_ftp' => $filename_ftp, 'magazine_id' => $magazine_id);
 		$queue = 'mgtransform';
 		$spec = array('cmd' => 'mgtransform', 'req' => $req);
 		$this->mq->publish($spec, $queue, 'mgtransform');
