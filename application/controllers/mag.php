@@ -70,7 +70,13 @@
 		$limit = $this->_get('limit', 10);
 		$start = $this->_get('start', 0);
 		$type = $this->input->get('type');
-		$order_by = 'me.weight desc';
+		$order = $this->input->get('orderby');
+		if ($order == 'likes'){
+			$order_by = 'me.num_loved desc';
+		}
+		else {
+			$order_by = 'rand() desc';
+		}
 		$element_list = $this->Mag_Model->_get_element_list($limit, $start, $order_by, $type);
 		$this->_json_output($element_list);
 	}//}}}
